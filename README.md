@@ -111,16 +111,28 @@ This is an example of how to list things you need to use the software and how to
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/JokerZ75/ModernFit-Gym-Group11
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-
+3. Create MongoDB database at https://www.mongodb.com for free and follow there instructions for connection.
+  * In summary:
+  * Create .env file in the backend folder
+  * Add MONGO_URI=< uri for your MONGODB database >
+4. Run these commands to start both server and frontend application. (NOTE this will remove logging in console can access logs with "pm2 logs" command)
+  ```sh
+  chmod u+x start-server-and-web-page
+  ./start-sever-and-web-page.sh
+  ```
+  OR run by using cd to enter both backend and frontend in seperate terminals then run
+  ```sh
+  npm run dev
+  ```
+  in both directories
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
