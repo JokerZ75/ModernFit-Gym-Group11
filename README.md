@@ -125,8 +125,7 @@ _Below is an example of how you can instruct your audience on installing and set
   * Add MONGO_URI=< uri for your MONGODB database >
 4. Run these commands to start both server and frontend application. (NOTE this will remove logging in console can access logs with "pm2 logs" command)
   ```sh
-  ./chmod u+x start-server-and-web-page.sh
-  ./start-sever-and-web-page.sh
+  chmod u+x ./start-server-and-web-page.sh && ./start-sever-and-web-page.sh
   ```
   OR run by using cd to enter both backend and frontend in seperate terminals then run
   ```sh
