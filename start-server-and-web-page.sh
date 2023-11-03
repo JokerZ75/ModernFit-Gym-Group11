@@ -5,8 +5,10 @@ fi
 
 
 cd backend
+npm install
 pm2 --name "backend" start npm -- run dev --port 3001
 cd ../frontend
+npm install
 pm2 --name "frontend" start npm -- run dev
 
 while true; do
