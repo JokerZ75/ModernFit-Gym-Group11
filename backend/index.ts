@@ -21,6 +21,12 @@ app.use("./postImages", express.static("postImages"));
 app.use("./profileImages/", express.static("profileImages"));
 app.use(express.json());
 
+// Redis setup
+
+import * as Redis from "redis";
+
+const redisClient = Redis.createClient()
+
 // Connection to MongoDB
 
 const MONGO_URI = process.env.MONGO_URI || "";
