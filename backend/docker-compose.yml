@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  api-application:
+    restart: on-failure
+    build: ./src
+    ports:
+      - "81:5000"
+  api-application-2:
+    restart: on-failure
+    build: ./backend/src
+    ports:
+      - "82:5000"
+  nginx:
+    restart: on-failure
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api-application
+      - api-application-2
