@@ -10,7 +10,7 @@ services:
       - "81:5000"
   api-application-2:
     restart: on-failure
-    build: ./backend/src
+    build: ./src
     ports:
       - "82:5000"
   nginx:

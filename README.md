@@ -123,15 +123,15 @@ _Below is an example of how you can instruct your audience on installing and set
   * In summary:
   * Create .env file in the backend folder
   * Add MONGO_URI=< uri for your MONGODB database >
-4. Run these commands to start both server and frontend application. (NOTE this will remove logging in console can access logs with "pm2 logs" command)
+4. You can then start either the backend and frontend together or backend alone (you will require docker from https://www.docker.com/products/docker-desktop/). To start both run in the ModernFit-Gym-Group11 Directory
   ```sh
-  chmod u+x ./start-server-and-web-page.sh && ./start-sever-and-web-page.sh
+  docker-compose up --build
   ```
-  OR run by using cd to enter both backend and frontend in seperate terminals then run
+  To run the backend alone run
   ```sh
-  npm run dev
+  cd backend && docker-compose up --build
   ```
-  in both directories
+5. You could also run them individually using npm run dev if you like. For the backend you will require redis (https://redis.io/docs/install/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
