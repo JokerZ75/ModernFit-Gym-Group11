@@ -12,4 +12,9 @@ const getTestWithID = (req: Request, res: Response) => {
   res.send("Hello World with ID! ID: " + req.params.id);
 };
 
-export default { getTest, getTestWithID };
+const getTestWithBody = (req: Request, res: Response) => {
+  const test = req.body.test;
+  res.json({ thisIsinbody: test });
+};
+
+export default { getTest, getTestWithID, getTestWithBody };
