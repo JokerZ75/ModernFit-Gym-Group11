@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
 
 const Schema = mongoose.Schema;
 
 
 const classSchema = new Schema({
     Owner_id:{
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Staff"
     },
@@ -35,16 +34,18 @@ const classSchema = new Schema({
         minlength: 3
     },
     Branch_id:{
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Branch"
     },
     Interested_users:{
-        type: Array(ObjectId),
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }],
         required: false,
         trim: true,
         minlength: 3,
-        ref: "User"
     },
 
 },{
