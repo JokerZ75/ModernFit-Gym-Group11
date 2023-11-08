@@ -31,5 +31,10 @@ const setCachePermanent = (key: string, data: any) => {
   redisClient.set(key, JSON.stringify(data));
 };
 
+const getCache = (key: string) => {
+  return redisClient.get(key);
+};
 
-export { cacheGetRequest, setCacheWithExpire, clearCache, clearAllCache, setCachePermanent };
+
+
+export { cacheGetRequest, setCacheWithExpire, clearCache, clearAllCache, setCachePermanent, getCache };
