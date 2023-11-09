@@ -12,4 +12,9 @@ const getTestWithID = (req: Request, res: Response) => {
   res.send("Hello World with ID! ID: " + req.params.id);
 };
 
-export default { getTest, getTestWithID };
+const getTestWithBody = (req: Request, res: Response) => {
+  const { test, test2 } = req.body;
+  res.json({test, test2});
+};
+
+export default { getTest, getTestWithID, getTestWithBody };

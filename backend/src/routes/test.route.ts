@@ -7,4 +7,6 @@ router.route("/").get(testController.getTest);
 
 router.route("/:id").get(testController.getTestWithID);
 
+router.route("/body").post(testController.getTestWithBody);
+
 module.exports = router;

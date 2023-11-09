@@ -56,9 +56,12 @@ connection.once("open", () => {
 
 const testRouter = require("./routes/test.route");
 
+const sessionRouter = require("./routes/session.route");
+
 // Use Routes
 
 app.use("/test", testRouter);
+app.use("/session", sessionRouter);
 
 // Start the server on the specified port
 
