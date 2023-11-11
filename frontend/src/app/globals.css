@@ -51,4 +51,18 @@
         margin-top: 0.75rem;
 
     }
+
+    .open-nav{
+        @apply !w-full left-0 duration-500;
+
+    }
+    .closed-nav{
+        @apply !w-0 left-full delay-100;
+    }
+    .active-cover{
+        @apply !opacity-75 delay-500 duration-500;
+    }
+    .inactive-cover{
+        @apply opacity-0 delay-0 duration-100; 
+    }
 }
