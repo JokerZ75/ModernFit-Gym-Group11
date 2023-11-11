@@ -11,6 +11,7 @@ const buttonVariants = cva("text-white text-lg font-bold py-2 px-6", {
       default: "bg-orange-100",
       darkBlue: "bg-blue-200",
       lightBlue: "bg-blue-100",
+      nobackground: "bg-transparent"
     },
     size: {
       default: "py-2 px-6",
@@ -32,8 +33,14 @@ const buttonVariants = cva("text-white text-lg font-bold py-2 px-6", {
     },
     hover: {
       default: "hover:bg-orange-200",
-      hoverDarkBlue: "hover:bg-blue-300",
-      hoverLightBlue: "hover:bg-blue-200",
+      hoverDarkBlue: "hover:bg-blue-200",
+      hoverLightBlue: "hover:bg-blue-100",
+    },
+    border:{
+      default: "border-2 border-orange-100",
+      borderDarkBlue: "border-2 border-blue-200",
+      borderLightBlue: "border-2 border-blue-100",
+      borderBlack: "border-2 border-black",
     },
     defaultVariants: {
       variant: "default",
@@ -51,14 +58,14 @@ interface ButtonProps
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, size, variant, rounded, hover, shadow, children, ...props },
+    { className, size, variant, rounded, hover, shadow, children, border, ...props },
     ref
   ) => {
     return (
       <button
         ref={ref}
         className={cn(
-          buttonVariants({ variant, size, rounded, hover, shadow, className })
+          buttonVariants({ variant, size, rounded, hover, shadow, className, border })
         )}
         {...props}
       >

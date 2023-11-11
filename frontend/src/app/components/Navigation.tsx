@@ -27,13 +27,13 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
         setDisableButton(false);
       }, 500);
     } else {
-      setTimeout(() => {
-        setDisableButton(false);
-      }, 500);
       navContainer.current?.classList.remove("open-nav");
       navContainer.current?.classList.add("closed-nav");
       darkCover.current?.classList.remove("active-cover");
       darkCover.current?.classList.add("inactive-cover");
+      setTimeout(() => {
+        setDisableButton(false);
+      }, 500);
     }
   }, [menuOpen]);
 
@@ -44,7 +44,7 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
         onClick={() => {
           if (disableButton == false) setMenuOpen(true);
         }}
-        className="cursor-pointer"
+        className="cursor-pointer hover:brightness-150 transition-all duration-500 ease-in-out"
       >
         <div className="w-14 h-2 bg-orange-100 rounded-full mb-2 md:w-20 md:h-3"></div>
         <div className="w-14 h-2 bg-orange-100 rounded-full mb-2 md:w-20 md:h-3"></div>
@@ -74,13 +74,13 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
             </div>
             <div
               id="menu-header"
-              className="text-2xl header-blue-200 font-extrabold my-auto"
+              className="text-2xl text-blue-200 font-extrabold my-auto"
             >
               <h1>Menu</h1>
             </div>
             <div
               id="close-icon-button"
-              className="text-5xl header-orange-100 font-extrabold ml-auto my-auto cursor-pointer "
+              className="text-5xl text-orange-100 font-extrabold ml-auto my-auto cursor-pointer hover:text-orange-200 "
               onClick={() => {
                 if (disableButton == false) setMenuOpen(false);
               }}
@@ -131,7 +131,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   ...props
 }) => {
   return (
-    <li className="li-nav first:mt-0 mt-5">
+    <li className="li-nav first:mt-0 mt-5 hover:brightness-150 transition-all duration-300 ease-linear">
       <Link href={to} {...props}>
         <div className="flex navigation-item gap-6 whitespace-nowrap">
           {children}
