@@ -14,6 +14,7 @@ import {
   faListUl,
   faGrip,
 } from "@fortawesome/free-solid-svg-icons";
+import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -104,6 +105,7 @@ export default function RootLayout({
               <Navigation Links={Links} />
             </Header>
             {children}
+            <Footer />
           </body>
         </html>
       </AuthContext>

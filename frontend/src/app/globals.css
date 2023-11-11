@@ -3,52 +3,84 @@
 @tailwind utilities;
 
 @layer utilities {
-    @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+  @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap");
 
-    .font-josefin{
-        font-family: 'Josefin Sans', sans-serif;
-    }
-    .bg-blue-100 {
-        background-color: #6EB2CC;
-    }
-    .bg-blue-200 {
-        background-color: #3288C4;
-    }
-    .bg-orange-100 {
-        background-color: #EA6C36;
-    }
-    .bg-orange-200 {
-        background-color: #E53E3E;
-    }
-    .header-orange-100 {
-        color: #EA6C36;
-    }
-    .header-blue-200 {
-        color: #3288C4;
-    }
-    .border-blue-200 {
-        border-color: #3288C4;
-    }
+  .font-josefin {
+    font-family: "Josefin Sans", sans-serif;
+  }
 
-    .navigation-item > svg{
-        height: 42px;
-        width: 42px;
-        color: #3288C4;
-        margin: auto 0;
-    }
+  .navigation-item > svg {
+    height: 42px;
+    width: 42px;
+    color: #3288c4;
+    margin: auto 0;
+  }
 
-    .navigation-item > p{
-        font-size: 1.2rem;
-        margin: auto 0;
-    }
+  .navigation-item > p {
+    font-size: 1.2rem;
+    margin: auto 0;
+  }
 
-    .li-nav::after{
-        content: '';
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: #3288C4;
-        margin-top: 0.75rem;
+  .li-nav::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #3288c4;
+    margin-top: 0.75rem;
+  }
 
+  .open-nav {
+    @apply !w-full left-0 duration-500;
+  }
+  .closed-nav {
+    @apply !w-0 left-full delay-100;
+  }
+  .active-cover {
+    @apply !opacity-75 delay-500 duration-500;
+  }
+  .inactive-cover {
+    @apply opacity-0 delay-0 duration-100;
+  }
+
+  .scroller {
+    max-width: 100%;
+    border-radius: 0.25rem;
+  }
+  .scroller__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .scroller[data-animated="true"] {
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+    max-width: max-content;
+    padding-bottom: 1rem;
+    -webkit-mask: linear-gradient(
+      90deg,
+      transparent,
+      white 5%,
+      white 95%,
+      transparent
+    );
+    mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+  }
+
+  .scroller[data-animated="true"] > .scroller__inner {
+    width: max-content;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    animation: scroll 20s linear infinite;
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(calc(-50% - 0.5rem));
     }
+  }
 }
