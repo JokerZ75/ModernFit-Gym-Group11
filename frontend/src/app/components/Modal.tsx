@@ -14,7 +14,7 @@ const Modal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, []);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="w-[600px]">
+      <div className="w-[90%]">
         <Button
           variant="default"
           size="default"
