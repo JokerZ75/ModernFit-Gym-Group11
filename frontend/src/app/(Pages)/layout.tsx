@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import QueryClientWrapper from "./components/QueryClientWrapper";
-import { AuthContext } from "./components/JWTAuth/AuthContext";
-import Navigation from "./components/Navigation";
-import Header from "./components/Header";
+import "../globals.css";
+import QueryClientWrapper from "../components/QueryClientWrapper";
+import { AuthContext } from "../components/JWTAuth/AuthContext";
+import Navigation from "../components/Navigation";
+import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressBook,
@@ -14,7 +14,7 @@ import {
   faListUl,
   faGrip,
 } from "@fortawesome/free-solid-svg-icons";
-import Footer from "./components/Footer";
+import Footer from "../components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
