@@ -13,7 +13,12 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const navContainer = React.useRef<HTMLDivElement>(null);
   const darkCover = React.useRef<HTMLDivElement>(null);
+  const [url, setUrl] = React.useState<string>();
   const [disableButton, setDisableButton] = React.useState(false);
+
+  React.useEffect(() => {
+    setUrl(window.location.href);
+  }, []);
 
   React.useEffect(() => {
     // Display if opening menu or closing
@@ -99,20 +104,22 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
               })}
             </ul>
           </div>
-          <div id="join-now-button" className="mt-auto">
-            <Link href="/register">
-              <Button
-                variant="default"
-                size="fillWidth"
-                rounded="circle"
-                shadow="shadow2xl"
-                hover="default"
-                className="md:text-2xl whitespace-nowrap "
-              >
-                join now
-              </Button>
-            </Link>
-          </div>
+          {!url?.includes("modernFit-app") ? (
+            <div id="join-now-button" className="mt-auto">
+              <Link href="/register">
+                <Button
+                  variant="default"
+                  size="fillWidth"
+                  rounded="circle"
+                  shadow="shadow2xl"
+                  hover="default"
+                  className="md:text-2xl whitespace-nowrap "
+                >
+                  join now
+                </Button>
+              </Link>
+            </div>
+          ) : null}
         </div>
       </div>
     </nav>

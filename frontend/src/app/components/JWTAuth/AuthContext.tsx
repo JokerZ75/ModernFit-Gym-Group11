@@ -16,9 +16,9 @@ const Context = createContext<{
   login: (details: LoginDetails) => void;
   logout: () => void;
   Headers: {};
-  Refresh: () => void;
   verify_api_endpoint: string;
   isAuthenticated: boolean;
+  api_url: string;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   redirectTo: string;
 }>(undefined!);
@@ -35,6 +35,7 @@ export const AuthContext = ({
   verify_api_endpoint = "",
   refreashTokenExpire = null,
   redirectTo = "",
+  API_ENDPOINT = "",
 }: {
   children: React.ReactNode;
   authName?: string;
@@ -47,9 +48,11 @@ export const AuthContext = ({
   verify_api_endpoint?: string;
   refreashTokenExpire?: number | null | "session";
   redirectTo?: string;
+  API_ENDPOINT?: string;
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [Headers, setHeaders] = useState({});
+  const [api_url] = useState(API_ENDPOINT);
 
   const getRefreshToken = () => {
     return document.cookie
@@ -144,18 +147,17 @@ export const AuthContext = ({
     }, refreshInterval);
   };
 
-
   return (
     <Context.Provider
       value={{
         login,
         logout,
         Headers,
-        Refresh,
         verify_api_endpoint,
         isAuthenticated,
         setIsAuthenticated,
         redirectTo,
+        api_url,
       }}
     >
       {children}
