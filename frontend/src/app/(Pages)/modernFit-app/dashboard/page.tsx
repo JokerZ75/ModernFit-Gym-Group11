@@ -75,7 +75,18 @@ const Dashboard: React.FC = async () => {
           },
         }
       );
+      console.log(data);
       if (data.length === 0) return data;
+      if (data?.msg == "No classes")
+        return [{ Name: "No classes found" }];
+      else {
+        return data
+          ?.sort((a: classType, b: classType) => {
+            return a.Date > b.Date ? 1 : -1;
+          })
+          ?.reverse()
+          ?.splice(0, 3);
+      }
     },
   });
 

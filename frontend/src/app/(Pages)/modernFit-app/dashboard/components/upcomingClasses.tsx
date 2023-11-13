@@ -28,11 +28,11 @@ const UpcomingClasses: React.FC = () => {
         headers: headers,
       });
       data
-        .sort((a: classType, b: classType) => {
+        ?.sort((a: classType, b: classType) => {
           return a.Date > b.Date ? 1 : -1;
         })
-        .reverse();
-      return data.splice(0, 3);
+        ?.reverse();
+      return data?.splice(0, 3);
     },
   });
 
@@ -57,10 +57,11 @@ const UpcomingClasses: React.FC = () => {
         An error has occured, please try again later
       </div>
     );
+  if (data?.msg == "No classes") return <div>No upcoming classes</div>;
 
   return (
     <>
-      {data.map((item: classType) => {
+      { data?.map((item: classType) => {
         return (
           <div key={item._id} className="flex items-center justify-center text-xl md:text-5xl">
             <p className="text-center font-bold ">{item.Name}</p>

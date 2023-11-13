@@ -106,7 +106,7 @@ export default function RootLayout({
               <Navigation Links={Links} />
             </Header>
             {children}
-            <Footer />
+            <Footer></Footer>
           </body>
         </html>
       </AuthContext>
