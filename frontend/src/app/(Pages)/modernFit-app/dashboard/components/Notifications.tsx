@@ -11,6 +11,7 @@ import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import axios, { AxiosHeaders } from "axios";
 import { Button } from "@/app/components/UI/Button";
 import { get } from "http";
+import Link from "next/link";
 
 type notif = {
   _id: string;
@@ -20,47 +21,67 @@ type notif = {
   updatedAt: Date;
 };
 
-const getNotifications = async ({
-  api_url,
-  Headers,
-}: {
-  api_url: string;
-  Headers: {};
-}) => {
-  const { data } = await axios.get(`${api_url}/notification/`, {
-    headers: Headers,
-  });
-  return data as notif[];
-};
+
 
 const Notifications: React.FC = () => {
-  const { Headers, api_url, login } = useAuthContext();
-
+  const { api_url, login, getHeaders } = useAuthContext();
   const { data, isError, isLoading, refetch, error } = useQuery({
     queryKey: ["notifications"],
-    queryFn: () => getNotifications({ api_url, Headers }),
+    queryFn: async () => {
+      const headers = await getHeaders();
+      const { data } = await axios.get(`${api_url}/notification/user`, {
+        headers,
+      });
+      return data as notif[];
+    },
   });
+
+  const formatDate = (date: Date) => {
+    // format as dd/mm/yyyy hh:mm
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.getMonth();
+    const year = d.getFullYear();
+    const hours = d.getHours();
+    const minutes = d.getMinutes();
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+
+  // Used for testing with this account
   React.useEffect(() => {
-    login({
-      tokenType: "Bearer",
-      refreshToken: "hhjwie",
-      accessToken: "jwioe",
-    });
+    const log = async () => {
+      const data = await axios.post(`${api_url}/session/login`, {
+        email: "deuidhw@hello.com",
+        password: "123456",
+      });
+      const { accessToken, refreshToken, tokenType } = data.data;
+      login({ accessToken, refreshToken, tokenType });
+    };
+    log();
   }, []);
-  console.log(isLoading);
   return (
     <>
-      {isError && <p>error</p>}
-      <Button variant="default" onClick={() => refetch()}>
-        refetch
-      </Button>
-      <ul>
+      <ul className="h-[250px] overflow-y-scroll mt-2">
         {data?.map((notification: notif) => (
-          <li key={notification._id}>{notification.Title}</li>
+          <li
+            key={notification._id}
+            className="bg-blue-100 bg-opacity-50 p-4 mt-3 rounded-xl"
+          >
+            <div className="notification-head flex font-bold">
+              <h3>{notification.Title}</h3>
+              <p className="ml-auto text-sm whitespace-nowrap">
+                {formatDate(notification.createdAt)}
+              </p>
+            </div>
+            <div>
+              <p>{notification.Description.toLowerCase()}</p>
+            </div>
+          </li>
         ))}
       </ul>
     </>
   );
 };
 
-export { Notifications, getNotifications };
+export { Notifications };

@@ -21,7 +21,7 @@ const workoutSchema = new Schema({
         minlength: 3
     },
     Type_of_workout:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId || String,
         required: true,
         ref: "Typeofworkout"
     },

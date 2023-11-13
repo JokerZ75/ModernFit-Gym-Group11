@@ -24,6 +24,7 @@ app.use(express.json());
 // Redis setup
 
 import * as Redis from "redis";
+import workout from './types/workout.type';
 const url = process.env.REDIS_URL || "redis://localhost:6379";
 
 
@@ -58,13 +59,18 @@ const testRouter = require("./routes/test.route");
 
 const notificationRouter = require("./routes/notification.route");
 const sessionRouter = require("./routes/session.route");
+const workoutRouter = require("./routes/workout.route");
+const typeofworkoutRouter = require("./routes/typeofworkout.route");
+const classRouter = require("./routes/class.route");
 
 // Use Routes
 
 app.use("/test", testRouter);
 app.use("/session", sessionRouter);
 app.use("/notification", notificationRouter);
-
+app.use("/workout", workoutRouter);
+app.use("/typeofworkout", typeofworkoutRouter);
+app.use("/class", classRouter);
 
 // Start the server on the specified port
 

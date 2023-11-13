@@ -1,41 +1,40 @@
 import { Request, Response } from "express";
+import Notification from "../models/notification.model";
+import notification from "../types/notification.type";
 
-const getNotifications = async (req: Request, res: Response) => {
-  res.json([
-    {
-      _id: 1,
-      Title: "Notification 1",
-      description: "Description 1",
-      date: "2020-01-01",
-      read: false,
-    },
-    {
-      _id: 2,
-      Title: "Notification 2",
-      description: "Description 2",
-      date: "2020-01-02",
-      read: true,
-    },
-    {
-      _id: 3,
-      Title: "Notification 3",
-      description: "Description 3",
-      date: "2020-01-03",
-      read: false,
-    },
-    {
-      _id: 4,
-      Title: "Notification 4",
-    },
-    {
-      _id:5,
-      Title: "Notification 5",
-    },
-    {
-      _id:6,
-      Title: "Notification 6",
-    }
-  ]);
+const generateNotification = async (req: Request, res: Response) => {
+  const notif: notification = {
+    Title: "Notification",
+    Description: "Description",
+    isForAll: false,
+    isSystemFlagged: false,
+    Recievers: ["5f9e3b3b9d3b9b1b3c9d3b9b"],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  try {
+    const newNotification = new Notification(notif);
+    const savedNotification = await newNotification.save();
+    res.json(savedNotification);
+  } catch (err) {
+    res.json({ message: err });
+  }
 };
 
-export default { getNotifications };
+
+
+const getUsersNotifications = async (req: Request, res: Response) => {
+  const user = req.body.user;
+  const userID = (user.id);
+
+  const notifications = await Notification.find({
+    $or: [{ Recievers: { $in: [userID] } }, { isForAll: true }],
+  });
+  res.json(notifications);
+};
+
+export default {
+  getUsersNotifications,
+  generateNotification,
+};
