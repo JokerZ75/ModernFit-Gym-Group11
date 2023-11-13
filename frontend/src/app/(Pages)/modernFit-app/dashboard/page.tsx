@@ -1,19 +1,37 @@
 import React from "react";
 import CardSection from "./components/CardSection";
+import axios from "axios";
+import { Notifications } from "./components/Notifications";
+import { cookies } from "next/headers";
 import {
-  dehydrate,
   HydrationBoundary,
   QueryClient,
+  dehydrate,
 } from "@tanstack/react-query";
-import axios from "axios";
-import { getNotifications, Notifications } from "./components/Notifications";
 
 const Dashboard: React.FC = async () => {
-  const queryClient = new QueryClient();
+  const cookieStore = cookies();
+  const queryClient = new QueryClient({
+    defaultOptions:{
+      queries:{
+        staleTime: 1000 * 60,
+      }
+    }
+  });
 
-  await queryClient.prefetchQuery({
+  await  queryClient.prefetchQuery({
     queryKey: ["notifications"],
-    queryFn: getNotifications,
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/notification/`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+          },
+        }
+      );
+      return data;
+    },
   });
 
   return (
