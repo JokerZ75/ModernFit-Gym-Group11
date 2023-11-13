@@ -75,18 +75,13 @@ const Dashboard: React.FC = async () => {
           },
         }
       );
-      data
-        .sort((a: classType, b: classType) => {
-          return a.Date > b.Date ? 1 : -1;
-        })
-        .reverse();
-      return data.splice(0, 3);
+      if (data.length === 0) return data;
     },
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="px-2">
+      <main className="px-2 md:grid md:grid-cols-2 md:gap-4 md:items-stretch h-screen md:mb-10">
         <CardSection heading="notifications" className="h-[300px] px-2">
           <Notifications />
         </CardSection>

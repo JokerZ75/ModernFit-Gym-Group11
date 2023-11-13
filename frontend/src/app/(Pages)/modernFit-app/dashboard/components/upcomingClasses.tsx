@@ -62,12 +62,12 @@ const UpcomingClasses: React.FC = () => {
     <>
       {data.map((item: classType) => {
         return (
-          <div key={item._id} className="flex items-center justify-center">
-            <p className="text-center font-bold text-xl">{item.Name}</p>
-            <p className="text-center font-bold text-xl ml-6">
+          <div key={item._id} className="flex items-center justify-center text-xl md:text-5xl">
+            <p className="text-center font-bold ">{item.Name}</p>
+            <p className="text-center font-bold ml-6">
               {formatDayMonth(item.Date)}
             </p>
-            <p className="text-center font-bold text-xl ml-2">
+            <p className="text-center font-bold ml-2">
               {formatHourMinute(item.Time)}
             </p>
           </div>

@@ -62,7 +62,7 @@ const Notifications: React.FC = () => {
   }, []);
   return (
     <>
-      <ul className="h-[250px] overflow-y-scroll mt-2">
+      <ul className="h-[250px] md:h-[450px] overflow-y-scroll mt-2">
         {data?.map((notification: notif) => (
           <li
             key={notification._id}
