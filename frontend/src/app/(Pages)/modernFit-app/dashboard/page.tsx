@@ -75,7 +75,6 @@ const Dashboard: React.FC = async () => {
           },
         }
       );
-      console.log(data);
       if (data.length === 0) return data;
       if (data?.msg == "No classes")
         return [{ Name: "No classes found" }];
