@@ -66,13 +66,13 @@ const LatestWorkout: React.FC = () => {
     return <div>Error has occured please try again later</div>;
   return (
     <>
-      <p className="text-center font-bold text-4xl">
-        type: {workout?.Name}
+      <p className="text-center font-bold text-3xl md:text-4xl">
+        type: {workout?.Name.toLocaleLowerCase()}
       </p>
-      <p className="text-center font-bold text-4xl">
+      <p className="text-center font-bold text-3xl md:text-4xl">
         duration: {workout?.Duration}
       </p>
-      <p className="text-center font-bold text-4xl">
+      <p className="text-center font-bold text-3xl md:text-4xl">
         cals burnt: {workout?.Calories_burned}
       </p>
     </>
