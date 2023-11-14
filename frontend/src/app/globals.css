@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer utilities {
+.form_acc{
+    border-width: 2px; 
+    margin: 8px; 
+    border-color: gray; 
+    border-radius: 6px;  
+    justify-content: center;
+    height: 60px;
+}
+
+}
