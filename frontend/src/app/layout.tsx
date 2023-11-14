@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
   const Links: Array<{ to: string; children: React.ReactNode }> = [
     {
-      to: "/dashboard",
+      to: "/modernFit-app/dashboard",
       children: (
         <>
           <FontAwesomeIcon icon={faGrip} />
@@ -48,7 +48,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/activity-diary",
+      to: "/modernFit-app/activity-diary",
       children: (
         <>
           <FontAwesomeIcon icon={faAddressBook} />
@@ -92,12 +92,13 @@ export default function RootLayout({
         authType="cookie"
         cookieDomain={"localhost"}
         cookieSecure={false}
-        cookieSameSite={true}
-        cookieExpires={15}
+        cookieSameSite={"strict"}
+        cookieExpires={10}
         refresh_api_endpoint="http://localhost:5001/session/refresh"
         refreashTokenExpire={"session"}
         verify_api_endpoint="http://localhost:5001/session/verify"
         redirectTo="/"
+        API_ENDPOINT="http://localhost:5001"
       >
         <html lang="en">
           <body className="font-josefin">
@@ -105,7 +106,7 @@ export default function RootLayout({
               <Navigation Links={Links} />
             </Header>
             {children}
-            <Footer />
+            <Footer></Footer>
           </body>
         </html>
       </AuthContext>

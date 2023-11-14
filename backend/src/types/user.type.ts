@@ -9,8 +9,8 @@ type UserType = {
     Height: number;
     Weight: number;
     DOB: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export default UserType;

@@ -16,9 +16,10 @@ const Context = createContext<{
   login: (details: LoginDetails) => void;
   logout: () => void;
   Headers: {};
-  Refresh: () => void;
+  getHeaders: () => Promise<{}>;
   verify_api_endpoint: string;
   isAuthenticated: boolean;
+  api_url: string;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   redirectTo: string;
 }>(undefined!);
@@ -29,35 +30,28 @@ export const AuthContext = ({
   authType = "cookie",
   cookieDomain = null,
   cookieSecure = null,
-  cookieSameSite = true,
+  cookieSameSite = "strict",
   cookieExpires = null,
   refresh_api_endpoint = "",
   verify_api_endpoint = "",
   refreashTokenExpire = null,
   redirectTo = "",
+  API_ENDPOINT = "",
 }: {
   children: React.ReactNode;
   authName?: string;
   authType?: string;
   cookieDomain?: string | null;
   cookieSecure?: boolean | null;
-  cookieSameSite?: boolean | null;
+  cookieSameSite?: string | null | "Strict" | "Lax" | "None";
   cookieExpires?: number | null;
   refresh_api_endpoint?: string;
   verify_api_endpoint?: string;
   refreashTokenExpire?: number | null | "session";
   redirectTo?: string;
+  API_ENDPOINT?: string;
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [Headers, setHeaders] = useState({});
-
-  const getRefreshToken = () => {
-    return document.cookie
-      .split(";")
-      .find((c) => c.trim().startsWith(`${authName}_refreshToken=`))
-      ?.split("=")[1];
-  };
-  const getJwtToken = () => {
+  const getJwtToken = async () => {
     return document.cookie
       .split(";")
       .find((c) => c.trim().startsWith(`${authName}_token=`))
@@ -69,6 +63,27 @@ export const AuthContext = ({
       .find((c) => c.trim().startsWith(`${authName}_tokenType=`))
       ?.split("=")[1];
   };
+  const getHeaders = async () => {
+    const token = await getJwtToken();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `${getJwtTokenType()}: ${token}`,
+    };
+    return headers;
+  };
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [Headers, setHeaders] = useState({});
+  const [api_url] = useState(API_ENDPOINT);
+  const [RemainingTime, setRemainingTime] = useState<number>(0);
+
+  const getRefreshToken = () => {
+    return document.cookie
+      .split(";")
+      .find((c) => c.trim().startsWith(`${authName}_refreshToken=`))
+      ?.split("=")[1];
+  };
+
   const getExpires = () => {
     const expires = new Date();
     if (cookieExpires === null) cookieExpires = 15;
@@ -90,60 +105,89 @@ export const AuthContext = ({
     return cookieExpires * 60 * 1000;
   };
 
-  const login = (details: LoginDetails) => {
+  const login = async (details: LoginDetails) => {
     const { accessToken: token, refreshToken } = details;
     // store as cookies
     let tokenType = "Bearer";
-    document.cookie = `${authName}_token=${token};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+    document.cookie = `${authName}_token=${token};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
     if (refreashTokenExpire === "session") {
-      document.cookie = `${authName}_refreshToken=${refreshToken};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${"session"}; path=/; Secure=${cookieSecure}`;
+      document.cookie = `${authName}_refreshToken=${refreshToken};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${"session"}; path=/; Secure=${cookieSecure}`;
     } else {
-      document.cookie = `${authName}_refreshToken=${refreshToken};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
+      document.cookie = `${authName}_refreshToken=${refreshToken};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
     }
-    document.cookie = `${authName}_tokenType=${tokenType};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${"session"}; path=/; Secure=${cookieSecure}`;
-    setHeaders(getHeaders());
+    document.cookie = `${authName}_tokenType=${tokenType};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${"session"}; path=/; Secure=${cookieSecure}`;
+    const headers = await getHeaders();
+    setHeaders(headers);
     if (refresh_api_endpoint != "") {
       Refresh();
     }
   };
 
   const logout = () => {
-    document.cookie = `${authName}_token=;Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
-    document.cookie = `${authName}_refreshToken=;Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
-    document.cookie = `${authName}_tokenType=;Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+    document.cookie = `${authName}_token=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+    document.cookie = `${authName}_refreshToken=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
+    document.cookie = `${authName}_tokenType=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
   };
 
-  const getHeaders = () => {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `${getJwtTokenType()}: ${getJwtToken()}`,
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      if ((await getJwtToken()) != undefined) {
+        Refresh();
+      }
     };
-    return headers;
-  };
+    checkAuth();
+  }, []);
+
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      if (RemainingTime <= 0) {
+        const headers = await getHeaders();
+        const refresh_token = getRefreshToken();
+        await axios
+          .post(
+            `${refresh_api_endpoint}`,
+            {
+              refreshToken: refresh_token,
+            },
+            {
+              headers: headers,
+            }
+          )
+          .then((response) => {
+            const { accessToken } = response.data;
+            const expires = getExpiresAsMiliseconds();
+            setRemainingTime((prev) => prev + expires - 30000);
+            document.cookie = `${authName}_token=${accessToken};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+          });
+      }
+    };
+    checkAuth();
+  }, [RemainingTime]);
 
   const Refresh = async () => {
-    const refreshInterval = getExpiresAsMiliseconds() - 500;
     setInterval(async () => {
-      const headers = getHeaders();
-      const refresh_token = getRefreshToken();
+      setRemainingTime((prev) => prev - 1000);
+    }, 1000);
 
-      await axios
-        .post(
-          `${refresh_api_endpoint}`,
-          {
-            refreshToken: refresh_token,
-          },
-          {
-            headers: headers,
-          }
-        )
-        .then((response) => {
-          const { accessToken } = response.data;
-          document.cookie = `${authName}_token=${accessToken};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
-        });
-    }, refreshInterval);
+    // setInterval(async () => {
+    //   const headers = await getHeaders();
+    //   const refresh_token = getRefreshToken();
+    //   await axios
+    //     .post(
+    //       `${refresh_api_endpoint}`,
+    //       {
+    //         refreshToken: refresh_token,
+    //       },
+    //       {
+    //         headers: headers,
+    //       }
+    //     )
+    //     .then((response) => {
+    //       const { accessToken } = response.data;
+    //       document.cookie = `${authName}_token=${accessToken};Domain=${cookieDomain};HostOnly=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+    //     });
+    // }, refreshInterval);
   };
-
 
   return (
     <Context.Provider
@@ -151,11 +195,12 @@ export const AuthContext = ({
         login,
         logout,
         Headers,
-        Refresh,
         verify_api_endpoint,
         isAuthenticated,
         setIsAuthenticated,
+        getHeaders,
         redirectTo,
+        api_url,
       }}
     >
       {children}

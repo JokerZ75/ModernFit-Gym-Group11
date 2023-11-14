@@ -16,8 +16,32 @@ import Carousel from "@/app/components/Carousel";
 export default function Home() {
   return (
     // Classnames hacky way to fix scroller issue appearing over the nav
-    <main className=""> 
+    <main className="">
       <HeroBanner />
+      <Link href="/login" className="flex mt-2 mb-4">
+        <Button
+          shadow="default"
+          size="default"
+          variant="default"
+          hover="default"
+          rounded="circle"
+          className="w-3/4 border mx-auto"
+        >
+          Test Login
+        </Button>
+      </Link>
+      <Link href="/register" className="flex mt-2 mb-4">
+        <Button
+          shadow="default"
+          size="default"
+          variant="default"
+          hover="default"
+          rounded="circle"
+          className="w-3/4 border mx-auto"
+        >
+          Test Register
+        </Button>
+      </Link>
       <div
         id="map-card"
         className="mx-8 md:mx-24 mt-3 border-2 border-gray-200 rounded-xl"
@@ -49,7 +73,9 @@ export default function Home() {
       </div>
       <div id="about-us" className="mx-8 md:mx-24 mt-5">
         <div id="abous-us-heading">
-          <h2 className="text-blue-200 text-2xl md:text-4xl font-bold">about us</h2>
+          <h2 className="text-blue-200 text-2xl md:text-4xl font-bold">
+            about us
+          </h2>
         </div>
         <div id="about-us-content" className="mt-2">
           <div className="">

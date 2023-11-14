@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +12,16 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const navContainer = React.useRef<HTMLDivElement>(null);
   const darkCover = React.useRef<HTMLDivElement>(null);
+  const [url, setUrl] = React.useState<string>();
   const [disableButton, setDisableButton] = React.useState(false);
+
+  React.useEffect(() => {
+    setUrl(window.location.pathname);
+  }, []);
+
+  React.useEffect(() => {
+    setMenuOpen(false);
+  }, [url]);
 
   React.useEffect(() => {
     // Display if opening menu or closing
@@ -92,38 +100,43 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
             <ul>
               {Links?.map((link) => {
                 return (
-                  <NavigationLink key={link.to} to={link.to}>
+                  <NavigationLink
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setUrl(link.to)}
+                  >
                     {link.children}
                   </NavigationLink>
                 );
               })}
             </ul>
           </div>
-          <div id="join-now-button" className="mt-auto">
-            <Link href="/register">
-              <Button
-                variant="default"
-                size="fillWidth"
-                rounded="circle"
-                shadow="shadow2xl"
-                hover="default"
-                className="md:text-2xl whitespace-nowrap "
-              >
-                join now
-              </Button>
-            </Link>
-          </div>
+          {!url?.includes("modernFit-app") ? (
+            <div id="join-now-button" className="mt-auto">
+              <Link href="/register">
+                <Button
+                  variant="default"
+                  size="fillWidth"
+                  rounded="circle"
+                  shadow="shadow2xl"
+                  hover="default"
+                  className="md:text-2xl whitespace-nowrap "
+                >
+                  join now
+                </Button>
+              </Link>
+            </div>
+          ) : null}
         </div>
       </div>
     </nav>
   );
 };
 
-type NavigationLinkProps = {
+interface NavigationLinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   to: string;
   children: React.ReactNode;
-  props?: Array<any>;
-};
+}
 
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   to,

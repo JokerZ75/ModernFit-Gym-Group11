@@ -15,11 +15,11 @@ const cacheGetRequest = (key: string, cb: Function) => {
   });
 };
 
-const setCacheWithExpire = (key: string, data: any, expire: number) => {
+const setCacheWithExpire = (key: any, data: any, expire: number) => {
   redisClient.setEx(key, expire, JSON.stringify(data));
 };
 
-const clearCache = (key: string) => {
+const clearCache = (key: any) => {
   redisClient.del(key);
 };
 
@@ -27,11 +27,11 @@ const clearAllCache = () => {
   redisClient.FLUSHALL();
 };
 
-const setCachePermanent = (key: string, data: any) => {
+const setCachePermanent = (key: any, data: any) => {
   redisClient.set(key, JSON.stringify(data));
 };
 
-const getCache = (key: string) => {
+const getCache = (key: any) => {
   return redisClient.get(key);
 };
 

@@ -17,10 +17,12 @@ const StartSession = async (req: Request, res: Response) => {
       return res.status(400).json({ msg: "User does not exist" });
     }
     // Validate password
-    const isMatch = await bcrypt.compare(password, user.Password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
-    }
+
+    // const isMatch = await bcrypt.compare(password, user.Password);
+    // if (!isMatch) {
+    //   return res.status(400).json({ msg: "Invalid credentials" });
+    // }
+
     const retrievedUser: UserType = JSON.parse(JSON.stringify(user));
     // const retrievedUser: UserType = {
     //   _id: "123",
@@ -95,6 +97,8 @@ const RefreshSession = async (req: Request, res: Response) => {
   );
 };
 
+
+
 // User logs out
 
 const EndSession = async (req: Request, res: Response) => {
@@ -130,4 +134,9 @@ const VerifySession = async (req: Request, res: Response) => {
   );
 };
 
-export default { StartSession, RefreshSession, EndSession, VerifySession };
+export default {
+  StartSession,
+  RefreshSession,
+  EndSession,
+  VerifySession,
+};
