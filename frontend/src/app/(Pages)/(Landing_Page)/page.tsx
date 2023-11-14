@@ -1,5 +1,5 @@
+"use client";
 import Image from "next/image";
-import Navigation from "../../components/Navigation";
 import { Button } from "../../components/UI/Button";
 import HeroBanner from "./components/Herobanner";
 import map from "@/app/Assets/maps.jpg";
@@ -12,8 +12,24 @@ import {
 import ClassCardImage from "@/app/Assets/Hero-alternate-min.jpeg";
 import ClassesAvailableCard from "./components/ClassessAvailableCard";
 import Carousel from "@/app/components/Carousel";
+import axios from "axios";
+import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
+import React from "react";
 
 export default function Home() {
+  const { api_url, login } = useAuthContext();
+  React.useEffect(() => {
+    const log = async () => {
+      const data = await axios.post(`${api_url}/session/login`, {
+        email: "deuidhw@hello.com",
+        password: "123456",
+      });
+      const { accessToken, refreshToken, tokenType } = data.data;
+      login({ accessToken, refreshToken, tokenType });
+    };
+    log();
+  }, []);
+  
   return (
     // Classnames hacky way to fix scroller issue appearing over the nav
     <main className="">

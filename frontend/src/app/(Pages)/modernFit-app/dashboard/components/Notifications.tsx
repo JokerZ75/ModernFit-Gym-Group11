@@ -21,8 +21,6 @@ type notif = {
   updatedAt: Date;
 };
 
-
-
 const Notifications: React.FC = () => {
   const { api_url, login, getHeaders } = useAuthContext();
   const { data, isError, isLoading, refetch, error } = useQuery({
@@ -48,18 +46,6 @@ const Notifications: React.FC = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
-  // Used for testing with this account
-  React.useEffect(() => {
-    const log = async () => {
-      const data = await axios.post(`${api_url}/session/login`, {
-        email: "deuidhw@hello.com",
-        password: "123456",
-      });
-      const { accessToken, refreshToken, tokenType } = data.data;
-      login({ accessToken, refreshToken, tokenType });
-    };
-    log();
-  }, []);
   return (
     <>
       <ul className="h-[250px] md:h-[450px] overflow-y-scroll mt-2">

@@ -81,8 +81,8 @@ const RefreshSession = async (req: Request, res: Response) => {
       if (err) return res.status(403).json({ msg: "Token not valid" });
       const jwtPayload = {
         user: {
-          id: user.id,
-          email: user.email,
+          id: user.user.id,
+          email: user.user.email,
         },
       };
       const accessToken = jwt.sign(
@@ -96,8 +96,6 @@ const RefreshSession = async (req: Request, res: Response) => {
     }
   );
 };
-
-
 
 // User logs out
 
