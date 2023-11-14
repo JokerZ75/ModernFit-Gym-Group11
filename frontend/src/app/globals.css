@@ -83,4 +83,11 @@
       transform: translateX(calc(-50% - 0.5rem));
     }
   }
+
+  .inputField{
+    padding: 1%;
+    background: none;
+    text-align: center;
+    border-radius: 0.25rem;
+  }
 }
