@@ -24,7 +24,6 @@ app.use(express.json());
 // Redis setup
 
 import * as Redis from "redis";
-
 const url = process.env.REDIS_URL || "redis://localhost:6379";
 
 
@@ -36,10 +35,11 @@ redisClient.connect()
 redisClient.on("connect", () => {
   console.log("Redis client connected");
 })
-redisClient.setEx("test", 3600, "testLog")
-redisClient.get("test").then((value) => {
-  console.log(value)
+redisClient.on("error", (err) => {
+  console.log("Something went wrong " + err);
 })
+
+export { redisClient };
 
 // Connection to MongoDB
 
@@ -56,9 +56,12 @@ connection.once("open", () => {
 
 const testRouter = require("./routes/test.route");
 
+const sessionRouter = require("./routes/session.route");
+
 // Use Routes
 
 app.use("/test", testRouter);
+app.use("/session", sessionRouter);
 
 // Start the server on the specified port
 
