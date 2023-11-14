@@ -31,23 +31,62 @@ const RecentWorkouts: React.FC = () => {
     },
   });
 
-
   return (
     <>
-      <div>
-        <h2>recent workouts</h2>
-        {data?.map((workout) => {
-          return (
-            <div key={workout._id}>
-              <p>{workout.Name}</p>
-              <p>{workout.Duration}</p>
-              <p>{workout.Type_of_workout}</p>
-              <p>{workout.Calories_burned}</p>
-            </div>
-          );
-        })}
+      <div className="h-full">
+        <h2 className="text-2xl font-bold text-blue-200">recent workouts</h2>
+        <div className="mt-2">
+          <ul className="overflow-y-scroll h-[250px]">
+            {data?.map((workout) => {
+              return (
+                <li className="mt-3 first:mt-0" key={workout._id}>
+                  <Workout workout={workout} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <Button
+          variant="darkBlue"
+          shadow="default"
+          rounded="square"
+          className=" mx-auto rounded-xl mt-4 py-4"
+          hover="hoverLightBlue"
+          size="fillWidth"
+        >
+          add workout
+        </Button>
       </div>
     </>
+  );
+};
+
+const Workout: React.FC<{ workout: workout }> = ({ workout }) => {
+  const { api_url, getHeaders } = useAuthContext();
+  const { data: workoutType } = useQuery({
+    queryKey: ["workoutType"],
+    queryFn: async () => {
+      const header = await getHeaders();
+      const { data } = await axios.get(`${api_url}/typeofworkout/`, {
+        headers: header,
+      });
+      return data as any[];
+    },
+  });
+
+  return (
+    <div className="bg-blue-200 bg-opacity-50 rounded-xl p-2 ">
+      <div className="flex">
+        <p className="text-2xl font-bold text-white">{workout.Name}</p>
+        <p className="ml-auto text-xl font-bold text-white">
+          {workout.Duration} min
+        </p>
+      </div>
+      <p className="font-bold">
+        {workoutType?.find((type) => type._id === workout.Type_of_workout).Name}
+      </p>
+      <p className="font-bold">{workout.Calories_burned} Kcal</p>
+    </div>
   );
 };
 

@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import RecentNutritionalActivity from "./components/RecentNutritionalActivity";
 
 const ActivityDiary: React.FC = async () => {
   const cookieStore = cookies();
@@ -29,18 +30,62 @@ const ActivityDiary: React.FC = async () => {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
+      );
+      return data;
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["workoutType"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/typeofworkout/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["nutritionalActivity"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/meal/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["mealcatagories"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/mealcatagory/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return data;
     },
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main>
+      <main className="px-8 py-5">
         <RecentWorkouts />
-        <div>
-          <h2>recent nutritional activity</h2>
-        </div>
+        <div className="mt-4"></div>
+        <RecentNutritionalActivity />
       </main>
     </HydrationBoundary>
   );

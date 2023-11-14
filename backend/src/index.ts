@@ -9,7 +9,7 @@ dotenv.config();
 // create express app
 
 const PORT = process.env.PORT || 5000;
-const app:Express = express();
+const app: Express = express();
 
 // Middleware
 
@@ -24,21 +24,19 @@ app.use(express.json());
 // Redis setup
 
 import * as Redis from "redis";
-import workout from './types/workout.type';
 const url = process.env.REDIS_URL || "redis://localhost:6379";
 
-
 const redisClient = Redis.createClient({
-  url: url
-})
+  url: url,
+});
 
-redisClient.connect()
+redisClient.connect();
 redisClient.on("connect", () => {
   console.log("Redis client connected");
-})
+});
 redisClient.on("error", (err) => {
   console.log("Something went wrong " + err);
-})
+});
 
 export { redisClient };
 
@@ -62,6 +60,8 @@ const sessionRouter = require("./routes/session.route");
 const workoutRouter = require("./routes/workout.route");
 const typeofworkoutRouter = require("./routes/typeofworkout.route");
 const classRouter = require("./routes/class.route");
+const mealRouter = require("./routes/meal.route");
+const mealcatagoryRouter = require("./routes/mealcatagory.route");
 
 // Use Routes
 
@@ -71,10 +71,11 @@ app.use("/notification", notificationRouter);
 app.use("/workout", workoutRouter);
 app.use("/typeofworkout", typeofworkoutRouter);
 app.use("/class", classRouter);
+app.use("/meal", mealRouter);
+app.use("/mealcatagory", mealcatagoryRouter);
 
 // Start the server on the specified port
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-

@@ -52,7 +52,7 @@ const Notifications: React.FC = () => {
         {data?.map((notification: notif) => (
           <li
             key={notification._id}
-            className="bg-blue-100 bg-opacity-50 p-4 mt-3 rounded-xl"
+            className="bg-blue-200 bg-opacity-50 p-4 mt-3 rounded-xl"
           >
             <div className="notification-head flex font-bold">
               <h3>{notification.Title}</h3>
