@@ -31,10 +31,8 @@ const createMeal: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
       Meal_desc: data.mealName,
       Portion: parseInt(data.mealPortion),
       Catagory_id: data.mealCatagory,
+      Calories_intake: Math.round(data.mealCalories * 100) / 100
     };
-    if (data.mealCalories) {
-      meal.Calories_intake = parseInt(data.mealCalories);
-    }
     mutate(meal);
   };
 
@@ -120,7 +118,7 @@ const createMeal: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
             <label htmlFor="mealPortion">meal portion</label>
             <input
               type="number"
-              placeholder="meal portion (g)"
+              placeholder="meal portion"
               id="mealPortion"
               {...register("mealPortion", {
                 required: true,
@@ -138,11 +136,12 @@ const createMeal: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
             <label htmlFor="mealCalories">meal calories</label>
             <input
               type="number"
+              step="0.01"
               placeholder="meal calories (kcal) (optional)"
               id="mealCalories"
               {...register("mealCalories", {
                 required: false,
-                pattern: /^[0-9]*$/,
+                pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
                 min: 1,
               })}
             />

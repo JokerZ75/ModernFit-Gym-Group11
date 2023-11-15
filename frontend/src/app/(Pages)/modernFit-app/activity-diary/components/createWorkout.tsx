@@ -17,13 +17,13 @@ const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
   } = useForm();
 
   const { api_url, getHeaders } = useAuthContext();
-
   const onSubmit = (data: FieldValues) => {
+    // round to next whole number
     const workout = {
       Name: data.workoutName,
       Type_of_workout: data.workType,
-      Duration: parseInt(data.duration),
-      Calories_burned: parseInt(data.caloriesBurned),
+      Duration:  Math.round(data.duration),
+      Calories_burned: Math.round(data.caloriesBurned * 100) / 100,
     };
     mutate(workout);
   };
@@ -88,10 +88,7 @@ const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
           )}
           <div>
             <label htmlFor="workType">type</label>
-            <select
-              id="workType"
-              {...register("workType", { required: true})}
-            >
+            <select id="workType" {...register("workType", { required: true })}>
               {workTypes?.map((type: any) => {
                 return (
                   <option key={type._id} value={type._id}>
@@ -108,11 +105,12 @@ const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
             <label htmlFor="duration">duration</label>
             <input
               type="number"
+              step="0.01"
               placeholder="duration (in minutes)"
               id="duration"
               {...register("duration", {
                 required: true,
-                pattern: /^[0-9]+$/,
+                pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
                 min: 1,
               })}
             />
@@ -124,10 +122,13 @@ const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
             <label htmlFor="caloriesBurned">calories burned</label>
             <input
               type="number"
-              placeholder="calories burned"
+              step="0.01"
+              placeholder="calories burned (Kcal) (optional)"
               id="caloriesBurned"
               {...register("caloriesBurned", {
-                pattern: /^[0-9]+$/,
+                required: true,
+                pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+                min: 1,
               })}
             />
           </div>
