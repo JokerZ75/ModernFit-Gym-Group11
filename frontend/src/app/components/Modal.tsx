@@ -26,8 +26,7 @@ const Modal: React.FC<{
             variant="default"
             size="default"
             rounded="default"
-            hover="default"
-            className=" absolute right-[2.5%] md:right-[25%] mr-2 mt-1 bg-transparent text-orange-100 text-5xl"
+            className=" absolute right-[2.5%] md:right-[25%] mr-2 mt-1 bg-transparent text-orange-100 hover:text-orange-200 text-5xl"
             onClick={() => {
               Router.back();
             }}
@@ -39,8 +38,7 @@ const Modal: React.FC<{
             variant="default"
             size="default"
             rounded="default"
-            hover="default"
-            className="absolute right-[2.5%] md:right-[25%] mr-2 mt-1 bg-transparent text-orange-100 text-5xl"
+            className="absolute right-[2.5%] md:right-[25%] mr-2 mt-1 bg-transparent text-orange-100 hover:text-orange-200 text-5xl"
             onClick={() => {
               closeModal && closeModal(false);
             }}

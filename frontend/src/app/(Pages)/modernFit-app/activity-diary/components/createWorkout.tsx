@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
 
-const createMeal: React.FC = () => {
+const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
+  setModalOpen,
+}) => {
   const {
     register,
     handleSubmit,
@@ -16,7 +19,13 @@ const createMeal: React.FC = () => {
   const { api_url, getHeaders } = useAuthContext();
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    const workout = {
+      Name: data.workoutName,
+      Type_of_workout: data.workType,
+      Duration: parseInt(data.duration),
+      Calories_burned: parseInt(data.caloriesBurned),
+    };
+    mutate(workout);
   };
 
   const { data: workTypes } = useQuery({
@@ -27,6 +36,31 @@ const createMeal: React.FC = () => {
         headers: headers,
       });
       return data as any[];
+    },
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["createWorkout"],
+    mutationFn: async (workout: any) => {
+      const headers = await getHeaders();
+      await toast.promise(
+        axios.post(`${api_url}/workout/add`, workout, {
+          headers: headers,
+        }),
+        {
+          pending: "Adding workout...",
+          success: "Workout added!",
+          error: "Failed to add workout. Please try again.",
+        }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    },
+    onSuccess: () => {
+      setModalOpen(false);
     },
   });
 
@@ -54,7 +88,10 @@ const createMeal: React.FC = () => {
           )}
           <div>
             <label htmlFor="workType">type</label>
-            <select id="workType" {...register("workType", { required: true })}>
+            <select
+              id="workType"
+              {...register("workType", { required: true})}
+            >
               {workTypes?.map((type: any) => {
                 return (
                   <option key={type._id} value={type._id}>
@@ -90,9 +127,7 @@ const createMeal: React.FC = () => {
               placeholder="calories burned"
               id="caloriesBurned"
               {...register("caloriesBurned", {
-                required: true,
                 pattern: /^[0-9]+$/,
-                min: 1,
               })}
             />
           </div>
@@ -118,4 +153,4 @@ const createMeal: React.FC = () => {
   );
 };
 
-export default createMeal;
+export default createWorkout;

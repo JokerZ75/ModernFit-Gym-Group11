@@ -8,6 +8,8 @@ import { Button } from "@/app/components/UI/Button";
 import Link from "next/link";
 import Modal from "@/app/components/Modal";
 import CreateWorkout from "./createWorkout";
+import { useMutationState } from "@tanstack/react-query";
+import { randomBytes } from "crypto";
 
 type workout = {
   _id?: string;
@@ -33,16 +35,18 @@ const RecentWorkouts: React.FC = () => {
       return data as workout[];
     },
   });
+  const variables = useMutationState<workout>({
+    filters: { mutationKey: ["createWorkout"], status: "pending" },
+    select: (mutation) => mutation.state.variables as workout,
+  });
 
   return (
     <>
-    {
-      openModal && (
+      {openModal && (
         <Modal withRouter={false} closeModal={setOpenModal}>
-          <CreateWorkout />
+          <CreateWorkout setModalOpen={setOpenModal} />
         </Modal>
-      )
-    }
+      )}
       <div className="h-full">
         <h2 className="text-2xl font-bold text-blue-200">recent workouts</h2>
         <div className="mt-2">
@@ -50,6 +54,13 @@ const RecentWorkouts: React.FC = () => {
             {data?.map((workout) => {
               return (
                 <li className="mt-3 first:mt-0" key={workout._id}>
+                  <Workout workout={workout} />
+                </li>
+              );
+            })}
+            {variables?.map((workout) => {
+              return (
+                <li className="mt-3 first:mt-0" key={workout.Type_of_workout + randomBytes(12)}>
                   <Workout workout={workout} />
                 </li>
               );

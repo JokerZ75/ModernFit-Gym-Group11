@@ -1,23 +1,44 @@
 "use client";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
+import { toast } from "react-toastify";
 
-const createMeal: React.FC = () => {
+type meal = {
+  User_id?: string;
+  Meal_desc: string;
+  Portion: number;
+  Calories_intake?: number;
+  Catagory_id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+const createMeal: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
+  setModalOpen,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { api_url, getHeaders } = useAuthContext();
-
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    const meal: meal = {
+      Meal_desc: data.mealName,
+      Portion: parseInt(data.mealPortion),
+      Catagory_id: data.mealCatagory,
+    };
+    if (data.mealCalories) {
+      meal.Calories_intake = parseInt(data.mealCalories);
+    }
+    mutate(meal);
   };
+
+  const { api_url, getHeaders } = useAuthContext();
 
   const { data: mealCatagories } = useQuery({
     queryKey: ["mealCatagories"],
@@ -27,6 +48,31 @@ const createMeal: React.FC = () => {
         headers: headers,
       });
       return data as any[];
+    },
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["createMeal"],
+    mutationFn: async (meal: any) => {
+      const headers = await getHeaders();
+      await toast.promise(
+        axios.post(`${api_url}/meal/add`, meal, {
+          headers: headers,
+        }),
+        {
+          pending: "Adding meal...",
+          success: "Successfully added meal.",
+          error: "Failed to add meal, please try again.",
+        }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["nutritionalActivity"] });
+    },
+    onSuccess(data, variables, context) {
+      setModalOpen(false);
     },
   });
 
@@ -76,11 +122,17 @@ const createMeal: React.FC = () => {
               type="number"
               placeholder="meal portion (g)"
               id="mealPortion"
-              {...register("mealPortion", { required: true, pattern: /^[0-9]*$/, min: 1 })}
+              {...register("mealPortion", {
+                required: true,
+                pattern: /^[0-9]*$/,
+                min: 1,
+              })}
             />
           </div>
           {errors.mealPortion && (
-            <p className="form-error">meal portion is required and must be a number. (Atleast 1)</p>
+            <p className="form-error">
+              meal portion is required and must be a number. (Atleast 1)
+            </p>
           )}
           <div className="">
             <label htmlFor="mealCalories">meal calories</label>
@@ -96,7 +148,9 @@ const createMeal: React.FC = () => {
             />
           </div>
           {errors.mealCalories && (
-            <p className="form-error">meal calories must be a number. (Atleast 1)</p>
+            <p className="form-error">
+              meal calories must be a number. (Atleast 1)
+            </p>
           )}
           <Button
             variant="default"
