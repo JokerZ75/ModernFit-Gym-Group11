@@ -2,6 +2,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./UI/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Modal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const Router = useRouter();
@@ -14,21 +16,20 @@ const Modal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, []);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="w-[90%]">
+      <div className="w-[90%] md:w-[50%]">
         <Button
           variant="default"
           size="default"
           rounded="default"
-          shadow="shadowLg"
           hover="default"
-          className=" text-black"
+          className="absolute right-[2.5%] md:right-[25%] mr-2 mt-1 bg-transparent text-orange-100 text-5xl"
           onClick={() => {
             Router.back();
           }}
         >
-          X
+          <FontAwesomeIcon icon={faCircleXmark} />
         </Button>
-        <div className="bg-white p-5 rounded-lg"> {children}</div>
+        <div className="bg-white rounded-lg"> {children}</div>
       </div>
     </div>
   );
