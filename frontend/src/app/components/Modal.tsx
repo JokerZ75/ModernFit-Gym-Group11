@@ -48,6 +48,7 @@ const Modal: React.FC<{
             <FontAwesomeIcon icon={faCircleXmark} />
           </Button>
         )}
+
         <div className="bg-white rounded-lg"> {children}</div>
       </div>
     </div>
