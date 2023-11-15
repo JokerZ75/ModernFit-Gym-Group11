@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
 import Link from "next/link";
+import Modal from "@/app/components/Modal";
+import CreateWorkout from "./createWorkout";
 
 type workout = {
   _id?: string;
@@ -20,6 +22,7 @@ type workout = {
 
 const RecentWorkouts: React.FC = () => {
   const { api_url, getHeaders } = useAuthContext();
+  const [openModal, setOpenModal] = React.useState(false);
   const { data } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => {
@@ -33,6 +36,13 @@ const RecentWorkouts: React.FC = () => {
 
   return (
     <>
+    {
+      openModal && (
+        <Modal withRouter={false} closeModal={setOpenModal}>
+          <CreateWorkout />
+        </Modal>
+      )
+    }
       <div className="h-full">
         <h2 className="text-2xl font-bold text-blue-200">recent workouts</h2>
         <div className="mt-2">
@@ -53,6 +63,7 @@ const RecentWorkouts: React.FC = () => {
           className=" mx-auto rounded-xl mt-4 py-4"
           hover="hoverLightBlue"
           size="fillWidth"
+          onClick={() => setOpenModal(true)}
         >
           add workout
         </Button>

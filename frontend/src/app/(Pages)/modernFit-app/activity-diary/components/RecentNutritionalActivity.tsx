@@ -5,8 +5,11 @@ import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
+import Modal from "@/app/components/Modal";
+import CreateMeal from "../components/createMeal";
 
 type meal = {
+  _id: string;
   User_id: string;
   Meal_desc: string;
   Portion: number;
@@ -17,6 +20,7 @@ type meal = {
 };
 const RecentNutritionalActivity: React.FC = () => {
   const { api_url, getHeaders } = useAuthContext();
+  const [openModal, setOpenModal] = React.useState(false);
   const { data } = useQuery({
     queryKey: ["nutritionalActivity"],
     queryFn: async () => {
@@ -30,6 +34,11 @@ const RecentNutritionalActivity: React.FC = () => {
 
   return (
     <>
+      {openModal && (
+        <Modal withRouter={false} closeModal={setOpenModal}>
+          <CreateMeal />
+        </Modal>
+      )}
       <div className="h-full">
         <h2 className="text-2xl font-bold text-blue-200">
           recent nutritional activity
@@ -38,13 +47,14 @@ const RecentNutritionalActivity: React.FC = () => {
           <ul className="overflow-y-scroll h-[250px]">
             {data?.map((meal) => {
               return (
-                <li className="mt-3 first:mt-0" key={meal.User_id}>
+                <li className="mt-3 first:mt-0" key={meal._id}>
                   <Meal meal={meal} />
                 </li>
               );
             })}
           </ul>
         </div>
+        {/* <Link href="activity-diary/create/meal"> */}
         <Button
           variant="darkBlue"
           shadow="default"
@@ -52,9 +62,11 @@ const RecentNutritionalActivity: React.FC = () => {
           className=" mx-auto rounded-xl mt-4 py-4"
           hover="hoverLightBlue"
           size="fillWidth"
+          onClick={() => setOpenModal(true)}
         >
           add meal/food
         </Button>
+        {/* </Link> */}
       </div>
     </>
   );
