@@ -13,5 +13,14 @@ const getWorkoutTypesByID = async (req: Request, res: Response) => {
     });
 };
 
+const getWorkoutTypes = async (req: Request, res: Response) => {
+  await TypeOfWorkout.find()
+    .then((workouts) => {
+      res.status(200).json(workouts);
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
 
-export default { getWorkoutTypesByID };
+export default { getWorkoutTypesByID, getWorkoutTypes };

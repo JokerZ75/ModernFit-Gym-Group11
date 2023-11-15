@@ -128,19 +128,26 @@ export const AuthContext = ({
     document.cookie = `${authName}_refreshToken=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
     document.cookie = `${authName}_tokenType=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
   };
+  const mounted = React.useRef(false);
 
   React.useEffect(() => {
-    const checkAuth = async () => {
-      if ((await getJwtToken()) != undefined) {
-        Refresh();
-      }
-    };
-    checkAuth();
+    if (mounted.current) {
+      const checkAuth = async () => {
+        const token = await getJwtToken();
+        if (token != undefined && refresh_api_endpoint != "" && token != "") {
+          Refresh();
+        }
+      };
+      checkAuth();
+    } else {
+      mounted.current = true;
+    }
   }, []);
 
   React.useEffect(() => {
     const checkAuth = async () => {
-      if (RemainingTime <= 0) {
+      const token = await getJwtToken();
+      if (RemainingTime <= 0 && refresh_api_endpoint != "" && token != "" && token != undefined) {
         const headers = await getHeaders();
         const refresh_token = getRefreshToken();
         await axios

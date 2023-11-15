@@ -5,7 +5,7 @@ import { ButtonHTMLAttributes } from "react";
 import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "@/app/utils/classMerge";
 
-const buttonVariants = cva("text-white text-lg font-bold py-2 px-6", {
+const buttonVariants = cva("text-white text-lg font-bold py-2 px-6 transition-all duration-300 ease-in-out", {
   variants: {
     variant: {
       default: "bg-orange-100",

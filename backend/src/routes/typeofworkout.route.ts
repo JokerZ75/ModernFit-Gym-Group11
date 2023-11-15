@@ -1,10 +1,11 @@
-import express from 'express';
-import type_of_workoutController from '../Controllers/typeofworkout.controller';
-import Auth from '../Middlewares/Auth';
+import express from "express";
+import type_of_workoutController from "../Controllers/typeofworkout.controller";
+import Auth from "../Middlewares/Auth";
 
 const router = express.Router();
 
-router.route('/:id').get(Auth, type_of_workoutController.getWorkoutTypesByID);
+router.route("/:id").get(Auth, type_of_workoutController.getWorkoutTypesByID);
 
+router.route("/").get(Auth, type_of_workoutController.getWorkoutTypes);
 
 module.exports = router;

@@ -26,6 +26,7 @@ type classType = {
 
 const Dashboard: React.FC = async () => {
   const cookieStore = cookies();
+  const token = cookieStore.get("_auth_token")?.value;
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -34,60 +35,61 @@ const Dashboard: React.FC = async () => {
     },
   });
 
-  await queryClient.prefetchQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/notification/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
-          },
-        }
-      );
-      return data;
-    },
-  });
+  if (token != undefined && token != "") { // This is for testing as we login with the notification component rn so we dont have cookie yet.
+    await queryClient.prefetchQuery({
+      queryKey: ["notifications"],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/notification/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+            },
+          }
+        );
+        return data;
+      },
+    });
 
-  await queryClient.fetchQuery({
-    queryKey: ["workouts"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/workout/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
-          },
-        }
-      );
-      return data;
-    },
-  });
+    await queryClient.fetchQuery({
+      queryKey: ["workouts"],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/workout/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+            },
+          }
+        );
+        return data;
+      },
+    });
 
-  await queryClient.fetchQuery({
-    queryKey: ["upcomingclasses"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/class/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
-          },
+    await queryClient.fetchQuery({
+      queryKey: ["upcomingclasses"],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/class/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+            },
+          }
+        );
+        if (data.length === 0) return data;
+        if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+        else {
+          return data
+            ?.sort((a: classType, b: classType) => {
+              return a.Date > b.Date ? 1 : -1;
+            })
+            ?.reverse()
+            ?.splice(0, 3);
         }
-      );
-      if (data.length === 0) return data;
-      if (data?.msg == "No classes")
-        return [{ Name: "No classes found" }];
-      else {
-        return data
-          ?.sort((a: classType, b: classType) => {
-            return a.Date > b.Date ? 1 : -1;
-          })
-          ?.reverse()
-          ?.splice(0, 3);
-      }
-    },
-  });
+      },
+    });
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
