@@ -9,5 +9,7 @@ router.route("/user").get(Auth, mealController.getMeals);
 
 router.route("/generate").get(mealController.generateMeal);
 
+router.route("/add").post(Auth, mealController.AddMeal);
+
 
 module.exports = router;

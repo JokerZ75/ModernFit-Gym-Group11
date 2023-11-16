@@ -2,11 +2,12 @@
 
 import React from "react";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutationState } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
 import Modal from "@/app/components/Modal";
 import CreateMeal from "../components/createMeal";
+import { randomBytes, randomInt } from "crypto";
 
 type meal = {
   _id: string;
@@ -32,11 +33,16 @@ const RecentNutritionalActivity: React.FC = () => {
     },
   });
 
+  const variables = useMutationState<meal>({
+    filters: { mutationKey: ["createMeal"], status: "pending" },
+    select: (mutation) => mutation.state.variables as meal,
+  });
+
   return (
     <>
       {openModal && (
         <Modal withRouter={false} closeModal={setOpenModal}>
-          <CreateMeal />
+          <CreateMeal setModalOpen={setOpenModal} />
         </Modal>
       )}
       <div className="h-full">
@@ -52,9 +58,19 @@ const RecentNutritionalActivity: React.FC = () => {
                 </li>
               );
             })}
+            {variables?.map((meal) => {
+              return (
+                <li
+                  className="mt-3 first:mt-0"
+                  key={meal.Meal_desc + meal.Catagory_id + randomBytes(12)}
+                >
+                  {meal._id}
+                  <Meal meal={meal} />
+                </li>
+              );
+            })}
           </ul>
         </div>
-        {/* <Link href="activity-diary/create/meal"> */}
         <Button
           variant="darkBlue"
           shadow="default"
@@ -66,7 +82,6 @@ const RecentNutritionalActivity: React.FC = () => {
         >
           add meal/food
         </Button>
-        {/* </Link> */}
       </div>
     </>
   );

@@ -15,6 +15,8 @@ import {
   faGrip,
 } from "@fortawesome/free-solid-svg-icons";
 import Footer from "./components/Footer";
+import ToastProvider from "./components/ToastProvider";
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -105,6 +107,7 @@ export default function RootLayout({
             <Header>
               <Navigation Links={Links} />
             </Header>
+            <ToastProvider />
             {children}
             <Footer></Footer>
           </body>

@@ -8,5 +8,7 @@ router.route("/").get(workoutController.generateWorkout);
 
 router.route("/user").get(Auth,workoutController.getWorkouts);
 
+router.route("/add").post(Auth,workoutController.AddWorkout);
+
 
 module.exports = router;

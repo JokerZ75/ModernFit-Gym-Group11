@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import axios from "axios";
 import { Button } from "@/app/components/UI/Button";
 
-const createMeal: React.FC = () => {
+const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
+  setModalOpen,
+}) => {
   const {
     register,
     handleSubmit,
@@ -14,9 +17,15 @@ const createMeal: React.FC = () => {
   } = useForm();
 
   const { api_url, getHeaders } = useAuthContext();
-
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    // round to next whole number
+    const workout = {
+      Name: data.workoutName,
+      Type_of_workout: data.workType,
+      Duration:  Math.round(data.duration),
+      Calories_burned: Math.round(data.caloriesBurned * 100) / 100,
+    };
+    mutate(workout);
   };
 
   const { data: workTypes } = useQuery({
@@ -27,6 +36,31 @@ const createMeal: React.FC = () => {
         headers: headers,
       });
       return data as any[];
+    },
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["createWorkout"],
+    mutationFn: async (workout: any) => {
+      const headers = await getHeaders();
+      await toast.promise(
+        axios.post(`${api_url}/workout/add`, workout, {
+          headers: headers,
+        }),
+        {
+          pending: "Adding workout...",
+          success: "Workout added!",
+          error: "Failed to add workout. Please try again.",
+        }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    },
+    onSuccess: () => {
+      setModalOpen(false);
     },
   });
 
@@ -71,11 +105,12 @@ const createMeal: React.FC = () => {
             <label htmlFor="duration">duration</label>
             <input
               type="number"
+              step="0.01"
               placeholder="duration (in minutes)"
               id="duration"
               {...register("duration", {
                 required: true,
-                pattern: /^[0-9]+$/,
+                pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
                 min: 1,
               })}
             />
@@ -87,11 +122,12 @@ const createMeal: React.FC = () => {
             <label htmlFor="caloriesBurned">calories burned</label>
             <input
               type="number"
-              placeholder="calories burned"
+              step="0.01"
+              placeholder="calories burned (Kcal) (optional)"
               id="caloriesBurned"
               {...register("caloriesBurned", {
                 required: true,
-                pattern: /^[0-9]+$/,
+                pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
                 min: 1,
               })}
             />
@@ -118,4 +154,4 @@ const createMeal: React.FC = () => {
   );
 };
 
-export default createMeal;
+export default createWorkout;
