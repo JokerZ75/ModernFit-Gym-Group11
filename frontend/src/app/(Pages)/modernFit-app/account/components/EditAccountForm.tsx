@@ -6,22 +6,63 @@ import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
 import { FieldValues, useForm } from "react-hook-form";
 import AutoComplete from "@/app/components/UI/AutoComplete";
+import axios from "axios";
+
 const EditAccountForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { api_url, Headers } = useAuthContext();
 
   const onSubmit = async (data: FieldValues) => {
     console.log(data);
   };
 
+  const { api_url, getHeaders } = useAuthContext();
+
+  const { data: gymLocations } = useQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const headers = await getHeaders();
+      const { data } = await axios.get(`${api_url}/branch/`, {
+        headers: headers,
+      });
+      const options: string[] = await data.map(
+        (location: any) => `${location.Name} (${location.Address})`
+      );
+      return options as string[];
+    },
+  });
+
   return (
     <div>
       <form className="page-form" onSubmit={handleSubmit(onSubmit)}>
-        <AutoComplete register={register("gymLocation") as any} options={["gym1", "gym2", "gym3"]} type="text" name="gymLocation" className="page-form-input" />
+        {gymLocations ? (
+          <AutoComplete
+            register={
+              register("gymLocation", { validate: {}, required: true }) as any
+            }
+            options={gymLocations}
+            type="text"
+            name="gymLocation"
+            className="page-form-input"
+            placeholder="gym location e.g (Sheffield ModernFit Gym)"
+          />
+        ) : (
+          <input
+            type="text"
+            placeholder="gym location"
+            {...register("gymLocationNotFilled", {
+              required: true,
+              maxLength: 20,
+              minLength: 2,
+            })}
+          />
+        )}
+        {errors.gymLocation && (
+          <p className="form-error">gym location is required</p>
+        )}
         <input
           type="text"
           placeholder="name"
@@ -31,7 +72,7 @@ const EditAccountForm: React.FC = () => {
             minLength: 2,
           })}
         />
-        {errors.name && <p className="form-error">name is required</p>}
+        {errors.name && <p className="form-error">name is required (max 20 characters)</p>}
         <input
           type="text"
           placeholder="email"
@@ -79,7 +120,7 @@ const EditAccountForm: React.FC = () => {
             pattern: /[0-9]/g,
           })}
         />
-        {errors.height && <p className="form-error">height is required</p>}
+        {errors.height && <p className="form-error">height is required (10-999cm)</p>}
         <input
           type="text"
           placeholder="weight (lbs)"
@@ -90,13 +131,13 @@ const EditAccountForm: React.FC = () => {
             pattern: /[0-9]/g,
           })}
         />
-        {errors.weight && <p className="form-error">weight is required</p>}
+        {errors.weight && <p className="form-error">weight is required (10-999lbs)</p>}
         <input
           type="text"
           placeholder="gym goals"
           {...register("gymGoals", {
             required: true,
-            minLength:3,
+            minLength: 3,
           })}
         />
         {errors.gymGoals && <p className="form-error">gym goals is required</p>}
