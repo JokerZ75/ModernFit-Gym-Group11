@@ -79,7 +79,7 @@
   }
 
   .loading-skeleton {
-    @apply bg-gray-200 h-full w-full rounded-lg ;
+    @apply bg-gray-200 h-full w-full rounded-lg;
     background-image: linear-gradient(
       90deg,
       #e2e8f0 0px,
@@ -105,7 +105,6 @@
     }
   }
 
-
   .modal-form > div {
     @apply flex mt-3 first:mt-0;
   }
@@ -124,7 +123,7 @@
   .modal-form > div > select:focus {
     @apply outline-none border-blue-500 bg-transparent;
   }
-  .modal-form > div > select  option {
+  .modal-form > div > select option {
     @apply bg-transparent;
   }
   .form-error {
@@ -134,25 +133,29 @@
   .page-form {
     @apply flex mt-3 first:mt-0 flex-col;
   }
-  .page-form > input {
+  .page-form  input {
     @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 first:mt-0 mt-4;
   }
-  .page-form > input:focus {
+  .page-form-input {
+    @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 first:mt-0 mt-4;
+  }
+  .page-form-input:focus {
     @apply outline-none border-blue-500;
   }
-  .page-form > select {
+  .page-form  input:focus {
+    @apply outline-none border-blue-500;
+  }
+  .page-form  select {
     @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 bg-transparent;
   }
-  .page-form > select:focus {
+  .page-form  select:focus {
     @apply outline-none border-blue-500 bg-transparent;
   }
-  .page-form > select  option {
+  .page-form  select option {
     @apply bg-transparent;
   }
 
-
-  #register-form{
-    
+  #register-form {
   }
   #register-form > div {
     @apply flex mt-3 first:mt-0;
@@ -170,13 +173,12 @@
     @apply text-red-500 text-sm;
   }
 
-  .form_acc{
-    border-width: 2px; 
-    margin: 8px; 
-    border-color: gray; 
-    border-radius: 6px;  
+  .form_acc {
+    border-width: 2px;
+    margin: 8px;
+    border-color: gray;
+    border-radius: 6px;
     justify-content: center;
-    height: 60px;}
-
+    height: 60px;
+  }
 }
-

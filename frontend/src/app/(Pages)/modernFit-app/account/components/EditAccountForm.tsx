@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
 import { FieldValues, useForm } from "react-hook-form";
-
+import AutoComplete from "@/app/components/UI/AutoComplete";
 const EditAccountForm: React.FC = () => {
   const {
     register,
@@ -21,11 +21,7 @@ const EditAccountForm: React.FC = () => {
   return (
     <div>
       <form className="page-form" onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          placeholder="gym location"
-          {...register("gymLocation")}
-        />
+        <AutoComplete register={register("gymLocation") as any} options={["gym1", "gym2", "gym3"]} type="text" name="gymLocation" className="page-form-input" />
         <input
           type="text"
           placeholder="name"

@@ -1,6 +1,7 @@
 import { Button } from "@/app/components/UI/Button";
 import EditAccountForm from "./components/EditAccountForm";
 import AutoComplete from "@/app/components/UI/AutoComplete";
+import DeleteAccountForm from "./components/DeleteAccountForm";
 
 const Account: React.FC = () => {
   return (
@@ -21,23 +22,11 @@ const Account: React.FC = () => {
             access pin: xxxxxxx
           </h2>
         </div>
-        <div className="md:flex-col">
+        <div className="md:flex-col md:ml-8">
           <h2 className="text-3xl font-bold text-left text-blue-200 mb-2">details</h2>
-          <div className="">
+          <div className="flex flex-col">
             <EditAccountForm />
-            <AutoComplete />
-            <form className="flex flex-col">
-              <input
-                className="form_acc md:h-8    "
-                type="text"
-                placeholder="Username (type to delete)"
-              />
-              <input
-                className="bg-orange-600 text-xl rounded-lg px-36 py-10 m-2 text-white hover: cursor-pointer md:py-5"
-                type="submit"
-                value="Delete"
-              />
-            </form>
+            <DeleteAccountForm />
           </div>
         </div>
       </div>
