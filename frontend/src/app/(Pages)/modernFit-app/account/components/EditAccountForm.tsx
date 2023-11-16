@@ -8,6 +8,27 @@ import { FieldValues, useForm } from "react-hook-form";
 import AutoComplete from "@/app/components/UI/AutoComplete";
 import axios from "axios";
 
+type userType = {
+  _id: string;
+  Access_pin: number;
+  Name: string;
+  Email: string;
+  Phone_number: number;
+  Profile_picture: string;
+  Height: number;
+  Weight: number;
+  Branch_id: string;
+  Gym_goals: string;
+};
+
+type branchType = {
+  _id: string;
+  Name: string;
+  Address: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 const EditAccountForm: React.FC = () => {
   const {
     register,
@@ -28,12 +49,22 @@ const EditAccountForm: React.FC = () => {
       const { data } = await axios.get(`${api_url}/branch/`, {
         headers: headers,
       });
-      const options: string[] = await data.map(
-        (location: any) => `${location.Name} (${location.Address})`
-      );
-      return options as string[];
+      return data as branchType[];
     },
   });
+
+  const { data: accountDetails } = useQuery({
+    queryKey: ["accountDetails"],
+    queryFn: async () => {
+      const headers = await getHeaders();
+      const { data } = await axios.get(`${api_url}/user/`, {
+        headers: headers,
+      });
+      return data as userType;
+    },
+  });
+
+
 
   return (
     <div>
@@ -43,9 +74,19 @@ const EditAccountForm: React.FC = () => {
             register={
               register("gymLocation", { validate: {}, required: true }) as any
             }
-            options={gymLocations}
+            options={gymLocations.map(
+              (location) => `${location.Name}-(${location.Address})`
+            )}
+            fetchedData={`${  // doing what options does but finding the value of the option that matches the current value a users fetched data
+              gymLocations?.find(
+                (location) => location._id === accountDetails?.Branch_id
+              )?.Name
+            }-(${
+              gymLocations?.find(
+                (location) => location._id === accountDetails?.Branch_id
+              )?.Address
+            })`}
             type="text"
-            name="gymLocation"
             className="page-form-input"
             placeholder="gym location e.g (Sheffield ModernFit Gym)"
           />
@@ -71,8 +112,11 @@ const EditAccountForm: React.FC = () => {
             maxLength: 20,
             minLength: 2,
           })}
+          defaultValue={accountDetails?.Name}
         />
-        {errors.name && <p className="form-error">name is required (max 20 characters)</p>}
+        {errors.name && (
+          <p className="form-error">name is required (max 20 characters)</p>
+        )}
         <input
           type="text"
           placeholder="email"
@@ -86,6 +130,7 @@ const EditAccountForm: React.FC = () => {
               }
             },
           })}
+          defaultValue={accountDetails?.Email}
         />
         {errors.email && <p className="form-error">make sure email is valid</p>}
         <input
@@ -104,6 +149,7 @@ const EditAccountForm: React.FC = () => {
               }
             },
           })}
+          defaultValue={accountDetails?.Phone_number}
         />
         {errors.phoneNumber && (
           <p className="form-error">
@@ -119,8 +165,11 @@ const EditAccountForm: React.FC = () => {
             maxLength: 3,
             pattern: /[0-9]/g,
           })}
+          defaultValue={accountDetails?.Height}
         />
-        {errors.height && <p className="form-error">height is required (10-999cm)</p>}
+        {errors.height && (
+          <p className="form-error">height is required (10-999cm)</p>
+        )}
         <input
           type="text"
           placeholder="weight (lbs)"
@@ -130,8 +179,13 @@ const EditAccountForm: React.FC = () => {
             maxLength: 3,
             pattern: /[0-9]/g,
           })}
+          defaultValue={
+            accountDetails?.Weight
+          }
         />
-        {errors.weight && <p className="form-error">weight is required (10-999lbs)</p>}
+        {errors.weight && (
+          <p className="form-error">weight is required (10-999lbs)</p>
+        )}
         <input
           type="text"
           placeholder="gym goals"
@@ -139,6 +193,7 @@ const EditAccountForm: React.FC = () => {
             required: true,
             minLength: 3,
           })}
+          defaultValue={accountDetails?.Gym_goals}
         />
         {errors.gymGoals && <p className="form-error">gym goals is required</p>}
         <Button

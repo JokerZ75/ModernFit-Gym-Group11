@@ -30,10 +30,22 @@ const Account: React.FC = async () => {
           },
         }
       );
-      const options: string[] = await data.map(
-        (location: any) => `${location.Name} (${location.Address})`
+      return data as any[];
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["accountDetails"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      return options as string[];
+      return data as any[];
     },
   });
 

@@ -10,6 +10,7 @@ interface props extends React.InputHTMLAttributes<HTMLInputElement> {
   options: string[];
   register: UseFormRegister<FieldValues>;
   className?: string;
+  fetchedData?: string;
 }
 
 const AutoComplete: React.FC<props> = ({
@@ -17,6 +18,7 @@ const AutoComplete: React.FC<props> = ({
   register,
   options,
   className,
+  fetchedData,
   ...props
 }) => {
   const [option, setOption] = React.useState<string[]>(options);
@@ -40,6 +42,12 @@ const AutoComplete: React.FC<props> = ({
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
   }, [display, ref]);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setSearch(fetchedData);
+    }
+  }, [fetchedData]);
 
   return (
     <>
