@@ -4,6 +4,7 @@ import React from "react";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { formatDayMonth, formatHourMinute } from "@/app/utils/dateFormat";
 
 type classType = {
   _id?: string;
@@ -36,20 +37,6 @@ const UpcomingClasses: React.FC = () => {
     },
   });
 
-  const formatDayMonth = (d: Date) => {
-    const date = new Date(d);
-    const day = date.getDate();
-    const month = date.getMonth();
-    return `${day}/${month}`;
-  };
-
-  const formatHourMinute = (d: Date) => {
-    const date = new Date(d);
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-    return `${hour}:${minute}`;
-  };
-
   if (isLoading) return <div className="loading-skeleton !h-[100px]"></div>;
   if (error)
     return (
@@ -61,9 +48,12 @@ const UpcomingClasses: React.FC = () => {
 
   return (
     <>
-      { data?.map((item: classType) => {
+      {data?.map((item: classType) => {
         return (
-          <div key={item._id} className="flex items-center justify-center text-xl md:text-5xl">
+          <div
+            key={item._id}
+            className="flex items-center justify-center text-xl md:text-5xl"
+          >
             <p className="text-center font-bold ">{item.Name}</p>
             <p className="text-center font-bold ml-6">
               {formatDayMonth(item.Date)}

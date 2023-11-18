@@ -13,7 +13,8 @@ const classSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 3
+        minlength: 3,
+        maxlength: 12
     },
     Date:{
         type: Date,
@@ -21,14 +22,14 @@ const classSchema = new Schema({
         trim: true,
         minlength: 3
     },
-    Time:{
-        type: Date,
+    Duration:{
+        type: Number,
         required: true,
         trim: true,
         minlength: 3
     },
-    Duration:{
-        type: Number,
+    Type: {
+        type: String,
         required: true,
         trim: true,
         minlength: 3

@@ -10,6 +10,6 @@ router.route("/update").post(Auth, userController.updateUser);
 
 router.route("/delete").post(Auth, userController.deleteUser);
 
-
+router.route("/:id").get(Auth, userController.getUserById);
 
 module.exports = router;
