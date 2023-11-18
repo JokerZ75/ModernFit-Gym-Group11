@@ -7,6 +7,20 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import ProfileImage from "./components/ProfileImage";
+
+type userType = {
+  _id?: string;
+  Access_pin?: number;
+  Name: string;
+  Email: string;
+  Phone_number: number;
+  Profile_picture?: string;
+  Height: number;
+  Weight: number;
+  Branch_id: string;
+  Gym_Goals: string;
+};
 
 const Account: React.FC = async () => {
   const cookieStore = cookies();
@@ -34,7 +48,7 @@ const Account: React.FC = async () => {
     },
   });
 
-  await queryClient.prefetchQuery({
+  const account = await queryClient.fetchQuery({
     queryKey: ["accountDetails"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -45,7 +59,7 @@ const Account: React.FC = async () => {
           },
         }
       );
-      return data as any[];
+      return data as userType;
     },
   });
 
@@ -61,13 +75,12 @@ const Account: React.FC = async () => {
               This account and your activity diary is public to gym trainers and
               nutritionists.
             </p>
-            <img
-              src="https://placehold.co/200x200"
-              className="block rounded-full m-4 ml-auto mr-auto "
-              alt="account profile picture"
-            />
+            <p className="md:hidden italic text-center">
+              (click profile image to update it)
+            </p>
+            <ProfileImage />
             <h2 className="text-3xl font-bold text-left text-blue-200">
-              access pin: xxxxxxx
+              access pin: {account?.Access_pin}
             </h2>
           </div>
           <div className="md:flex-col md:ml-8">

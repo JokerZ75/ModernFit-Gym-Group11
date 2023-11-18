@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
 import { FieldValues, useForm } from "react-hook-form";
@@ -9,16 +9,16 @@ import AutoComplete from "@/app/components/UI/AutoComplete";
 import axios from "axios";
 
 type userType = {
-  _id: string;
-  Access_pin: number;
+  _id?: string;
+  Access_pin?: number;
   Name: string;
   Email: string;
   Phone_number: number;
-  Profile_picture: string;
+  Profile_picture?: string;
   Height: number;
   Weight: number;
   Branch_id: string;
-  Gym_goals: string;
+  Gym_Goals: string;
 };
 
 type branchType = {
@@ -37,10 +37,43 @@ const EditAccountForm: React.FC = () => {
   } = useForm();
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
+    const gymLocationID = gymLocations?.find(
+      (location) => location.Name === data.gymLocation.split("-")[0]
+    )?._id;
+    if (gymLocationID) {
+      updateAccountDetails({
+        Name: data.name,
+        Email: data.email,
+        Phone_number: data.phoneNumber,
+        Height: data.height,
+        Weight: data.weight,
+        Branch_id: gymLocationID,
+        Gym_Goals: data.gymGoals,
+      });
+    }
   };
 
   const { api_url, getHeaders } = useAuthContext();
+  const queryClient = useQueryClient();
+
+  const { mutate: updateAccountDetails } = useMutation({
+    mutationFn: async (data: userType) => {
+      const headers = await getHeaders();
+      await toast.promise(
+        axios.post(`${api_url}/user/update`, data, {
+          headers: headers,
+        }),
+        {
+          pending: "saving...",
+          success: "saved",
+          error: "error",
+        }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["accountDetails"] });
+    },
+  });
 
   const { data: gymLocations } = useQuery({
     queryKey: ["gymLocations"],
@@ -65,7 +98,6 @@ const EditAccountForm: React.FC = () => {
   });
 
 
-
   return (
     <div>
       <form className="page-form" onSubmit={handleSubmit(onSubmit)}>
@@ -77,7 +109,8 @@ const EditAccountForm: React.FC = () => {
             options={gymLocations.map(
               (location) => `${location.Name}-(${location.Address})`
             )}
-            fetchedData={`${  // doing what options does but finding the value of the option that matches the current value a users fetched data
+            fetchedData={`${
+              // doing what options does but finding the value of the option that matches the current value a users fetched data
               gymLocations?.find(
                 (location) => location._id === accountDetails?.Branch_id
               )?.Name
@@ -179,9 +212,7 @@ const EditAccountForm: React.FC = () => {
             maxLength: 3,
             pattern: /[0-9]/g,
           })}
-          defaultValue={
-            accountDetails?.Weight
-          }
+          defaultValue={accountDetails?.Weight}
         />
         {errors.weight && (
           <p className="form-error">weight is required (10-999lbs)</p>
@@ -193,7 +224,7 @@ const EditAccountForm: React.FC = () => {
             required: true,
             minLength: 3,
           })}
-          defaultValue={accountDetails?.Gym_goals}
+          defaultValue={accountDetails?.Gym_Goals}
         />
         {errors.gymGoals && <p className="form-error">gym goals is required</p>}
         <Button

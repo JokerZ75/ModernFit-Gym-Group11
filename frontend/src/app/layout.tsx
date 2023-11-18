@@ -77,7 +77,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "modernFit-app/account",
+      to: "/modernFit-app/account",
       children: (
         <>
           <FontAwesomeIcon icon={faAddressCard} />

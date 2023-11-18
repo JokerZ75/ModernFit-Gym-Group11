@@ -133,7 +133,7 @@
   .page-form {
     @apply flex mt-3 first:mt-0 flex-col;
   }
-  .page-form  input {
+  .page-form input {
     @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 first:mt-0 mt-4;
   }
   .page-form-input {
@@ -142,16 +142,16 @@
   .page-form-input:focus {
     @apply outline-none border-blue-500;
   }
-  .page-form  input:focus {
+  .page-form input:focus {
     @apply outline-none border-blue-500;
   }
-  .page-form  select {
+  .page-form select {
     @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 bg-transparent;
   }
-  .page-form  select:focus {
+  .page-form select:focus {
     @apply outline-none border-blue-500 bg-transparent;
   }
-  .page-form  select option {
+  .page-form select option {
     @apply bg-transparent;
   }
 
@@ -180,5 +180,9 @@
     border-radius: 6px;
     justify-content: center;
     height: 60px;
+  }
+
+  .profile-scaling {
+    @apply h-[200px] w-[200px] md:h-[300px] md:w-[300px] lg:h-[400px] lg:w-[400px];
   }
 }

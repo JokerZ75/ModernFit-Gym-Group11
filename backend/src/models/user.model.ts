@@ -28,10 +28,10 @@ const userSchema = new Schema({
     minlength: 3,
   },
   Phone_number: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
-    minlength: 10,
+    minlength: 11,
   },
   Password: {
     type: String,
