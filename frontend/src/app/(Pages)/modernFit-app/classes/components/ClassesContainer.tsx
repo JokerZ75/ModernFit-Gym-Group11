@@ -15,7 +15,7 @@ const MyClassesContainer: React.FC<{ classes: classType[], type: "myClasses" | "
   classes,type
 }) => {
   return (
-    <div className="flex flex-col gap-3 mt-5 h-[350px] overflow-y-scroll">
+    <div className="flex flex-col gap-3 mt-5 h-[350px] md:h-[450px] overflow-y-scroll">
       {classes.map((c: classType) => {
         return <Class type={type} key={c._id} passedClass={c} />;
       })}
