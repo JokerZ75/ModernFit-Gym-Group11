@@ -103,4 +103,22 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export default { getUser, updateUser, deleteUser };
+const getUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await User.findById(id)
+    .then((user) => {
+      user = JSON.parse(JSON.stringify(user));
+      if (!user) {
+        return res.status(200).json({ msg: "No user" });
+      }
+      const returnJSON = {
+        Name: user.Name,
+      };
+      res.status(200).json(returnJSON);
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: "No user" });
+    });
+};
+
+export default { getUser, updateUser, deleteUser, getUserById };
