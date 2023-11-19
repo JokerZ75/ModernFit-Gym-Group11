@@ -4,6 +4,7 @@ import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
+  useMutationState,
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
@@ -29,7 +30,7 @@ const Classes: React.FC = async () => {
     },
   });
 
-  const classes = await queryClient.fetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: ["upcomingclasses"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -40,6 +41,7 @@ const Classes: React.FC = async () => {
           },
         }
       );
+      if (data?.msg == "No classes") return [{ Name: "No classes found" }];
       data
         ?.sort((a: classType, b: classType) => {
           const aDate = new Date(a.Date);
@@ -51,7 +53,7 @@ const Classes: React.FC = async () => {
     },
   });
 
-  const classesAtGym = await queryClient.fetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: ["classesAtGym"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -82,11 +84,11 @@ const Classes: React.FC = async () => {
       <main className="px-2 py-5 md:w-3/4 mx-auto">
         <div>
           <h2 className="text-blue-200 font-bold text-3xl">my classes</h2>
-          <MyClassesContainer type="myClasses" classes={classes} />
+          <MyClassesContainer type="myClasses" />
         </div>
         <div className="mt-4">
           <h2 className="text-blue-200 font-bold text-3xl">upcoming classes</h2>
-          <MyClassesContainer type="upcomingClasses" classes={classesAtGym} />
+          <MyClassesContainer type="upcomingClasses" />
         </div>
       </main>
     </HydrationBoundary>
