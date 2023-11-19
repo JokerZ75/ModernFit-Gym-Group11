@@ -40,6 +40,30 @@ redisClient.on("error", (err) => {
 
 export { redisClient };
 
+// NodeMailer setup
+
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  port: 465,
+  host: "smtp.gmail.com",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  secure: true,
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take messages");
+  }
+});
+
+export { transporter };
+
 // Connection to MongoDB
 
 const MONGO_URI = process.env.MONGO_URI || "";

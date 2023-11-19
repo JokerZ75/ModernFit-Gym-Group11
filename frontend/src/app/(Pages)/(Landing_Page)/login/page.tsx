@@ -8,7 +8,7 @@ const Login: React.FC = () => {
     <>
       <div className="px-5 py-5">
         <div className="text-blue-200 text-center font-bold text-4xl mb-2">
-          <h1>Login</h1>
+          <h1>login</h1>
         </div>
         <LoginForm />
         <div className="text-center">

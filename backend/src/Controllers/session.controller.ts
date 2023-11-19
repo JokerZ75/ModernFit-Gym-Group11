@@ -5,16 +5,67 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/user.model";
 import UserType from "../types/user.type";
 import bcrypt from "bcrypt";
-import { setCachePermanent, getCache, clearCache } from "../utils/cache";
+import {
+  setCachePermanent,
+  getCache,
+  clearCache,
+  setCacheWithExpire,
+} from "../utils/cache";
+import { LoginEmail } from "../utils/emails";
+
+const SendFor2FA = async (req: Request, res: Response) => {
+  const { email, password }: { email: string; password: string } = req.body;
+  // Authenticate User
+  const user = await User.findOne({ Email: email });
+  if (!user) {
+    return res.status(400).json({ msg: "Invalid details" });
+  }
+  // Validate password
+
+  // const isMatch = await bcrypt.compare(password, user.Password);
+  // if (!isMatch) {
+  //   return res.status(400).json({ msg: "Invalid credentials" });
+  // }
+
+  let unique = false;
+  let code = "";
+  while (!unique) {
+    code = Math.floor(100000 + Math.random() * 900000).toString();
+    const retrievedCode = await getCache(code);
+    if (!retrievedCode) {
+      unique = true;
+    }
+  }
+  setCacheWithExpire(code, email, 3600);
+  await LoginEmail(email, code);
+
+  return res.status(200).json({ msg: "Email sent" });
+};
 
 // User logs in
 const StartSession = async (req: Request, res: Response) => {
-  const { email, password }: { email: string; password: string } = req.body;
+  const {
+    email,
+    password,
+    authCode,
+  }: { email: string; password: string; authCode: string } = req.body;
+
+  if (!email || !password || !authCode) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  const retrievedEmail = await getCache(authCode) as string;
+  if (!retrievedEmail) {
+    return res.status(400).json({ msg: "Invalid auth code" });
+  }
+  if (retrievedEmail != email) {
+    return res.status(400).json({ msg: "Invalid auth code" });
+  }
 
   // Authenticate User
   await User.findOne({ Email: email }).then(async (user) => {
     if (!user) {
-      return res.status(400).json({ msg: "User does not exist" });
+      return res.status(400).json({ msg: "Invalid details" });
     }
     // Validate password
 
@@ -24,21 +75,6 @@ const StartSession = async (req: Request, res: Response) => {
     // }
 
     const retrievedUser: UserType = JSON.parse(JSON.stringify(user));
-    // const retrievedUser: UserType = {
-    //   _id: "123",
-    //   Email: "",
-    //   Password: "",
-    //   Name: "",
-    //   Phone_number: 123,
-    //   Access_pin: 123,
-    //   Profile_picture: "",
-
-    //   Height: 123,
-    //   Weight: 123,
-    //   DOB: new Date(),
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // }
     const jwtPayload = {
       user: {
         id: retrievedUser._id,
@@ -137,4 +173,5 @@ export default {
   RefreshSession,
   EndSession,
   VerifySession,
+  SendFor2FA,
 };
