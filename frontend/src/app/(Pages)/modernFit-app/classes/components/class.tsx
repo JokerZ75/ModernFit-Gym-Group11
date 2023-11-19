@@ -1,6 +1,11 @@
 "use client";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  QueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { formatDayMonth, formatHourMinute } from "@/app/utils/dateFormat";
@@ -31,11 +36,114 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
         {
           headers: headers,
         }
-      )
+      );
       return data;
     },
   });
 
+  const queryClient = useQueryClient();
+
+  const { mutate: markInterest } = useMutation({
+    mutationKey: ["markInterest"],
+    mutationFn: async (newClass: classType) => {
+      await queryClient.cancelQueries({ queryKey: ["upcomingclasses"] });
+      await queryClient.cancelQueries({ queryKey: ["classesAtGym"] });
+
+      const previousClasses = await queryClient.getQueryData([
+        "upcomingclasses",
+      ]);
+      const previousGymClasses = await queryClient.getQueryData([
+        "classesAtGym",
+      ]);
+
+      const headers = await getHeaders();
+      const { data } = await axios.post(
+        `${api_url}/class/mark-interest/${passedClass._id}`,
+        {},
+        {
+          headers: headers,
+        }
+      );
+
+      await queryClient.setQueryData(
+        ["upcomingclasses"],
+        (old: classType[]) => [...old, newClass]
+      );
+      await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => {
+        const newClassesAtGym = old.filter(
+          (classItem) => classItem._id !== passedClass._id
+        );
+        return newClassesAtGym;
+      });
+
+      return { previousClasses, previousGymClasses };
+    },
+    onError: (err, newClass, context: any) => {
+      queryClient.setQueryData(["upcomingclasses"], context.previousClasses);
+      queryClient.setQueryData(["classesAtGym"], context.previousGymClasses);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["upcomingclasses"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["classesAtGym"],
+      });
+    },
+  });
+
+  const { mutate: removeInterest } = useMutation({
+    mutationKey: ["removeInterest"],
+    mutationFn: async (newClass: classType) => {
+      await queryClient.cancelQueries({ queryKey: ["classesAtGym"] });
+      await queryClient.cancelQueries({ queryKey: ["upcomingclasses"] });
+
+      const previousClasses = await queryClient.getQueryData(["classesAtGym"]);
+      const previousUpcomingClasses = await queryClient.getQueryData([
+        "upcomingclasses",
+      ]);
+
+      const headers = await getHeaders();
+      const { data } = await axios.post(
+        `${api_url}/class/mark-uninterest/${passedClass._id}`,
+        {},
+        {
+          headers: headers,
+        }
+      );
+
+      await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+        ...old,
+        newClass,
+      ]);
+      await queryClient.setQueryData(
+        ["upcomingclasses"],
+        (old: classType[]) => {
+          const newUpcomingClasses = old.filter(
+            (classItem) => classItem._id !== passedClass._id
+          );
+          return newUpcomingClasses;
+        }
+      );
+
+      return { previousClasses, previousUpcomingClasses };
+    },
+    onError: (err, newClass, context: any) => {
+      queryClient.setQueryData(["classesAtGym"], context.previousClasses);
+      queryClient.setQueryData(
+        ["upcomingclasses"],
+        context.previousUpcomingClasses
+      );
+    },
+    onSettled() {
+      queryClient.invalidateQueries({
+        queryKey: ["classesAtGym"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["upcomingclasses"],
+      });
+    },
+  });
 
   if (passedClass.Type == "cancelled") {
     return (
@@ -71,9 +179,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
             {passedClass.Name} class at {formatDayMonth(passedClass.Date)} at{" "}
             {formatHourMinute(passedClass.Date)}.
           </p>
-          <p>
-            Duration: {passedClass.Duration} minutes.
-          </p>
+          <p>Duration: {passedClass.Duration} minutes.</p>
           {type == "myClasses" ? (
             <Button
               variant="default"
@@ -82,6 +188,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
               className=" mx-auto rounded-2xl mt-2 py-2"
               hover="default"
               size="fillWidth"
+              onClick={() => removeInterest(passedClass)}
             >
               Remove Interest
             </Button>
@@ -93,6 +200,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
               className=" mx-auto rounded-2xl mt-2 py-2"
               hover="hoverLightBlue"
               size="fillWidth"
+              onClick={() => markInterest(passedClass)}
             >
               Mark Interest
             </Button>

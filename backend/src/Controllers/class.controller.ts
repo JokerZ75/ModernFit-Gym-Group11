@@ -76,4 +76,60 @@ const getClassesAtBranch = async (req: Request, res: Response) => {
     });
 };
 
-export default { generateClass, getClasses, getClassesAtBranch };
+const MarkInterested = async (req: Request, res: Response) => {
+  const user = req.body.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const Class_id = req.params.id;
+  if (!Class_id) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  await Class.findByIdAndUpdate(
+    Class_id,
+    { $push: { Interested_users: user.id } },
+    { new: true }
+  )
+    .then((c) => {
+      if (!c) {
+        return res.status(400).json({ msg: "Class not found" });
+      }
+      return res.status(200).json({ msg: "Marked interested" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
+const UnmarkInterested = async (req: Request, res: Response) => {
+  const user = req.body.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const Class_id = req.params.id;
+  if (!Class_id) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  await Class.findByIdAndUpdate(
+    Class_id,
+    { $pull: { Interested_users: user.id } },
+    { new: true }
+  )
+    .then((c) => {
+      if (!c) {
+        return res.status(400).json({ msg: "Class not found" });
+      }
+      return res.status(200).json({ msg: "Unmarked interested" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
+export default {
+  generateClass,
+  getClasses,
+  getClassesAtBranch,
+  MarkInterested,
+  UnmarkInterested,
+};
