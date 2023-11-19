@@ -42,6 +42,7 @@ const SendFor2FA = async (req: Request, res: Response) => {
   return res.status(200).json({ msg: "Email sent" });
 };
 
+
 // User logs in
 const StartSession = async (req: Request, res: Response) => {
   const {
