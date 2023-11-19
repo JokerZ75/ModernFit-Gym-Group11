@@ -1,4 +1,4 @@
-export default function Nutri(){
+export default function Nutriinfo(){
     return (
         <div className="flex m-auto flex-col">
             <h1 className="m-auto text-4xl text-sky-300">Info categories</h1>
