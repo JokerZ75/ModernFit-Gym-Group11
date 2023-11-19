@@ -59,7 +59,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "modernFit-app/program",
+      to: "/modernFit-app/program",
       children: (
         <>
           <FontAwesomeIcon icon={faListUl} />

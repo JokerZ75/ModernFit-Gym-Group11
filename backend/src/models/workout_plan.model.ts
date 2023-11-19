@@ -15,7 +15,58 @@ const workoutPlanSchema = new Schema(
       ref: "Staff",
     },
     Plan: {
-      type: String,
+      type: {
+        Monday: {
+          WorkoutsList: [
+            {
+              type: String,
+              required: true,
+              trim: true,
+              minlength: 3,
+            },
+          ],
+        },
+        Tuesday: {
+          WorkoutsList: [
+            {
+              type: String,
+              required: true,
+              trim: true,
+              minlength: 3,
+            },
+          ],
+        },
+        Wednesday: {
+          WorkoutsList: [
+            {
+              type: String,
+              required: true,
+              trim: true,
+              minlength: 3,
+            },
+          ],
+        },
+        Thursday: {
+          WorkoutsList: [
+            {
+              type: String,
+              required: true,
+              trim: true,
+              minlength: 3,
+            },
+          ],
+        },
+        Friday: {
+          WorkoutsList: [
+            {
+              type: String,
+              required: true,
+              trim: true,
+              minlength: 3,
+            },
+          ],
+        },
+      },
       required: true,
       trim: true,
       minlength: 3,
@@ -25,7 +76,6 @@ const workoutPlanSchema = new Schema(
     timestamps: true,
   }
 );
-
 
 const WorkoutPlan = mongoose.model("WorkoutPlan", workoutPlanSchema);
 
