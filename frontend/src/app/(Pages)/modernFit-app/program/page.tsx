@@ -112,8 +112,8 @@ const ProgramPage: React.FC = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="px-8">
-        <div>
+      <main className="px-8 md:w-3/4 md:mx-auto">
+        <div className="mt-3">
           <h2 className="text-3xl font-bold text-blue-200">dietary program</h2>
           <ProgramTable plan={dietPlan} />
         </div>

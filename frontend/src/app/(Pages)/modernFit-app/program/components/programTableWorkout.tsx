@@ -34,8 +34,8 @@ const ProgramTableWorkout: React.FC<tableProps> = ({ plan }) => {
   const Friday = plan.Plan?.Friday.WorkoutsList;
 
   return (
-    <table className=" mt-2">
-      <tbody className="flex flex-col">
+    <table className=" mt-2 w-full">
+      <tbody className="flex flex-col md:w-full h-[400px] overflow-y-scroll md:h-auto md:overscroll-y-none">
         <tr className="flex flex-col  md:flex-row md:border-b-2">
           <th className="bg-blue-200 bg-opacity-50 p-4 text-xl text-white md:flex md:w-[15%]">
             <p className="md:mx-auto md:my-auto">Monday</p>
@@ -61,10 +61,10 @@ const ProgramTableWorkout: React.FC<tableProps> = ({ plan }) => {
           </td>
         </tr>
         <tr className="flex flex-col  md:flex-row md:border-b-2">
-          <th className="bg-blue-200 bg-opacity-50 p-4 text-xl text-white md:flex md:w-[15%] ">
+          <th className="bg-blue-200 bg-opacity-50 p-4 md:pr-3 text-xl text-white md:flex md:w-[15%] ">
             <p className="md:mx-auto md:my-auto">Wednesday</p>
           </th>
-          <td className="bg-blue-100 bg-opacity-50 p-2  md:w-full">
+          <td className="bg-blue-100 bg-opacity-50 p-2 md:w-full">
             <ol className="list-decimal">
               {Wednesday.map((workout) => {
                 return <li className="ml-5">{workout}</li>;

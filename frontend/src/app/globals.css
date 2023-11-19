@@ -155,8 +155,6 @@
     @apply bg-transparent;
   }
 
-  #register-form {
-  }
   #register-form > div {
     @apply flex mt-3 first:mt-0;
   }

@@ -50,8 +50,8 @@ const ProgramTable: React.FC<tableProps> = ({ plan }) => {
   const Friday = plan.Plan?.Friday;
 
   return (
-    <table className="mt-2">
-      <tbody className="flex flex-col">
+    <table className="mt-2 ">
+      <tbody className="flex flex-col h-[400px] overflow-y-scroll md:h-auto md:overscroll-y-none">
         <tr className="flex flex-col  md:flex-row md:border-b-2">
           <th className="bg-blue-200 bg-opacity-50 p-4 text-xl text-white md:flex md:w-[15%] ">
             <p className="md:my-auto md:mx-auto">Monday</p>
