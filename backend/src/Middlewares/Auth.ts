@@ -20,7 +20,10 @@ function Auth(req: Request, res: Response, next: NextFunction) {
           .status(403)
           .json({ message: "Error: Forbidden", statusCode: 403 });
       }
-      req.body.user = user;
+      req.body = {
+        ...req.body,
+        user: { id: user.user.id, email: user.user.email },
+      }; // work around to add user to body so you dont need to write user.user
       next();
     }
   );

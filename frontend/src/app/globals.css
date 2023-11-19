@@ -1,3 +1,162 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap");
+
+  .font-josefin {
+    font-family: "Josefin Sans", sans-serif;
+  }
+
+  .navigation-item > svg {
+    height: 42px;
+    width: 42px;
+    color: #3288c4;
+    margin: auto 0;
+  }
+
+  .navigation-item > p {
+    font-size: 1.2rem;
+    margin: auto 0;
+  }
+
+  .li-nav::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #3288c4;
+    margin-top: 0.75rem;
+  }
+
+  .open-nav {
+    @apply !w-full left-0 duration-500;
+  }
+  .closed-nav {
+    @apply !w-0 left-full delay-100;
+  }
+  .active-cover {
+    @apply !opacity-75 delay-500 duration-500;
+  }
+  .inactive-cover {
+    @apply opacity-0 delay-0 duration-100;
+  }
+
+  .scroller {
+    max-width: 100%;
+    border-radius: 0.25rem;
+  }
+  .scroller__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .scroller[data-animated="true"] {
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+    max-width: max-content;
+    padding-bottom: 1rem;
+    -webkit-mask: linear-gradient(
+      90deg,
+      transparent,
+      white 5%,
+      white 95%,
+      transparent
+    );
+    mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+  }
+
+  .scroller[data-animated="true"] > .scroller__inner {
+    width: max-content;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    animation: scroll 20s linear infinite;
+  }
+
+  .loading-skeleton {
+    @apply bg-gray-200 h-full w-full rounded-lg ;
+    background-image: linear-gradient(
+      90deg,
+      #e2e8f0 0px,
+      #e2e8f0 40px,
+      #edf2f7 80px
+    );
+    background-size: 600px;
+    animation: loading 1.5s infinite linear;
+  }
+
+  @keyframes loading {
+    0% {
+      background-position: -600px;
+    }
+    100% {
+      background-position: 600px;
+    }
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(calc(-50% - 0.5rem));
+    }
+  }
+
+
+  .modal-form > div {
+    @apply flex mt-3 first:mt-0;
+  }
+  .modal-form > div > label {
+    @apply w-2/5 font-bold text-left;
+  }
+  .modal-form > div > input {
+    @apply w-3/5 border-2 border-gray-300 rounded-md p-1 pl-2 ml-1;
+  }
+  .modal-form > div > input:focus {
+    @apply outline-none border-blue-500;
+  }
+  .modal-form > div > select {
+    @apply w-3/5 border-2 border-gray-300 rounded-md p-1 pl-2 ml-1 bg-transparent;
+  }
+  .modal-form > div > select:focus {
+    @apply outline-none border-blue-500 bg-transparent;
+  }
+  .modal-form > div > select  option {
+    @apply bg-transparent;
+  }
+  .form-error {
+    @apply text-red-500 text-sm;
+  }
+
+  #register-form{
+    
+  }
+  #register-form > div {
+    @apply flex mt-3 first:mt-0;
+  }
+  #register-form > div > label {
+    @apply w-2/5 font-bold text-left;
+  }
+  #register-form > div > input {
+    @apply w-3/5 border-2 border-gray-300 rounded-md p-1 pl-2 ml-1;
+  }
+  #register-form > div > input:focus {
+    @apply outline-none border-blue-500;
+  }
+  .form-error {
+    @apply text-red-500 text-sm;
+  }
+
+  .form_acc{
+    border-width: 2px; 
+    margin: 8px; 
+    border-color: gray; 
+    border-radius: 6px;  
+    justify-content: center;
+    height: 60px;}
+
+}
+
