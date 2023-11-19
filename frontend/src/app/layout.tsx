@@ -41,7 +41,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/modernFit-app/nutrition",
+      to: "/modernFit-app/nutri-info",
       children: (
         <>
           <FontAwesomeIcon icon={faCircleInfo} />

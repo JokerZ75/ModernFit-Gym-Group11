@@ -18,11 +18,11 @@ const Nutricategories: React.FC = async () => {
       },
     },
   });
-  const posts = await queryClient.fetchQuery({
+  const catagories = await queryClient.fetchQuery({
     queryKey: ["mealcategories"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/mealcategories/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/mealcatagory/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -37,11 +37,11 @@ const Nutricategories: React.FC = async () => {
       <div className="flex m-auto flex-col">
         <h1 className="m-auto text-4xl text-sky-300">Info categories</h1>
         <div className="flex justify-center m-auto md:flex-row flex-wrap">
-          {posts.map((catagory) => {
+          {catagories.map((catagory) => {
             return (
               <div>
                 <p className="p-16 m-10 text-2xl text-center w-2/3 text-cyan-50 bg-opacity-80 bg-blue-400 rounded-3xl md:w-1/3 md:text-3xl">
-                  {catagory.name}
+                  {catagory.Name}
                 </p>
               </div>
             );
