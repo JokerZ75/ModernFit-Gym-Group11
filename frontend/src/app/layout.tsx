@@ -41,7 +41,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/nutrition",
+      to: "/modernFit-app/nutrition",
       children: (
         <>
           <FontAwesomeIcon icon={faCircleInfo} />
@@ -59,7 +59,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/program",
+      to: "/modernFit-app/program",
       children: (
         <>
           <FontAwesomeIcon icon={faListUl} />
@@ -68,7 +68,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/classes",
+      to: "/modernFit-app/classes",
       children: (
         <>
           <FontAwesomeIcon icon={faCalendarDays} />
@@ -77,7 +77,7 @@ export default function RootLayout({
       ),
     },
     {
-      to: "/profile",
+      to: "/modernFit-app/account",
       children: (
         <>
           <FontAwesomeIcon icon={faAddressCard} />

@@ -5,9 +5,14 @@ import Auth from "../Middlewares/Auth";
 
 const router = express.Router();
 
+router.route("/user").get(Auth, classController.getClasses);
 
-router.route("/user").get(Auth , classController.getClasses);
+router.route("/branch").get(Auth, classController.getClassesAtBranch);
 
-router.route("/generate").get( classController.generateClass);
+router.route("/mark-interest/:id").post(Auth, classController.MarkInterested);
+
+router.route("/mark-uninterest/:id").post(Auth, classController.UnmarkInterested);
+
+router.route("/generate").get(classController.generateClass);
 
 module.exports = router;
