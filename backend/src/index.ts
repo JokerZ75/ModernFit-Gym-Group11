@@ -64,6 +64,8 @@ const mealRouter = require("./routes/meal.route");
 const mealcatagoryRouter = require("./routes/mealcatagory.route");
 const branchRouter = require("./routes/branch.route");
 const userRouter = require("./routes/user.route");
+const diet_planRouter = require("./routes/diet_plan.route");
+const workout_planRouter = require("./routes/workout_plan.route");
 
 // Use Routes
 
@@ -77,6 +79,8 @@ app.use("/meal", mealRouter);
 app.use("/mealcatagory", mealcatagoryRouter);
 app.use("/branch", branchRouter);
 app.use("/user", userRouter);
+app.use("/diet-plan", diet_planRouter);
+app.use("/workout-plan", workout_planRouter);
 
 // Start the server on the specified port
 

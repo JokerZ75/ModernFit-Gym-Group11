@@ -84,7 +84,7 @@ const Classes: React.FC = async () => {
           <h2 className="text-blue-200 font-bold text-3xl">my classes</h2>
           <MyClassesContainer type="myClasses" classes={classes} />
         </div>
-        <div>
+        <div className="mt-4">
           <h2 className="text-blue-200 font-bold text-3xl">upcoming classes</h2>
           <MyClassesContainer type="upcomingClasses" classes={classesAtGym} />
         </div>

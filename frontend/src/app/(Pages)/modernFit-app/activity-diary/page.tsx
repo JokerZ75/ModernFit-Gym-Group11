@@ -82,7 +82,7 @@ const ActivityDiary: React.FC = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient) }>
-      <main className="px-8 py-5">
+      <main className="px-8 py-5 md:w-3/4 mx-auto">
         <RecentWorkouts />
         <div className="mt-4"></div>
         <RecentNutritionalActivity />
