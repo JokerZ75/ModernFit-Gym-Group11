@@ -31,8 +31,12 @@ const setCachePermanent = (key: any, data: any) => {
   redisClient.set(key, JSON.stringify(data));
 };
 
-const getCache = (key: any) => {
-  return redisClient.get(key);
+const getCache = async (key: any) => {
+    const data = await redisClient.get(key);
+    if (data != null) {
+      return JSON.parse(data);
+    }
+    return null;
 };
 
 const setCacheAsJson = async (key: any, data: any) => {
