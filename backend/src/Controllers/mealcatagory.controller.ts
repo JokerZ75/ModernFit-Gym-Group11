@@ -31,7 +31,21 @@ const getMealCatagories = async (req: Request, res: Response) => {
     });
 };
 
+const getMealCatagory = async (req: Request, res: Response) => {
+  const mealCatagoryID = req.params.id;
+  await MealCatagory.findById(mealCatagoryID)
+    .then((mealCatagory) => {
+      res.status(200).json(mealCatagory);
+    })
+    .catch((err) => {
+      res.status(400).json({
+        msg: err,
+      });
+    });
+};
+
 export default {
   generateMealCatagory,
   getMealCatagories,
+  getMealCatagory,
 };

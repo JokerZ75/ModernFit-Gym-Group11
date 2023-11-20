@@ -51,17 +51,17 @@ const StartSession = async (req: Request, res: Response) => {
     authCode,
   }: { email: string; password: string; authCode: string } = req.body;
 
-  if (!email || !password || !authCode) {
-    return res.status(400).json({ msg: "Please enter all fields" });
-  }
+  // if (!email || !password || !authCode) {
+  //   return res.status(400).json({ msg: "Please enter all fields" });
+  // }
 
-  const retrievedEmail = await getCache(authCode) as string;
-  if (!retrievedEmail) {
-    return res.status(400).json({ msg: "Invalid auth code" });
-  }
-  if (retrievedEmail != email) {
-    return res.status(400).json({ msg: "Invalid auth code" });
-  }
+  // const retrievedEmail = await getCache(authCode) as string;
+  // if (!retrievedEmail) {
+  //   return res.status(400).json({ msg: "Invalid auth code" });
+  // }
+  // if (retrievedEmail != email) {
+  //   return res.status(400).json({ msg: "Invalid auth code" });
+  // }
 
   // Authenticate User
   await User.findOne({ Email: email }).then(async (user) => {
