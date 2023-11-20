@@ -101,7 +101,7 @@ app.use("/typeofworkout", typeofworkoutRouter);
 app.use("/class", classRouter);
 app.use("/meal", mealRouter);
 app.use("/mealcatagory", mealcatagoryRouter);
-app.use("/nutronal_post", nutrional_postRouter);
+app.use("/nutritional_post", nutrional_postRouter);
 app.use("/branch", branchRouter);
 app.use("/user", userRouter);
 app.use("/diet-plan", diet_planRouter);
