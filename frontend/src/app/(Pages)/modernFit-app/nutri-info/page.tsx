@@ -40,7 +40,7 @@ const Nutricategories: React.FC = async () => {
           {catagories.map((catagory) => {
             return (
               <div>
-                <p className="p-16 m-10 text-2xl text-center w-2/3 text-cyan-50 bg-opacity-80 bg-blue-400 rounded-3xl md:w-1/3 md:text-3xl">
+                <p className="p-16 m-10 text-2xl text-center text-cyan-50 bg-opacity-80 bg-blue-400 rounded-3xl md:md:text-3xl">
                   {catagory.Name}
                 </p>
               </div>
