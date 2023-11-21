@@ -1,4 +1,4 @@
-import { redisClient } from "..";
+import { redisClient, jsonCache } from "..";
 import { Request, Response, NextFunction } from "express";
 
 const cacheGetRequest = (key: string, cb: Function) => {
@@ -8,7 +8,7 @@ const cacheGetRequest = (key: string, cb: Function) => {
         return resolve(JSON.parse(data));
       } else {
         const freshData = await cb();
-        redisClient.setEx(key, 3600, JSON.stringify(freshData));
+        redisClient.setex(key, 3600, JSON.stringify(freshData));
         resolve(freshData);
       }
     });
@@ -16,7 +16,7 @@ const cacheGetRequest = (key: string, cb: Function) => {
 };
 
 const setCacheWithExpire = (key: any, data: any, expire: number) => {
-  redisClient.setEx(key, expire, JSON.stringify(data));
+  redisClient.setex(key, expire, JSON.stringify(data));
 };
 
 const clearCache = (key: any) => {
@@ -24,17 +24,37 @@ const clearCache = (key: any) => {
 };
 
 const clearAllCache = () => {
-  redisClient.FLUSHALL();
+  redisClient.flushall();
 };
 
 const setCachePermanent = (key: any, data: any) => {
   redisClient.set(key, JSON.stringify(data));
 };
 
-const getCache = (key: any) => {
-  return redisClient.get(key);
+const getCache = async (key: any) => {
+    const data = await redisClient.get(key);
+    if (data != null) {
+      return JSON.parse(data);
+    }
+    return null;
 };
 
+const setCacheAsJson = async (key: any, data: any) => {
+  await jsonCache.set(key, data);
+};
 
+const getCacheAsJson = async  (key: any) => {
+  const value = await jsonCache.get(key);
+  return value;
+};
 
-export { cacheGetRequest, setCacheWithExpire, clearCache, clearAllCache, setCachePermanent, getCache };
+export {
+  cacheGetRequest,
+  setCacheWithExpire,
+  clearCache,
+  clearAllCache,
+  setCachePermanent,
+  getCache,
+  setCacheAsJson,
+  getCacheAsJson,
+};

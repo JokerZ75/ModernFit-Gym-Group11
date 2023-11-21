@@ -21,7 +21,7 @@ export default function Home() {
   React.useEffect(() => {
     const log = async () => {
       const data = await axios.post(`${api_url}/session/login`, {
-        email: "deuidhw@hello.com",
+        email: "deaconhughes07@gmail.com",
         password: "123456",
       });
       const { accessToken, refreshToken, tokenType } = data.data;

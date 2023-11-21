@@ -5,7 +5,7 @@ type classType = {
   Owner_id: string | ObjectId;
   Name: string;
   Date: Date;
-  Time: Date;
+  Type: "ongoing" | "cancelled";
   Duration: number;
   Branch_id: string | ObjectId;
   Interested_users?: string[] | ObjectId[];

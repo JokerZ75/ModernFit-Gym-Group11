@@ -23,22 +23,44 @@ app.use(express.json());
 
 // Redis setup
 
-import * as Redis from "redis";
+import Redis from "ioredis";
 const url = process.env.REDIS_URL || "redis://localhost:6379";
+import JSONCache from "redis-json";
 
-const redisClient = Redis.createClient({
-  url: url,
-});
-
-redisClient.connect();
+const redisClient = new Redis(url);
 redisClient.on("connect", () => {
   console.log("Redis client connected");
 });
 redisClient.on("error", (err) => {
   console.log("Something went wrong " + err);
 });
+const jsonCache = new JSONCache(redisClient, { prefix: "cache" });
 
-export { redisClient };
+export { redisClient, jsonCache };
+
+// NodeMailer setup
+
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  port: 465,
+  host: "smtp.gmail.com",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  secure: true,
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take messages");
+  }
+});
+
+export { transporter };
 
 // Connection to MongoDB
 
@@ -62,6 +84,12 @@ const typeofworkoutRouter = require("./routes/typeofworkout.route");
 const classRouter = require("./routes/class.route");
 const mealRouter = require("./routes/meal.route");
 const mealcatagoryRouter = require("./routes/mealcatagory.route");
+const nutrional_postRouter = require("./routes/nutrional_post.route");
+const branchRouter = require("./routes/branch.route");
+const userRouter = require("./routes/user.route");
+const diet_planRouter = require("./routes/diet_plan.route");
+const workout_planRouter = require("./routes/workout_plan.route");
+const program_requestRouter = require("./routes/program_request.route");
 
 // Use Routes
 
@@ -73,6 +101,12 @@ app.use("/typeofworkout", typeofworkoutRouter);
 app.use("/class", classRouter);
 app.use("/meal", mealRouter);
 app.use("/mealcatagory", mealcatagoryRouter);
+app.use("/nutritional_post", nutrional_postRouter);
+app.use("/branch", branchRouter);
+app.use("/user", userRouter);
+app.use("/diet-plan", diet_planRouter);
+app.use("/workout-plan", workout_planRouter);
+app.use("/program-request", program_requestRouter);
 
 // Start the server on the specified port
 

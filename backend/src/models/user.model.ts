@@ -28,10 +28,10 @@ const userSchema = new Schema({
     minlength: 3,
   },
   Phone_number: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
-    minlength: 10,
+    minlength: 11,
   },
   Password: {
     type: String,
@@ -57,10 +57,11 @@ const userSchema = new Schema({
     trim: true,
     minlength: 2,
   },
-  DOB: {
-    type: Date,
+  Gym_Goals: {
+    type: String,
     required: false,
     trim: true,
+    minlength: 3,
   },
 },{
     timestamps: true,

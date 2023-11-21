@@ -15,7 +15,138 @@ const dietPlanSchema = new Schema(
       ref: "Staff",
     },
     Plan: {
-      type: String,
+      type: {
+        Monday: {
+          Breakfast: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Lunch: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Dinner: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Snack: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+        Tuesday: {
+          Breakfast: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Lunch: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Dinner: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Snack: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+        Wednesday: {
+          Breakfast: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Lunch: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Dinner: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Snack: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+        Thursday: {
+          Breakfast: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Lunch: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Dinner: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Snack: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+        Friday: {
+          Breakfast: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Lunch: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Dinner: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          Snack: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+      },
       required: true,
       trim: true,
       minlength: 3,
