@@ -54,7 +54,7 @@ const MyClassesContainer: React.FC<{
     return (
       <div className="flex flex-col gap-3 mt-5 h-[350px] md:h-[450px] overflow-y-scroll">
         {/* @ts-expect-error */}
-        {classesAtGym?.length === 0 || classesAtGym?.msg === "No classes" || classesAtGym[0]?.Name === "No classes found" ? (
+        {classesAtGym?.length === 0 || classesAtGym?.msg === "No classes" ? (
           <p className="text-blue-200">
             There are no upcoming classes at your gym.
           </p>
@@ -79,7 +79,7 @@ const MyClassesContainer: React.FC<{
     return (
       <div className="flex flex-col gap-3 mt-5 h-[350px] md:h-[450px] overflow-y-scroll">
         {/* @ts-expect-error */}
-        {classes?.length === 0 || classes?.msg === "No classes" || classes[0]?.Name === "No classes found" ? (
+        {classes?.length === 0 || classes?.msg === "No classes" ? (
           <p className="text-blue-200">
             You are not registered for any classes.
           </p>
