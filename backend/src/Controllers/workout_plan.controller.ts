@@ -1,5 +1,6 @@
 import WorkoutPlan from "../models/workout_plan.model";
 import { Request, Response } from "express";
+import { RequestWithUser } from "../types/Request.interface";
 
 const generateWorkoutPlan = async (req: Request, res: Response) => {
   const nworkoutPlan = {
@@ -33,8 +34,11 @@ const generateWorkoutPlan = async (req: Request, res: Response) => {
   }
 };
 
-const getWorkoutPlan = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getWorkoutPlan = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   await WorkoutPlan.findOne({ User_id: user.id })
     .then((workoutPlan) => {
       if (!workoutPlan) {

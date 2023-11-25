@@ -17,10 +17,14 @@ import {
 } from "../utils/cache";
 import bcrypt from "bcrypt";
 import { SendVerificationEmailForRegistration } from "../utils/emails";
+import { RequestWithUser } from "../types/Request.interface";
+import dotenv from "dotenv";
 
-const getUser = async (req: Request, res: Response) => {
-  const user = req.body.user;
-  await User.findById(user.id)
+dotenv.config();
+
+const getUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  await User.findById(user?.id)
     .then((user) => {
       user = JSON.parse(JSON.stringify(user));
       if (!user) {
@@ -32,7 +36,7 @@ const getUser = async (req: Request, res: Response) => {
         Email: user.Email,
         Phone_number: user.Phone_number,
         Branch_id: user.Branch_id,
-        Profile_picture: user.Profile_picture,
+        Profile_picture: `http://localhost:${process.env.PORT}/public/profileImages/${user.Profile_picture}.jpg`,
         Height: user.Height,
         Weight: user.Weight,
         Gym_Goals: user.Gym_Goals,
@@ -44,8 +48,11 @@ const getUser = async (req: Request, res: Response) => {
     });
 };
 
-const updateUser = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const updateUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   const {
     Name,
     Email,
@@ -85,8 +92,38 @@ const updateUser = async (req: Request, res: Response) => {
     });
 };
 
-const deleteUser = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const updateProfilePicture = async (req: any, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  if (!req.file) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  await User.findByIdAndUpdate(
+    user.id,
+    {
+      Profile_picture: `${user.id}`,
+    },
+    { new: true }
+  )
+    .then((user) => {
+      user = JSON.parse(JSON.stringify(user));
+      if (!user) {
+        return res.status(200).json({ msg: "No user" });
+      }
+      return res.status(200).json({ msg: "User updated" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
+const deleteUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   const { Name } = req.body;
   const foundUser = await User.findById(user.id);
   if (!foundUser) {
@@ -221,7 +258,10 @@ const ConfirmUser = async (req: Request, res: Response) => {
             '<h1 style="color: yellow;  text-align: center;  text-transform: uppercase;  font-size: 50px;">Registeration failed, Try again later</h1>'
           );
         }
-        res.cookie("user-details", JSON.stringify({ Email, stringPassword, token }));
+        res.cookie(
+          "user-details",
+          JSON.stringify({ Email, stringPassword, token })
+        );
         return res.redirect("http://localhost:3000/register");
       })
       .catch((err) => {
@@ -237,4 +277,5 @@ export default {
   getUserById,
   CreateUser,
   ConfirmUser,
+  updateProfilePicture,
 };

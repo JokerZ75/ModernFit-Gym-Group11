@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Meal from "../models/meal.model";
 import meal from "../types/meal.type";
 import MealCatagory from "../models/meal_catagory.model";
+import { RequestWithUser } from "../types/Request.interface";
 
 const generateMeal = async (req: Request, res: Response) => {
   // used for testing
@@ -22,8 +23,11 @@ const generateMeal = async (req: Request, res: Response) => {
   }
 };
 
-const getMeals = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getMeals = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   await Meal.find({ User_id: user.id })
     .then((meals) => {
       res.status(200).json(meals);
@@ -33,8 +37,11 @@ const getMeals = async (req: Request, res: Response) => {
     });
 };
 
-const AddMeal = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const AddMeal = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   let { Meal_desc, Portion, Calories_intake, Catagory_id } = req.body;
   if (!Meal_desc || !Portion || !Catagory_id) {
     return res.status(400).json({ msg: "Please enter all fields" });
