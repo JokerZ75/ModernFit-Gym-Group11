@@ -71,14 +71,16 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="md:w-3/4 mx-auto px-4">
-        <div className=" font-bold text-blue-200 text-2xl md:text-4xl mt-4">
-          <h2>{catagory.Name}</h2>
+        <div>
+          <div className=" font-bold text-blue-200 text-2xl md:text-4xl mt-4">
+            <h2>{catagory.Name}</h2>
+          </div>
+          <br></br>
+          <div className="mx-auto text-md md:text-lg">
+            {catagory.Description}
+          </div>
         </div>
-        <br></br>
-        <div className="mx-auto text-md md:text-lg">
-          {catagory.Description}
-        </div>
-        <div className="md:grid md:grid-cols-2 md:gap-x-6">
+        <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
           {posts?.map((post) => {
             return (
               <InformationContainer
