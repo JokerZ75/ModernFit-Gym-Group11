@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Notification from "../models/notification.model";
 import notification from "../types/notification.type";
+import { RequestWithUser } from "../types/Request.interface";
 
 const generateNotification = async (req: Request, res: Response) => {
   const notif: notification = {
@@ -24,8 +25,11 @@ const generateNotification = async (req: Request, res: Response) => {
 
 
 
-const getUsersNotifications = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getUsersNotifications = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   const userID = (user.id);
 
   const notifications = await Notification.find({
