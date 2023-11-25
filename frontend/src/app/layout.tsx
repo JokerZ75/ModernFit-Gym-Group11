@@ -103,7 +103,7 @@ export default function RootLayout({
         API_ENDPOINT="http://localhost:5001"
       >
         <html lang="en">
-          <body className="font-josefin">
+          <body className="font-josefin min-h-[100dvh] flex flex-col">
             <Header>
               <Navigation Links={Links} />
             </Header>

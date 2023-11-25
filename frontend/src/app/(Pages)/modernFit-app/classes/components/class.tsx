@@ -18,6 +18,7 @@ type classType = {
   Type: "ongoing" | "cancelled";
   Duration: number;
   Branch_id: string;
+  msg?: string;
 };
 
 interface ClassProps {
@@ -39,6 +40,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
       );
       return data;
     },
+    enabled: passedClass.Owner_id !== undefined,
   });
 
   const queryClient = useQueryClient();
@@ -65,16 +67,37 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
         }
       );
 
-      await queryClient.setQueryData(
-        ["upcomingclasses"],
-        (old: classType[]) => [...old, newClass]
-      );
-      await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => {
-        const newClassesAtGym = old.filter(
-          (classItem) => classItem._id !== passedClass._id
+      if (
+        // @ts-expect-error
+        previousClasses?.msg == "No classes" ||
+        previousClasses === undefined
+      ) {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => [newClass]
         );
-        return newClassesAtGym;
-      });
+      } else {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => [...old, newClass]
+        );
+      }
+      if (
+        // @ts-expect-error
+        previousGymClasses?.msg == "No classes" ||
+        previousGymClasses === undefined
+      ) {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+          newClass,
+        ]);
+      } else {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => {
+          const newClassesAtGym = old.filter(
+            (classItem) => classItem._id !== passedClass._id
+          );
+          return newClassesAtGym;
+        });
+      }
 
       return { previousClasses, previousGymClasses };
     },
@@ -112,23 +135,45 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
         }
       );
 
-      await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
-        ...old,
-        newClass,
-      ]);
-      await queryClient.setQueryData(
-        ["upcomingclasses"],
-        (old: classType[]) => {
-          const newUpcomingClasses = old.filter(
-            (classItem) => classItem._id !== passedClass._id
-          );
-          return newUpcomingClasses;
-        }
-      );
+      if (
+        // @ts-expect-error
+        previousClasses?.msg == "No classes" ||
+        previousClasses === undefined
+      ) {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+          newClass,
+        ]);
+      } else {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+          ...old,
+          newClass,
+        ]);
+      }
+      if (
+        // @ts-expect-error
+        previousUpcomingClasses?.msg == "No classes" ||
+        previousUpcomingClasses === undefined
+      ) {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => [newClass]
+        );
+      } else {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => {
+            const newUpcomingClasses = old.filter(
+              (classItem) => classItem._id !== passedClass._id
+            );
+            return newUpcomingClasses;
+          }
+        );
+      }
 
       return { previousClasses, previousUpcomingClasses };
     },
     onError: (err, newClass, context: any) => {
+      console.log(err);
       queryClient.setQueryData(["classesAtGym"], context.previousClasses);
       queryClient.setQueryData(
         ["upcomingclasses"],

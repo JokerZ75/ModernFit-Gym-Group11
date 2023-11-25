@@ -46,6 +46,7 @@ type dietPlan = {
       Snack: string;
     };
   };
+  msg?: string;
 };
 
 type workout_plan = {
@@ -68,6 +69,7 @@ type workout_plan = {
       WorkoutsList: string[];
     };
   };
+  msg?: string;
 };
 
 const ProgramPage: React.FC = async () => {
@@ -134,11 +136,33 @@ const ProgramPage: React.FC = async () => {
       <main className="px-8 md:w-3/4 md:mx-auto">
         <div className="mt-3">
           <h2 className="text-3xl font-bold text-blue-200">dietary program</h2>
-          <ProgramTable plan={dietPlan} />
+          {dietPlan?.msg == "No diet plan" ? (
+            <div className="flex mb-5">
+              <p>
+                You dont have a diet plan, request one from a trainer to get
+                started
+              </p>
+            </div>
+          ) : (
+            <>
+              <ProgramTable plan={dietPlan} />
+            </>
+          )}
         </div>
         <div className="my-4">
           <h2 className="text-3xl font-bold text-blue-200">physical program</h2>
-          <ProgramTableWorkout plan={physicalPlan} />
+          {physicalPlan?.msg == "No workout plan" ? (
+            <div className="flex mb-5">
+              <p>
+                You dont have a workout plan, request one from a trainer to get
+                started
+              </p>
+            </div>
+          ) : (
+            <>
+              <ProgramTableWorkout plan={physicalPlan} />
+            </>
+          )}
         </div>
         <div className="flex mb-5">
           {requestedProgram[0]?.Name === "No program request" && (

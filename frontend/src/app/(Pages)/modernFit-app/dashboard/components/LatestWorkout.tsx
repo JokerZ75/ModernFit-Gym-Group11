@@ -4,6 +4,8 @@ import React from "react";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Link from "next/link";
+import { Button } from "@/app/components/UI/Button";
 
 type workout = {
   _id?: string;
@@ -36,7 +38,10 @@ const LatestWorkout: React.FC = () => {
   if (!isLoading) {
     workout = data?.sort((a, b) => {
       if (a.createdAt && b.createdAt) {
-        return new Date(a.createdAt as Date).getDate() - new Date(b.createdAt as Date).getDate();
+        return (
+          new Date(a.createdAt as Date).getDate() -
+          new Date(b.createdAt as Date).getDate()
+        );
       }
       return 0;
     })[data.length - 1];
@@ -58,8 +63,28 @@ const LatestWorkout: React.FC = () => {
       );
       return data as any;
     },
+    enabled: workout != undefined,
   });
 
+  if (workout == undefined)
+    return (
+      <div className="flex flex-col text-xl">
+        <p className="mx-auto">You havent logged any workouts yet.</p>
+        <p className="mx-auto">Log some on the diary page</p>
+        <Link href="/modernFit-app/activity-diary" passHref>
+          <Button
+            variant="default"
+            hover="default"
+            shadow="default"
+            rounded="circle"
+            size="fillWidth"
+            className="mx-auto mt-4 py-3"
+          >
+            go to diary
+          </Button>
+        </Link>
+      </div>
+    );
   if (isLoading || typeLoading)
     return <div className="loading-skeleton !h-[150px]"></div>;
   if (isError || typeError)

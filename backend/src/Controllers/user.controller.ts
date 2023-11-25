@@ -9,6 +9,14 @@ import DietPlan from "../models/diet_plan.model";
 import WorkoutPlan from "../models/workout_plan.model";
 import NutritionalPost from "../models/nurtional_post.model";
 import Notification from "../models/notification.model";
+import {
+  getCacheAsJson,
+  setCacheAsJson,
+  setCacheAsJsonWithExpire,
+  setCacheWithExpire,
+} from "../utils/cache";
+import bcrypt from "bcrypt";
+import { SendVerificationEmailForRegistration } from "../utils/emails";
 
 const getUser = async (req: Request, res: Response) => {
   const user = req.body.user;
@@ -121,4 +129,112 @@ const getUserById = async (req: Request, res: Response) => {
     });
 };
 
-export default { getUser, updateUser, deleteUser, getUserById };
+const CreateUser = async (req: Request, res: Response) => {
+  const { Name, Email, Phone_number, Branch_id, Password } = req.body;
+  if (!Name || !Email || !Phone_number || !Branch_id || !Password) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  // check if user already exists
+  await User.findOne({ Email }).then(async (user) => {
+    if (user) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
+
+    // Make unique access pin for user
+    let unqiue = false;
+    let Access_pin = "";
+    while (!unqiue) {
+      Access_pin = Math.floor(100000 + Math.random() * 900000).toString();
+      const foundUser = await User.findOne({ Access_pin });
+      if (!foundUser) {
+        unqiue = true;
+      }
+    }
+
+    // Hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(Password, salt);
+
+    // Make unqiue token for email verification
+    let token = "";
+    unqiue = false;
+    while (!unqiue) {
+      token = Math.floor(100000 + Math.random() * 900000).toString();
+      await getCacheAsJson(token).then((data) => {
+        if (!data || data == null || data == undefined) {
+          unqiue = true;
+        }
+      });
+    }
+
+    setCacheAsJsonWithExpire(
+      token,
+      {
+        Name,
+        Email,
+        Phone_number,
+        Branch_id,
+        Password: hash,
+        stringPassword: Password,
+        Access_pin,
+      },
+      3600
+    );
+
+    await SendVerificationEmailForRegistration(Email, token);
+    return res.status(200).json({ msg: "Email sent" });
+  });
+};
+
+const ConfirmUser = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  await getCacheAsJson(token).then(async (data) => {
+    if (!data) {
+      return res.send(
+        '<h1 style="color: red;  text-align: center;  text-transform: uppercase;  font-size: 50px;">Registeration failed, bad data</h1>'
+      );
+    }
+    const {
+      Name,
+      Email,
+      Phone_number,
+      Branch_id,
+      Password,
+      Access_pin,
+      stringPassword,
+    } = data;
+    const newUser = new User({
+      Name,
+      Email,
+      Phone_number,
+      Branch_id,
+      Password,
+      Access_pin,
+    });
+    await newUser
+      .save()
+      .then((user) => {
+        user = JSON.parse(JSON.stringify(user));
+        if (!user) {
+          // return html page with error
+          return res.send(
+            '<h1 style="color: yellow;  text-align: center;  text-transform: uppercase;  font-size: 50px;">Registeration failed, Try again later</h1>'
+          );
+        }
+        res.cookie("user-details", JSON.stringify({ Email, stringPassword, token }));
+        return res.redirect("http://localhost:3000/register");
+      })
+      .catch((err) => {
+        res.status(400).json({ msg: err });
+      });
+  });
+};
+
+export default {
+  getUser,
+  updateUser,
+  deleteUser,
+  getUserById,
+  CreateUser,
+  ConfirmUser,
+};

@@ -41,7 +41,7 @@ const Classes: React.FC = async () => {
           },
         }
       );
-      if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+      if (data?.msg == "No classes") data;
       data
         ?.sort((a: classType, b: classType) => {
           const aDate = new Date(a.Date);
@@ -67,7 +67,7 @@ const Classes: React.FC = async () => {
       if (data.length === 0) {
         return data;
       }
-      if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+      if (data?.msg == "No classes") return data;
       data
         ?.sort((a: classType, b: classType) => {
           const aDate = new Date(a.Date);
