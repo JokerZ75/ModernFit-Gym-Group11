@@ -9,10 +9,11 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { cookies } from "next/headers";
+import CheckServerRedirect from "./components/CheckServerRedirect";
 
 const Register: React.FC = async () => {
   const cookieStore = cookies();
-  const token = cookieStore.get("_auth_token")?.value;
+  const userDetails = cookieStore.get("user-details")?.value;
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -25,12 +26,7 @@ const Register: React.FC = async () => {
     queryKey: ["gymLocations"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/branch/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`
       );
       return data as any[];
     },
@@ -39,6 +35,7 @@ const Register: React.FC = async () => {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
+        <CheckServerRedirect cookie={userDetails} />
         <div className="px-5 py-5 md:w-2/3 mx-auto">
           <div className="text-blue-200 text-center font-bold text-4xl mb-2">
             <h1>register</h1>

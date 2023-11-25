@@ -34,9 +34,8 @@ redisClient.on("connect", () => {
 redisClient.on("error", (err) => {
   console.log("Something went wrong " + err);
 });
-const jsonCache = new JSONCache(redisClient, { prefix: "cache" });
 
-export { redisClient, jsonCache };
+export { redisClient };
 
 // NodeMailer setup
 

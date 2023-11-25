@@ -30,7 +30,7 @@ const SendVerificationEmailForRegistration = async (
     to: email,
     subject: "Verify your email address",
     text: "Please click the link below to verify your email address",
-    html: `<a href="http://localhost:${process.env.PORT}/verify/${token}">Click here to verify your email address and create your account</a>`,
+    html: `<a href="http://localhost:${process.env.PORT}/user/confirm/${token}">Click here to verify your email address and create your account</a>`,
   };
 
   transporter.sendMail(mailData, (err, info) => {

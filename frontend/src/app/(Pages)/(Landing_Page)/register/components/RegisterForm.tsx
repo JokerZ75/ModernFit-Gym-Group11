@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import { Button } from "@/app/components/UI/Button";
 import AutoComplete from "@/app/components/UI/AutoComplete";
+import { toast } from "react-toastify";
 
 const RegisterForm: React.FC = () => {
   const {
@@ -36,6 +37,7 @@ const RegisterForm: React.FC = () => {
       Branch_id: gymLocationID,
     };
     console.log(user);
+    registerUser(user);
   };
 
   const { data: gymLocations } = useQuery({
@@ -45,6 +47,20 @@ const RegisterForm: React.FC = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/branch/`
       );
       return data as any[];
+    },
+  });
+
+  const { mutate: registerUser } = useMutation({
+    mutationKey: ["registerUser"],
+    mutationFn: async (user: any) => {
+      await toast.promise(
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`, user),
+        {
+          pending: "Registering",
+          success: "Registered, Check your email to complete registration",
+          error: "Failed to register",
+        }
+      );
     },
   });
 

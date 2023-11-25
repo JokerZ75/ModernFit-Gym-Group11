@@ -12,4 +12,8 @@ router.route("/delete").post(Auth, userController.deleteUser);
 
 router.route("/:id").get(Auth, userController.getUserById);
 
+router.route("/create").post(userController.CreateUser);
+
+router.route("/confirm/:token").get(userController.ConfirmUser);
+
 module.exports = router;

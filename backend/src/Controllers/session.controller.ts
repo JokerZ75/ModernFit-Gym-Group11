@@ -10,6 +10,7 @@ import {
   getCache,
   clearCache,
   setCacheWithExpire,
+  getCacheAsJson,
 } from "../utils/cache";
 import { LoginEmail } from "../utils/emails";
 
@@ -42,7 +43,6 @@ const SendFor2FA = async (req: Request, res: Response) => {
   return res.status(200).json({ msg: "Email sent" });
 };
 
-
 // User logs in
 const StartSession = async (req: Request, res: Response) => {
   const {
@@ -51,9 +51,9 @@ const StartSession = async (req: Request, res: Response) => {
     authCode,
   }: { email: string; password: string; authCode: string } = req.body;
 
-  // if (!email || !password || !authCode) {
-  //   return res.status(400).json({ msg: "Please enter all fields" });
-  // }
+  if (!email || !password || !authCode) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
 
   // const retrievedEmail = await getCache(authCode) as string;
   // if (!retrievedEmail) {
@@ -70,10 +70,10 @@ const StartSession = async (req: Request, res: Response) => {
     }
     // Validate password
 
-    // const isMatch = await bcrypt.compare(password, user.Password);
-    // if (!isMatch) {
-    //   return res.status(400).json({ msg: "Invalid credentials" });
-    // }
+    const isMatch = await bcrypt.compare(password, user.Password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
 
     const retrievedUser: UserType = JSON.parse(JSON.stringify(user));
     const jwtPayload = {
@@ -169,10 +169,69 @@ const VerifySession = async (req: Request, res: Response) => {
   );
 };
 
+// login from Register
+const StartSessionFromRegister = async (req: Request, res: Response) => {
+  const {
+    email,
+    password,
+    token,
+  }: { email: string; password: string; token: string } = req.body;
+
+  if (!email || !password || !token) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  const registerDataFromCache = await getCacheAsJson(token);
+  if (!registerDataFromCache) {
+    return res.status(400).json({ msg: "Invalid token" });
+  }
+  if (registerDataFromCache.Email != email) {
+    return res.status(400).json({ msg: "Invalid token" });
+  }
+
+  // Authenticate User
+
+  await User.findOne({ Email: email }).then(async (user) => {
+    if (!user) {
+      return res.status(400).json({ msg: "Invalid details" });
+    }
+    // Validate password
+
+    const isMatch = await bcrypt.compare(password, user.Password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
+
+    const retrievedUser: UserType = JSON.parse(JSON.stringify(user));
+    const jwtPayload = {
+      user: {
+        id: retrievedUser._id,
+        email: retrievedUser.Email,
+      },
+    };
+    const accessToken = jwt.sign(
+      jwtPayload,
+      process.env.TOKEN_SECRET as string,
+      {
+        expiresIn: "15m",
+      }
+    );
+    const refreshToken = jwt.sign(
+      jwtPayload,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    setCachePermanent(refreshToken, refreshToken);
+    return res
+      .status(200)
+      .json({ accessToken: accessToken, refreshToken: refreshToken });
+  });
+};
+
 export default {
   StartSession,
   RefreshSession,
   EndSession,
   VerifySession,
   SendFor2FA,
+  StartSessionFromRegister,
 };
