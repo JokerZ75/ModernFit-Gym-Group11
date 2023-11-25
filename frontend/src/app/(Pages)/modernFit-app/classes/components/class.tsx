@@ -18,6 +18,7 @@ type classType = {
   Type: "ongoing" | "cancelled";
   Duration: number;
   Branch_id: string;
+  msg?: string;
 };
 
 interface ClassProps {
@@ -112,23 +113,39 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
         }
       );
 
-      await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
-        ...old,
-        newClass,
-      ]);
-      await queryClient.setQueryData(
-        ["upcomingclasses"],
-        (old: classType[]) => {
-          const newUpcomingClasses = old.filter(
-            (classItem) => classItem._id !== passedClass._id
-          );
-          return newUpcomingClasses;
-        }
-      );
+      // @ts-expect-error
+      if (previousClasses?.msg == "No classes") {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+          newClass,
+        ]);
+      } else {
+        await queryClient.setQueryData(["classesAtGym"], (old: classType[]) => [
+          ...old,
+          newClass,
+        ]);
+      }
+      // @ts-expect-error
+      if (previousUpcomingClasses?.msg == "No classes") {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => [newClass]
+        );
+      } else {
+        await queryClient.setQueryData(
+          ["upcomingclasses"],
+          (old: classType[]) => {
+            const newUpcomingClasses = old.filter(
+              (classItem) => classItem._id !== passedClass._id
+            );
+            return newUpcomingClasses;
+          }
+        );
+      }
 
       return { previousClasses, previousUpcomingClasses };
     },
     onError: (err, newClass, context: any) => {
+      console.log(err);
       queryClient.setQueryData(["classesAtGym"], context.previousClasses);
       queryClient.setQueryData(
         ["upcomingclasses"],

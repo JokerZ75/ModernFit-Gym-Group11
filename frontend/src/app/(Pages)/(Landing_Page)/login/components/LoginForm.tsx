@@ -80,7 +80,7 @@ const LoginForm: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">email</label>
           <input
             className="inputField"
             type="text"
@@ -93,7 +93,7 @@ const LoginForm: React.FC = () => {
           <p className="form-error">Please enter a valid email</p>
         )}
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">password</label>
           <input
             className="inputField"
             type="password"

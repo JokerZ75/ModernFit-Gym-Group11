@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import { Button } from "@/app/components/UI/Button";
+import AutoComplete from "@/app/components/UI/AutoComplete";
 
 const RegisterForm: React.FC = () => {
   const {
@@ -18,11 +19,21 @@ const RegisterForm: React.FC = () => {
     console.log(data);
   };
 
+  const { data: gymLocations } = useQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`
+      );
+      return data as any[];
+    },
+  });
+
   return (
     <>
       <form
         id="register-form"
-        className="text-center"
+        className="text-center modal-form"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -62,13 +73,16 @@ const RegisterForm: React.FC = () => {
         )}
         <div>
           <label htmlFor="gymLocation">gym location</label>
-          <input
-            className="inputField"
-            type="text"
-            placeholder="gym location"
-            id="gymLocation"
-            {...(register("gymLocation"), { required: true })}
-          />
+            {gymLocations && (
+              <AutoComplete
+                className=""
+                id="gymLocation"
+                register={...register("gymLocation", { required: true }) as any}
+                options={gymLocations?.map(
+                  (location) => `${location.Name}-(${location.Address})`
+                )}
+              />
+            )}
         </div>
         {errors.gymLocation && (
           <p className="form-error">please enter a gym location</p>
@@ -91,7 +105,7 @@ const RegisterForm: React.FC = () => {
                 } else {
                   return false;
                 }
-              }
+              },
             })}
           />
         </div>
