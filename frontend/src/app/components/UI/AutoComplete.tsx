@@ -4,12 +4,14 @@ import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
+import { cn } from "@/app/utils/classMerge";
 
 interface props extends React.InputHTMLAttributes<HTMLInputElement> {
   children?: React.ReactNode;
   options: string[];
   register: UseFormRegister<FieldValues>;
   className?: string;
+  containerDivClassName?: string;
   fetchedData?: string;
 }
 
@@ -18,6 +20,7 @@ const AutoComplete: React.FC<props> = ({
   register,
   options,
   className,
+  containerDivClassName,
   fetchedData,
   ...props
 }) => {
@@ -51,7 +54,7 @@ const AutoComplete: React.FC<props> = ({
 
   return (
     <>
-      <div ref={ref} className="relative">
+      <div ref={ref} className={cn("relative", containerDivClassName)}>
         <input
           className={className}
           {...register}

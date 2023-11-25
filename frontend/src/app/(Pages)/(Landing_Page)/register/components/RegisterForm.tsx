@@ -13,10 +13,29 @@ const RegisterForm: React.FC = () => {
     handleSubmit,
     getValues,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    const gymLocationID = gymLocations?.find(
+      (location) => location.Name === data.gymLocation.split("-")[0]
+    )?._id;
+    console.log(gymLocationID);
+    if (gymLocationID == undefined) {
+      setError("gymLocation", {
+        type: "manual",
+        message: "please enter a valid gym location",
+      });
+      return;
+    }
+    let user = {
+      Name: data.name,
+      Email: data.email,
+      Phone_number: data.mobileNumber,
+      Password: data.password,
+      Branch_id: gymLocationID,
+    };
+    console.log(user);
   };
 
   const { data: gymLocations } = useQuery({
@@ -32,7 +51,6 @@ const RegisterForm: React.FC = () => {
   return (
     <>
       <form
-        id="register-form"
         className="text-center modal-form"
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -73,16 +91,18 @@ const RegisterForm: React.FC = () => {
         )}
         <div>
           <label htmlFor="gymLocation">gym location</label>
-            {gymLocations && (
-              <AutoComplete
-                className=""
-                id="gymLocation"
-                register={...register("gymLocation", { required: true }) as any}
-                options={gymLocations?.map(
-                  (location) => `${location.Name}-(${location.Address})`
-                )}
-              />
-            )}
+          {gymLocations && (
+            <AutoComplete
+              className="modal-form-input !ml-0"
+              containerDivClassName="flex-grow  ml-1"
+              id="gymLocation"
+              register={...register("gymLocation", { required: true }) as any}
+              options={gymLocations?.map(
+                (location) => `${location.Name}-(${location.Address})`
+              )}
+              placeholder="gym location e.g (Sheffield ModernFit Gym)"
+            />
+          )}
         </div>
         {errors.gymLocation && (
           <p className="form-error">please enter a gym location</p>
