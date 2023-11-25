@@ -28,26 +28,62 @@ const myUsers: React.FC = () => {
                 <div className="">
                     <SearchBar />
                 </div>
-                <AssignedUser
-                firstName={firstName}
-                lastName={lastName}
-                profileImage={profileImage}
-                goals={goals}
-                height={height}
-                weight={weight}
-                />
+                <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
+                    <AssignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                    <AssignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                    <AssignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                    <AssignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                    <AssignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                </div>
 
                 <div className="font-bold text-2xl">
                     waiting users
                 </div>
-                <UnassignedUser
-                firstName={firstName}
-                lastName={lastName}
-                profileImage={profileImage}
-                goals={goals}
-                height={height}
-                weight={weight}
-                />
+                <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
+                    <UnassignedUser
+                    firstName={firstName}
+                    lastName={lastName}
+                    profileImage={profileImage}
+                    goals={goals}
+                    height={height}
+                    weight={weight}
+                    />
+                </div>
             </div>
         </>
     )

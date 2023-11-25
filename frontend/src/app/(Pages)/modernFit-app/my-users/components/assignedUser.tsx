@@ -18,7 +18,7 @@ const AssignedUser: React.FC<props> = ({children, firstName, lastName, profileIm
         goals += "...";
     }
     return (
-        <div className="mx-auto m-4 bg-blue-100 p-1 rounded-xl">
+        <div className="max-w-sm mx-auto m-4 bg-blue-100 p-1 rounded-xl">
             <div className="flex flexbox m-3">
                 <div className="w-1/4 rounded-full overflow-hidden"> <img src={profileImage} alt="Profile Picture" height="100000" width="50000"></img> </div>
                 <div className="mx-auto w-3/4 ml-5">
