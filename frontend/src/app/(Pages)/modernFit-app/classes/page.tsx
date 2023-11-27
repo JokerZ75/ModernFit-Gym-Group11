@@ -52,6 +52,13 @@ const Classes: React.FC = async () => {
           return aDate.getTime() - bDate.getTime();
         })
         .reverse();
+
+      data?.sort((a: classType, b: classType) => {
+        if (a.Type === "cancelled") return 1;
+        if (b.Type === "cancelled") return -1;
+        return 0;
+      });
+
       return data as classType[];
     },
   });
@@ -97,6 +104,21 @@ const Classes: React.FC = async () => {
         })
         .reverse();
       return data as classType[];
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data as any[];
     },
   });
 

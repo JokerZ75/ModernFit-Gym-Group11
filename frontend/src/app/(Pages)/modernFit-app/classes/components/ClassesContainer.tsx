@@ -35,6 +35,11 @@ const MyClassesContainer: React.FC<{
           return aDate.getTime() - bDate.getTime();
         })
         .reverse();
+      data?.sort((a: classType, b: classType) => {
+        if (a.Type === "cancelled") return 1;
+        if (b.Type === "cancelled") return -1;
+        return 0;
+      });
       return data as classType[];
     },
   });
@@ -50,12 +55,13 @@ const MyClassesContainer: React.FC<{
     },
   });
 
-
   if (type === "upcomingClasses") {
     return (
       <div className="flex flex-col gap-3 mt-5 h-[350px] md:h-[450px] overflow-y-scroll">
-        {/* @ts-expect-error */}
-        {classesAtGym?.length === 0 || classesAtGym?.msg === "No classes" || classesAtGym === undefined ? (
+        {classesAtGym?.length === 0 ||
+        // @ts-expect-error
+        classesAtGym?.msg === "No classes" ||
+        classesAtGym === undefined ? (
           <p className="text-blue-200">
             There are no upcoming classes at your gym.
           </p>
@@ -79,8 +85,10 @@ const MyClassesContainer: React.FC<{
   if (type === "myClasses") {
     return (
       <div className="flex flex-col gap-3 mt-5 h-[350px] md:h-[450px] overflow-y-scroll">
-        {/* @ts-expect-error */}
-        {classes?.length === 0 || classes?.msg === "No classes" || classes === undefined ? (
+        {classes?.length === 0 ||
+        // @ts-expect-error
+        classes?.msg === "No classes" ||
+        classes === undefined ? (
           <p className="text-blue-200">
             You are not registered for any classes.
           </p>
