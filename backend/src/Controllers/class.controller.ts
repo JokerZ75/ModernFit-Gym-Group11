@@ -4,6 +4,9 @@ import classType from "../types/class.type";
 import User from "../models/user.model";
 import { RequestWithUser } from "../types/Request.interface";
 import Staff from "../models/staff.model";
+import mongoose, { ObjectId } from "mongoose";
+import { sendEmail } from "../utils/emails";
+import notification from "../utils/notification";
 
 const generateClass = async (req: Request, res: Response) => {
   const classObj: classType = {
@@ -31,8 +34,17 @@ const getClasses = async (req: RequestWithUser, res: Response) => {
     return res.status(400).json({ msg: "User not found" });
   }
   const staffID = (await Staff.findOne({ User_id: user?.id }))?._id;
+  const branchId = (await User.findById(user?.id))?.Branch_id;
   await Class.find({
-    $or: [{ Interested_users: { $in: [user?.id] } }, { Owner_id: staffID }],
+    $or: [
+      {
+        $and: [
+          { Interested_users: { $in: [user?.id] } },
+          { Branch_id: branchId },
+        ],
+      },
+      { Owner_id: staffID },
+    ],
   })
     .then((classes) => {
       classes = JSON.parse(JSON.stringify(classes));
@@ -175,6 +187,52 @@ const AddClass = async (req: RequestWithUser, res: Response) => {
     });
 };
 
+const cancelClass = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const Class_id = req.params.id;
+  if (!Class_id) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  const Staff_id = (await Staff.findOne({ User_id: user.id }))?._id;
+  if (!Staff_id) {
+    return res.status(400).json({ msg: "Staff member not found" });
+  }
+
+  await Class.findByIdAndUpdate(Class_id, { Type: "cancelled" }, { new: true })
+    .then((c) => {
+      if (!c) {
+        return res.status(400).json({ msg: "Class not found" });
+      }
+      const interestedUsers = c.Interested_users;
+      if (interestedUsers && interestedUsers.length > 0) {
+        interestedUsers.forEach(async (userID) => {
+          const userData = await User.findById(userID);
+          if (userData) {
+            sendEmail(
+              userData.Email,
+              "Class cancelled",
+              `Class ${c.Name} has been cancelled`
+            );
+          }
+          notification.CreateCancelledClassNotification(
+            Class_id,
+            interestedUsers as any,
+            "Class has been cancelled"
+          );
+          return res.status(200).json({ msg: "Class cancelled" });
+        });
+      } else {
+        return res.status(200).json({ msg: "Class cancelled" });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: "Class not found" });
+    });
+};
+
 export default {
   generateClass,
   getClasses,
@@ -182,4 +240,5 @@ export default {
   MarkInterested,
   UnmarkInterested,
   AddClass,
+  cancelClass,
 };
