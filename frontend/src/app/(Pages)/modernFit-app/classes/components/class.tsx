@@ -33,7 +33,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
     queryFn: async () => {
       const headers = await getHeaders();
       const { data } = await axios.get(
-        `${api_url}/user/${passedClass.Owner_id}`,
+        `${api_url}/staff/${passedClass.Owner_id}`,
         {
           headers: headers,
         }
@@ -41,6 +41,9 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
       return data;
     },
     enabled: passedClass.Owner_id !== undefined,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const queryClient = useQueryClient();
@@ -225,7 +228,35 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
             {formatHourMinute(passedClass.Date)}.
           </p>
           <p>Duration: {passedClass.Duration} minutes.</p>
-          {type == "myClasses" ? (
+          {ownerInfo?.id !== passedClass.Owner_id ? (
+            <>
+              {type == "myClasses" ? (
+                <Button
+                  variant="default"
+                  shadow="default"
+                  rounded="square"
+                  className=" mx-auto rounded-2xl mt-2 py-2"
+                  hover="default"
+                  size="fillWidth"
+                  onClick={() => removeInterest(passedClass)}
+                >
+                  Remove Interest
+                </Button>
+              ) : (
+                <Button
+                  variant="darkBlue"
+                  shadow="default"
+                  rounded="square"
+                  className=" mx-auto rounded-2xl mt-2 py-2"
+                  hover="hoverLightBlue"
+                  size="fillWidth"
+                  onClick={() => markInterest(passedClass)}
+                >
+                  Mark Interest
+                </Button>
+              )}
+            </>
+          ) : (
             <Button
               variant="default"
               shadow="default"
@@ -233,21 +264,9 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
               className=" mx-auto rounded-2xl mt-2 py-2"
               hover="default"
               size="fillWidth"
-              onClick={() => removeInterest(passedClass)}
+              onClick={() => {}}
             >
-              Remove Interest
-            </Button>
-          ) : (
-            <Button
-              variant="darkBlue"
-              shadow="default"
-              rounded="square"
-              className=" mx-auto rounded-2xl mt-2 py-2"
-              hover="hoverLightBlue"
-              size="fillWidth"
-              onClick={() => markInterest(passedClass)}
-            >
-              Mark Interest
+              Cancel Class
             </Button>
           )}
         </div>
