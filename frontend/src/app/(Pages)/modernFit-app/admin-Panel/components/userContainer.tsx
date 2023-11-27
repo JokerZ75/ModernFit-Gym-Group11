@@ -1,69 +1,63 @@
+"use client";
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
-import { StringToBoolean } from "class-variance-authority/types";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
+import axios from "axios";
+import User from "./User";
 
-type props = {
-    children?: React.ReactNode;
-    name: string;
-    permission: string;
-    email: string;
-    profileImage: string;
-}
+const UserContainer: React.FC<{ children?: React.ReactNode }> = ({}: {
+  children?: React.ReactNode;
+}) => {
+  const { getHeaders, api_url } = useAuthContext();
+  const { data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const headers = await getHeaders();
+      const { data } = await axios.get(`${api_url}/user/allUsers`, {
+        headers: headers,
+      });
+      if (data?.msg == "No users found") return data;
+      await Promise.all(
+        data?.map((user: userType) => {
+          const splitEmail = user.Email.split("@");
+          user.Email = `${splitEmail[0].slice(
+            0,
+            splitEmail[0].length / 3
+          )}*****@${splitEmail[1]}`;
+        })
+      );
+      return data as userType[];
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-const UserContainer: React.FC<props> = ({children, name, permission, email, profileImage}) =>{
-    let atPos = email.lastIndexOf("@");
-    let emailFirstHalf
-    if (atPos - 4 >= 0)
-    {
-        emailFirstHalf = email.substring(0, atPos - 4)
-    }
-    else{
-        emailFirstHalf = email.substring(0, atPos)
-    }
-    let emailSecondHalf
-    if (atPos - 2 >= 0)
-    {
-        emailSecondHalf = email.substring(atPos - 2, email.length)
-    }
-    else
-    {
-        emailSecondHalf = email.substring(atPos, email.length)
-    }
-    return (
-        <div className="max-w-sm mx-auto m-4 bg-blue-100 p-1 rounded-xl">
-                        <div className="flex flexbox m-3">
-                            <div className="w-1/4 rounded-full overflow-hidden"> <img src={profileImage} alt="Profile Picture" height="100000" width="50000"></img> </div>
-                            <div className="mx-auto w-3/4 ml-5">
-                                <div className="text-white text-xl">{permission}</div>
-                                <div className="text-white text-xl">{name}</div>
-                                <div className="text-white text-xl">{emailFirstHalf}****{emailSecondHalf}</div>
-                            </div>
-                        </div>
-                        <div className="mx-auto w-5/6">
-                            <div className="text-center">
-                                <Button
-                                    shadow="default"
-                                    size="small"
-                                    variant="darkBlue"
-                                    hover="default"
-                                    rounded="circle"
-                                    className="w-5/6 border mx-auto text-center m-1"
-                                    >
-                                    Edit Account
-                                </Button>
-                                <Button
-                                    shadow="default"
-                                    size="small"
-                                    variant="default"
-                                    hover="default"
-                                    rounded="circle"
-                                    className="w-5/6 border mx-auto text-center m-1"
-                                    >
-                                    Remove Account
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-    );
+  type userType = {
+    _id: string;
+    Name: string;
+    Email: string;
+    Position: string;
+    Profile_picture: string;
+  };
+  return (
+    <>
+      <div className="md:grid md:grid-cols-2 md:gap-x-6  max-h-[400px] overflow-y-scroll">
+        {users?.map((user: userType) => {
+          return (
+            <User
+              key={user._id}
+              name={user.Name}
+              permission={user.Position}
+              email={user.Email}
+              profileImage={user.Profile_picture as string}
+            />
+          );
+        })}
+      </div>
+    </>
+  );
 };
+
 export default UserContainer;

@@ -48,6 +48,59 @@ const getUser = async (req: RequestWithUser, res: Response) => {
     });
 };
 
+const getAllUsers = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  // check if user is admin
+  const isAdmin = await Staff.findOne({ User_id: user.id })
+    .then((staff) => {
+      if (staff?.Position === "Admin") {
+        return true;
+      }
+      return false;
+    })
+    .catch((err) => {
+      return false;
+    });
+  if (!isAdmin) {
+    return res.status(400).json({ msg: "User is not admin" });
+  }
+  await User.find()
+    .then(async (users) => {
+      let userJSON = await JSON.parse(JSON.stringify(users));
+      if (!userJSON) {
+        return res.status(200).json({ msg: "No users" });
+      }
+      userJSON = await Promise.all(
+        userJSON.map(async (user: any) => {
+          let staffPoition = (await Staff.findOne({ User_id: user._id }))
+            ?.Position;
+          if (
+            !staffPoition ||
+            staffPoition === null ||
+            staffPoition === undefined
+          ) {
+            staffPoition = "Member";
+          }
+
+          delete user.Password;
+          delete user.Access_pin;
+          delete user.Phone_number;
+          delete user.Branch_id;
+          user.Profile_picture = `http://localhost:${process.env.PORT}/public/profileImages/${user.Profile_picture}.jpg`;
+          user.Position = staffPoition;
+          return user;
+        })
+      );
+      res.status(200).json(userJSON);
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
 const updateUser = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
   if (!user) {
@@ -278,4 +331,5 @@ export default {
   CreateUser,
   ConfirmUser,
   updateProfilePicture,
+  getAllUsers,
 };

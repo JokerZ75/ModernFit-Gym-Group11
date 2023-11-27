@@ -146,9 +146,14 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <li className="li-nav first:mt-0 mt-5 hover:brightness-150 transition-all duration-300 ease-linear">
       <Link href={to} {...props}>
-        <div className="flex navigation-item gap-6 whitespace-nowrap">
-          {children}
-        </div>
+        {to == "/modernFit-app/admin-panel" ||
+        to == "/modernFit-app/my-users" ? (
+          <div className="flex navigation-item gap-6 whitespace-nowrap mt-24">{children}</div>
+        ) : (
+          <div className="flex navigation-item gap-6 whitespace-nowrap">
+            {children}
+          </div>
+        )}
       </Link>
     </li>
   );
