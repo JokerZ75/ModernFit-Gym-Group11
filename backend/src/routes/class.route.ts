@@ -15,4 +15,6 @@ router.route("/mark-uninterest/:id").post(Auth, classController.UnmarkInterested
 
 router.route("/generate").get(classController.generateClass);
 
+router.route("/add").post(Auth, classController.AddClass);
+
 module.exports = router;

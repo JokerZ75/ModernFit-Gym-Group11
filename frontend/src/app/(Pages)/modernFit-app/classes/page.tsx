@@ -8,6 +8,9 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import Modal from "@/app/components/Modal";
+import CreateClass from "./components/CreateClass";
+import CreateClassButton from "./components/CreateClassButton";
 
 type classType = {
   _id?: string;
@@ -53,6 +56,24 @@ const Classes: React.FC = async () => {
     },
   });
 
+  const isTrainer = await queryClient.fetchQuery({
+    queryKey: ["isTrainer"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+          },
+        }
+      );
+      if (data?.position == "Trainer") {
+        return true;
+      }
+      return false;
+    },
+  });
+
   await queryClient.prefetchQuery({
     queryKey: ["classesAtGym"],
     queryFn: async () => {
@@ -90,6 +111,7 @@ const Classes: React.FC = async () => {
           <h2 className="text-blue-200 font-bold text-3xl">upcoming classes</h2>
           <MyClassesContainer type="upcomingClasses" />
         </div>
+        {isTrainer ? <CreateClassButton /> : null}
       </main>
     </HydrationBoundary>
   );

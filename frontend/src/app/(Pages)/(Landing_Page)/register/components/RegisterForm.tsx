@@ -106,11 +106,11 @@ const RegisterForm: React.FC = () => {
           <p className="form-error">please enter a valid email</p>
         )}
         <div>
-          <label htmlFor="gymLocation">gym location</label>
+          <label htmlFor="gymLocation" className="">gym location</label>
           {gymLocations && (
             <AutoComplete
-              className="modal-form-input !ml-0"
-              containerDivClassName="flex-grow  ml-1"
+              className="modal-form-input  !ml-0"
+              containerDivClassName="flex-grow w-3/5 ml-1"
               id="gymLocation"
               register={...register("gymLocation", { required: true }) as any}
               options={gymLocations?.map(
