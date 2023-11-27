@@ -78,7 +78,7 @@ const Dashboard: React.FC = async () => {
           }
         );
         if (data.length === 0) return data;
-        if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+        if (data?.msg == "No classes") return data;
         else {
           return data
             ?.sort((a: classType, b: classType) => {

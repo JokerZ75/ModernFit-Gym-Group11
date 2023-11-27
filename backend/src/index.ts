@@ -4,6 +4,7 @@
 
 import express, { Request, Response, Express } from "express";
 import dotenv from "dotenv";
+import multer from "multer";
 
 dotenv.config();
 // create express app
@@ -17,8 +18,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 
 app.use(cors());
-app.use("./public/postImages", express.static("postImages"));
-app.use("./public/profileImages/", express.static("profileImages"));
+app.use("/public/postImages", express.static("public/postImages"));
+app.use("/public/profileImages", express.static("public/profileImages"));
 app.use(express.json());
 
 // Redis setup
@@ -34,9 +35,8 @@ redisClient.on("connect", () => {
 redisClient.on("error", (err) => {
   console.log("Something went wrong " + err);
 });
-const jsonCache = new JSONCache(redisClient, { prefix: "cache" });
 
-export { redisClient, jsonCache };
+export { redisClient };
 
 // NodeMailer setup
 

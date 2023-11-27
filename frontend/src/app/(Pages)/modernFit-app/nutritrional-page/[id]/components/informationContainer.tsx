@@ -16,8 +16,8 @@ const InformationContainer: React.FC<props> = ({ name, image, description, autho
         description += "...";
     }
     return (
-        <div className="bg-blue-100 text-white mx-auto mt-2 mb-4 border rounded-lg py-2 px-4 flex flex-col">
-            <div className="text-xl text-left font-bold mx-4">{name}</div>
+        <div className="bg-blue-100 text-white mt-2 mb-4 border rounded-lg py-2 px-4 flex flex-col">
+            <div className="text-xl text-left font-bold">{name}</div>
             <div className="mx-auto md:w-full "><img src={image} alt="placeholder" className="w-[400px] h-[150px] md:w-full object-cover"></img></div>
             <div className="text-base mx-auto mt-4">{description}</div>
             <div className="flex-1 w-full mx-auto font-bold text-sm">

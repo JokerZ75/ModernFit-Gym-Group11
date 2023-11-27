@@ -1,14 +1,18 @@
 import DietPlan from "../models/diet_plan.model";
 import { Request, Response } from "express";
+import { RequestWithUser } from "../types/Request.interface";
 
-const getDietPlan = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getDietPlan = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(200).json({ msg: "No user" });
+  }
   await DietPlan.findOne({ User_id: user.id })
     .then((diet_plan) => {
       diet_plan = JSON.parse(JSON.stringify(diet_plan));
-        if (!diet_plan) {
-            return res.status(200).json({ msg: "No diet plan" });
-        }
+      if (!diet_plan) {
+        return res.status(200).json({ msg: "No diet plan" });
+      }
       res.status(200).json(diet_plan);
     })
     .catch((err) => {
@@ -79,6 +83,5 @@ const generateDietPlan = async (req: Request, res: Response) => {
     res.json({ message: err });
   }
 };
-
 
 export default { getDietPlan, generateDietPlan };

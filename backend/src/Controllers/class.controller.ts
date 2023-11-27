@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Class from "../models/class.model";
 import classType from "../types/class.type";
 import User from "../models/user.model";
+import { RequestWithUser } from "../types/Request.interface";
 
 const generateClass = async (req: Request, res: Response) => {
   const classObj: classType = {
@@ -23,9 +24,12 @@ const generateClass = async (req: Request, res: Response) => {
   }
 };
 
-const getClasses = async (req: Request, res: Response) => {
-  const user = req.body.user;
-  await Class.find({ Interested_users: { $in: [user.id] } })
+const getClasses = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  await Class.find({ Interested_users: { $in: [user?.id] } })
     .then((classes) => {
       classes = JSON.parse(JSON.stringify(classes));
       // classes = classes.filter((c: any) => {  // TODO: COMMENTED OUT FOR TESTING PURPOSES
@@ -44,16 +48,19 @@ const getClasses = async (req: Request, res: Response) => {
     });
 };
 
-const getClassesAtBranch = async (req: Request, res: Response) => {
-  const user = req.body.user;
-  const userData = await User.findById(user.id);
+const getClassesAtBranch = async (req: any, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const userData = await User.findById(user?.id);
   if (!userData) {
     return res.status(400).json({ msg: "User not found" });
   }
   const branchId = userData.Branch_id;
   await Class.find({
     $and: [
-      { Interested_users: { $nin: [user.id] } },
+      { Interested_users: { $nin: [user?.id] } },
       { Branch_id: branchId },
       { Type: "ongoing" },
     ],
@@ -76,8 +83,8 @@ const getClassesAtBranch = async (req: Request, res: Response) => {
     });
 };
 
-const MarkInterested = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const MarkInterested = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
   if (!user) {
     return res.status(400).json({ msg: "User not found" });
   }
@@ -101,8 +108,8 @@ const MarkInterested = async (req: Request, res: Response) => {
     });
 };
 
-const UnmarkInterested = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const UnmarkInterested = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
   if (!user) {
     return res.status(400).json({ msg: "User not found" });
   }

@@ -9,7 +9,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-blue-100 p-5 py-8 pb-7  flex flex-col md:grid md:grid-cols-3 md:items-start md:justify-items-center  md:px-48 md:py-10 w-full items-center">
+    <footer className="bg-blue-100 p-5 py-8 pb-7  flex flex-col md:grid md:grid-cols-3 md:items-start md:justify-items-center  md:px-48 md:py-10 w-full items-center mt-auto">
       <div id="contact-us" className="">
         <div
           className="text-2xl md:text-4xl text-white font-extrabold my-auto"

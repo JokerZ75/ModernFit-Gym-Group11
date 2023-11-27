@@ -15,5 +15,7 @@ router.route('/refresh').post( sessionController.RefreshSession);
 
 router.route('/verify').post(sessionController.VerifySession);
 
+router.route('/registerlogin').post(sessionController.StartSessionFromRegister);
+
 
 module.exports = router;
