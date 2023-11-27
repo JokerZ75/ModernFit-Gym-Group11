@@ -80,6 +80,9 @@ const EditAccountForm: React.FC = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["accountDetails"] });
+      queryClient.invalidateQueries({ queryKey: ["gymLocations"] });
+      queryClient.invalidateQueries({ queryKey: ["classesAtGym"] });
+      queryClient.invalidateQueries({ queryKey: ["upcomingclasses"] });
     },
   });
 
