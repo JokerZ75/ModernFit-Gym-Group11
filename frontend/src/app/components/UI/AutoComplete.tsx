@@ -13,6 +13,7 @@ interface props extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   containerDivClassName?: string;
   fetchedData?: string;
+  extraOnChangeFn?: (value: string) => void;
 }
 
 const AutoComplete: React.FC<props> = ({
@@ -22,6 +23,7 @@ const AutoComplete: React.FC<props> = ({
   className,
   containerDivClassName,
   fetchedData,
+  extraOnChangeFn,
   ...props
 }) => {
   const [option, setOption] = React.useState<string[]>(options);
@@ -63,11 +65,14 @@ const AutoComplete: React.FC<props> = ({
           onChange={(e) => {
             setSearch(e.target.value);
             setDisplay(true);
+            if (extraOnChangeFn) {
+              extraOnChangeFn(e.target.value);
+            }
           }}
           value={search}
         />
         {display && (
-          <div className="absolute z-10 w-full bg-white border-2 rounded-lg rounded-t-none -mt-1 border-gray-300">
+          <div className="absolute z-10 w-full bg-white border-2 rounded-lg rounded-t-none -mt-1 border-gray-300 max-h-[200px] overflow-y-scroll">
             {option
               .filter((options) => {
                 if (search === "") {
