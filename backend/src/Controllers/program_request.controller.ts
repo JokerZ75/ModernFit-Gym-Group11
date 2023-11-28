@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { setCacheAsJson, getCacheAsJson } from "../utils/cache";
 import User from "../models/user.model";
+import { RequestWithUser } from "../types/Request.interface";
 
 const getAllProgramRequests = async (req: Request, res: Response) => {
   await getCacheAsJson("programRequests")
@@ -15,8 +16,11 @@ const getAllProgramRequests = async (req: Request, res: Response) => {
     });
 };
 
-const makeProgramRequest = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const makeProgramRequest = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   const fetchedUser = await User.findById(user.id);
   if (!fetchedUser) {
     return res.status(400).json({ msg: "User does not exist" });
@@ -56,8 +60,11 @@ const makeProgramRequest = async (req: Request, res: Response) => {
   }
 };
 
-const getAUsersProgramRequest = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getAUsersProgramRequest = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   const currentProgramRequest = await getCacheAsJson("programRequests");
   if (currentProgramRequest) {
     if (currentProgramRequest[user.id] == true) {

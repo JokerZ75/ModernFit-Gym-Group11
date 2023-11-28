@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Workout from "../models/workout.model";
 import workout from "../types/workout.type";
 import TypeOfWorkout from "../models/type_of_workout.model";
+import { RequestWithUser } from "../types/Request.interface";
 
 const generateWorkout = async (req: Request, res: Response) => {
   const workout: workout = {
@@ -23,8 +24,11 @@ const generateWorkout = async (req: Request, res: Response) => {
   }
 };
 
-const getWorkouts = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const getWorkouts = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   await Workout.find({ User_id: user.id })
     .then((workouts) => {
       res.status(200).json(workouts);
@@ -34,8 +38,11 @@ const getWorkouts = async (req: Request, res: Response) => {
     });
 };
 
-const AddWorkout = async (req: Request, res: Response) => {
-  const user = req.body.user;
+const AddWorkout = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
   let { Name, Duration, Type_of_workout, Calories_burned } = req.body;
   if (!Name || !Duration || !Type_of_workout) {
     return res.status(400).json({ msg: "Please enter all fields" });

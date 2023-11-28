@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import { Button } from "@/app/components/UI/Button";
+import AutoComplete from "@/app/components/UI/AutoComplete";
+import { toast } from "react-toastify";
 
 const RegisterForm: React.FC = () => {
   const {
@@ -12,17 +14,60 @@ const RegisterForm: React.FC = () => {
     handleSubmit,
     getValues,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    const gymLocationID = gymLocations?.find(
+      (location) => location.Name === data.gymLocation.split("-")[0]
+    )?._id;
+    console.log(gymLocationID);
+    if (gymLocationID == undefined) {
+      setError("gymLocation", {
+        type: "manual",
+        message: "please enter a valid gym location",
+      });
+      return;
+    }
+    let user = {
+      Name: data.name,
+      Email: data.email,
+      Phone_number: data.mobileNumber,
+      Password: data.password,
+      Branch_id: gymLocationID,
+    };
+    console.log(user);
+    registerUser(user);
   };
+
+  const { data: gymLocations } = useQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`
+      );
+      return data as any[];
+    },
+  });
+
+  const { mutate: registerUser } = useMutation({
+    mutationKey: ["registerUser"],
+    mutationFn: async (user: any) => {
+      await toast.promise(
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`, user),
+        {
+          pending: "Registering",
+          success: "Registered, Check your email to complete registration",
+          error: "Failed to register",
+        }
+      );
+    },
+  });
 
   return (
     <>
       <form
-        id="register-form"
-        className="text-center"
+        className="text-center modal-form"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -61,14 +106,19 @@ const RegisterForm: React.FC = () => {
           <p className="form-error">please enter a valid email</p>
         )}
         <div>
-          <label htmlFor="gymLocation">gym location</label>
-          <input
-            className="inputField"
-            type="text"
-            placeholder="gym location"
-            id="gymLocation"
-            {...(register("gymLocation"), { required: true })}
-          />
+          <label htmlFor="gymLocation" className="">gym location</label>
+          {gymLocations && (
+            <AutoComplete
+              className="modal-form-input  !ml-0"
+              containerDivClassName="flex-grow w-3/5 ml-1"
+              id="gymLocation"
+              register={...register("gymLocation", { required: true }) as any}
+              options={gymLocations?.map(
+                (location) => `${location.Name}-(${location.Address})`
+              )}
+              placeholder="gym location e.g (Sheffield ModernFit Gym)"
+            />
+          )}
         </div>
         {errors.gymLocation && (
           <p className="form-error">please enter a gym location</p>
@@ -91,7 +141,7 @@ const RegisterForm: React.FC = () => {
                 } else {
                   return false;
                 }
-              }
+              },
             })}
           />
         </div>

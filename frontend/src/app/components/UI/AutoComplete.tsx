@@ -4,13 +4,16 @@ import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
+import { cn } from "@/app/utils/classMerge";
 
 interface props extends React.InputHTMLAttributes<HTMLInputElement> {
   children?: React.ReactNode;
   options: string[];
   register: UseFormRegister<FieldValues>;
   className?: string;
+  containerDivClassName?: string;
   fetchedData?: string;
+  extraOnChangeFn?: (value: string) => void;
 }
 
 const AutoComplete: React.FC<props> = ({
@@ -18,7 +21,9 @@ const AutoComplete: React.FC<props> = ({
   register,
   options,
   className,
+  containerDivClassName,
   fetchedData,
+  extraOnChangeFn,
   ...props
 }) => {
   const [option, setOption] = React.useState<string[]>(options);
@@ -51,7 +56,7 @@ const AutoComplete: React.FC<props> = ({
 
   return (
     <>
-      <div ref={ref} className="relative">
+      <div ref={ref} className={cn("relative", containerDivClassName)}>
         <input
           className={className}
           {...register}
@@ -60,11 +65,14 @@ const AutoComplete: React.FC<props> = ({
           onChange={(e) => {
             setSearch(e.target.value);
             setDisplay(true);
+            if (extraOnChangeFn) {
+              extraOnChangeFn(e.target.value);
+            }
           }}
           value={search}
         />
         {display && (
-          <div className="absolute z-10 w-full bg-white border-2 rounded-lg rounded-t-none -mt-1 border-gray-300">
+          <div className="absolute z-10 w-full bg-white border-2 rounded-lg rounded-t-none -mt-1 border-gray-300 max-h-[200px] overflow-y-scroll">
             {option
               .filter((options) => {
                 if (search === "") {

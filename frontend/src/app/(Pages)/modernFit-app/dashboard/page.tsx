@@ -35,7 +35,8 @@ const Dashboard: React.FC = async () => {
     },
   });
 
-  if (token != undefined && token != "") { // This is for testing as we login with the notification component rn so we dont have cookie yet.
+  if (token != undefined && token != "") {
+    // This is for testing as we login with the notification component rn so we dont have cookie yet.
     await queryClient.prefetchQuery({
       queryKey: ["notifications"],
       queryFn: async () => {
@@ -78,7 +79,7 @@ const Dashboard: React.FC = async () => {
           }
         );
         if (data.length === 0) return data;
-        if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+        if (data?.msg == "No classes") return data;
         else {
           return data
             ?.sort((a: classType, b: classType) => {
@@ -93,7 +94,7 @@ const Dashboard: React.FC = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className="px-2 md:grid md:grid-cols-2 md:gap-4 md:items-stretch h-screen md:mb-10">
+      <main className="px-2 md:grid md:grid-cols-2 md:gap-4 md:items-stretch h-screen mb-20">
         <CardSection heading="notifications" className="h-[300px] px-2">
           <Notifications />
         </CardSection>

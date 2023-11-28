@@ -8,6 +8,9 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import Modal from "@/app/components/Modal";
+import CreateClass from "./components/CreateClass";
+import CreateClassButton from "./components/CreateClassButton";
 
 type classType = {
   _id?: string;
@@ -41,7 +44,7 @@ const Classes: React.FC = async () => {
           },
         }
       );
-      if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+      if (data?.msg == "No classes") data;
       data
         ?.sort((a: classType, b: classType) => {
           const aDate = new Date(a.Date);
@@ -49,7 +52,32 @@ const Classes: React.FC = async () => {
           return aDate.getTime() - bDate.getTime();
         })
         .reverse();
+
+      data?.sort((a: classType, b: classType) => {
+        if (a.Type === "cancelled") return 1;
+        if (b.Type === "cancelled") return -1;
+        return 0;
+      });
+
       return data as classType[];
+    },
+  });
+
+  const isTrainer = await queryClient.fetchQuery({
+    queryKey: ["isTrainer"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+          },
+        }
+      );
+      if (data?.position == "Trainer") {
+        return true;
+      }
+      return false;
     },
   });
 
@@ -67,7 +95,7 @@ const Classes: React.FC = async () => {
       if (data.length === 0) {
         return data;
       }
-      if (data?.msg == "No classes") return [{ Name: "No classes found" }];
+      if (data?.msg == "No classes") return data;
       data
         ?.sort((a: classType, b: classType) => {
           const aDate = new Date(a.Date);
@@ -76,6 +104,21 @@ const Classes: React.FC = async () => {
         })
         .reverse();
       return data as classType[];
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data as any[];
     },
   });
 
@@ -90,6 +133,7 @@ const Classes: React.FC = async () => {
           <h2 className="text-blue-200 font-bold text-3xl">upcoming classes</h2>
           <MyClassesContainer type="upcomingClasses" />
         </div>
+        {isTrainer ? <CreateClassButton /> : null}
       </main>
     </HydrationBoundary>
   );

@@ -5,6 +5,8 @@ import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { formatDayMonth, formatHourMinute } from "@/app/utils/dateFormat";
+import { Button } from "@/app/components/UI/Button";
+import Link from "next/link";
 
 type classType = {
   _id?: string;
@@ -28,6 +30,7 @@ const UpcomingClasses: React.FC = () => {
       const { data } = await axios.get(`${api_url}/class/user`, {
         headers: headers,
       });
+      if (data?.msg == "No classes") return data;
       data
         ?.sort((a: classType, b: classType) => {
           return a.Date > b.Date ? 1 : -1;
@@ -37,6 +40,25 @@ const UpcomingClasses: React.FC = () => {
     },
   });
 
+  if (data?.msg == "No classes")
+    return (
+      <div className="flex flex-col text-xl">
+        <p className="mx-auto ">No upcoming classes</p>
+        <p className="mx-auto">Join some on the classes page</p>
+        <Link href="/modernFit-app/classes" passHref>
+          <Button
+            variant="default"
+            hover="default"
+            shadow="default"
+            rounded="circle"
+            size="fillWidth"
+            className="mx-auto mt-4 py-3"
+          >
+            go to classes
+          </Button>
+        </Link>
+      </div>
+    );
   if (isLoading) return <div className="loading-skeleton !h-[100px]"></div>;
   if (error)
     return (
@@ -44,7 +66,6 @@ const UpcomingClasses: React.FC = () => {
         An error has occured, please try again later
       </div>
     );
-  if (data?.msg == "No classes") return <div>No upcoming classes</div>;
 
   return (
     <>

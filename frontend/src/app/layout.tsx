@@ -3,19 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryClientWrapper from "./components/QueryClientWrapper";
 import { AuthContext } from "./components/JWTAuth/AuthContext";
-import Navigation from "./components/Navigation";
-import Header from "./components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAddressBook,
-  faAddressCard,
-  faCalendarDays,
-  faCircleInfo,
-  faListUl,
-  faGrip,
-} from "@fortawesome/free-solid-svg-icons";
-import Footer from "./components/Footer";
-import ToastProvider from "./components/ToastProvider";
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -30,62 +18,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const Links: Array<{ to: string; children: React.ReactNode }> = [
-    {
-      to: "/modernFit-app/dashboard",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faGrip} />
-          <p>dashboard</p>
-        </>
-      ),
-    },
-    {
-      to: "/modernFit-app/nutri-info",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faCircleInfo} />
-          <p>nutrition</p>
-        </>
-      ),
-    },
-    {
-      to: "/modernFit-app/activity-diary",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faAddressBook} />
-          <p>my activity diary</p>
-        </>
-      ),
-    },
-    {
-      to: "/modernFit-app/program",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faListUl} />
-          <p>my program</p>
-        </>
-      ),
-    },
-    {
-      to: "/modernFit-app/classes",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faCalendarDays} />
-          <p>classes</p>
-        </>
-      ),
-    },
-    {
-      to: "/modernFit-app/account",
-      children: (
-        <>
-          <FontAwesomeIcon icon={faAddressCard} />
-          <p>profile</p>
-        </>
-      ),
-    },
-  ];
 
   return (
     <QueryClientWrapper>
@@ -102,16 +34,7 @@ export default function RootLayout({
         redirectTo="/"
         API_ENDPOINT="http://localhost:5001"
       >
-        <html lang="en">
-          <body className="font-josefin">
-            <Header>
-              <Navigation Links={Links} />
-            </Header>
-            <ToastProvider />
-            {children}
-            <Footer></Footer>
-          </body>
-        </html>
+        {children}
       </AuthContext>
     </QueryClientWrapper>
   );

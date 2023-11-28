@@ -6,7 +6,7 @@ import LoginForm from "./components/LoginForm";
 const Login: React.FC = () => {
   return (
     <>
-      <div className="px-5 py-5">
+      <div className="px-5 py-5 md:w-2/3 mx-auto">
         <div className="text-blue-200 text-center font-bold text-4xl mb-2">
           <h1>login</h1>
         </div>

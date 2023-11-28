@@ -34,12 +34,20 @@ const EditAccountForm: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onSubmit = async (data: FieldValues) => {
     const gymLocationID = gymLocations?.find(
       (location) => location.Name === data.gymLocation.split("-")[0]
     )?._id;
+    if (gymLocationID == undefined) {
+      setError("gymLocation", {
+        type: "manual",
+        message: "please enter a valid gym location",
+      });
+      return;
+    }
     if (gymLocationID) {
       updateAccountDetails({
         Name: data.name,
@@ -72,6 +80,9 @@ const EditAccountForm: React.FC = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["accountDetails"] });
+      queryClient.invalidateQueries({ queryKey: ["gymLocations"] });
+      queryClient.invalidateQueries({ queryKey: ["classesAtGym"] });
+      queryClient.invalidateQueries({ queryKey: ["upcomingclasses"] });
     },
   });
 
@@ -96,7 +107,6 @@ const EditAccountForm: React.FC = () => {
       return data as userType;
     },
   });
-
 
   return (
     <div>

@@ -14,6 +14,7 @@ type props = {
     weight: number;
 }
 
+
 const AssignedUser: React.FC<props> = ({children, User_id, firstName, lastName, profileImage, goals, height, weight}) =>{
     if (goals.length > 30)
     {
@@ -31,8 +32,10 @@ const AssignedUser: React.FC<props> = ({children, User_id, firstName, lastName, 
             </div>
             <div className="mx-auto w-5/6">
                 <div className="text-black"> {firstName}&#39;s gym goals are: {goals}  </div>
+
                 <div className="text-white font-bold underline"><Link
 href={`/modernFit-app/dbuser/${User_id}`}>View Records</Link></div>
+
                 <div className="text-center">
                     <Button
                         shadow="default"
