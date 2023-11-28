@@ -24,10 +24,22 @@ const generatePost = async (req: Request, res: Response) => {
   }
 };
 
+const getPost = async (req: Request, res: Response) => {
+  const postID = req.params.id;
+  await Nutrional_post.findById({ _id: postID }).then((post: nutrional_post | null) => {
+    if (post) {
+      return res.status(200).json(post);
+    } else {
+      return res.status(400).json({ msg: "No post found" });
+    }
+  });
+};
+
+
 const getPosts = async (req: Request, res: Response) => {
   const foodType = req.params.id;
   await Nutrional_post.find({ Catagory_id: foodType })
-    .then(async (posts) => {
+    .then(async (posts: any[]) => {
       posts = JSON.parse(JSON.stringify(posts));
 
       await Promise.all(
@@ -49,4 +61,4 @@ const getPosts = async (req: Request, res: Response) => {
     });
 };
 
-export default { generatePost, getPosts };
+export default { generatePost, getPosts, getPost };

@@ -7,12 +7,12 @@ services:
     restart: on-failure
     build: ./src
     ports:
-      - "81:5000"
+      - "5001:5001"
   api-application-2:
     restart: on-failure
     build: ./src
     ports:
-      - "82:5000"
+      - "5002:5001"
   nginx:
     restart: on-failure
     build: ./nginx
