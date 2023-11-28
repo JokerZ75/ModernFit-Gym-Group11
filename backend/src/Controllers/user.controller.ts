@@ -19,6 +19,7 @@ import bcrypt from "bcrypt";
 import { SendVerificationEmailForRegistration } from "../utils/emails";
 import { RequestWithUser } from "../types/Request.interface";
 import dotenv from "dotenv";
+import { deleteFile } from "../utils/files";
 
 dotenv.config();
 
@@ -148,6 +149,7 @@ const updateUser = async (req: RequestWithUser, res: Response) => {
 const updateProfilePicture = async (req: any, res: Response) => {
   const user = req.user;
   if (!user) {
+    await deleteFile(`./public/profileImages/undefined.jpg`);
     return res.status(400).json({ msg: "User not found" });
   }
   if (!req.file) {
@@ -160,14 +162,16 @@ const updateProfilePicture = async (req: any, res: Response) => {
     },
     { new: true }
   )
-    .then((user) => {
+    .then(async (user) => {
       user = JSON.parse(JSON.stringify(user));
       if (!user) {
+        await deleteFile(`./public/profileImages/undefined.jpg`);
         return res.status(200).json({ msg: "No user" });
       }
       return res.status(200).json({ msg: "User updated" });
     })
-    .catch((err) => {
+    .catch(async (err) => {
+      await deleteFile(`./public/profileImages/${user.id}.jpg`);
       res.status(400).json({ msg: err });
     });
 };
@@ -197,6 +201,7 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
     await Notification.updateMany({
       $pull: { Recievers: user.id },
     });
+    await deleteFile(`./public/profileImages/${user.id}.jpg`);
     return res.status(200).json({ msg: "User deleted" });
   }
 };

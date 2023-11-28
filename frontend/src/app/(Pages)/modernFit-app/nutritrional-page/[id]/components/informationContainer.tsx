@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
+import axios from "axios";
 
 type props = {
     name: string;
@@ -9,12 +10,18 @@ type props = {
     calories: number;
 }
 
-const InformationContainer: React.FC<props> = ({ name, image, description, author, calories}) =>{
+const InformationContainer: React.FC<props> = async ({ name, image, description, author, calories}) =>{
     if (description.length > 75)
     {
         description = description.slice(0, 75);
         description += "...";
     }
+
+    await axios.get(image).then((res) => {
+        console.log(res);
+    }).catch((err) => {
+        image = "https://placeholder.com/400x150"
+    });
     return (
         <div className="bg-blue-100 text-white mt-2 mb-4 border rounded-lg py-2 px-4 flex flex-col">
             <div className="text-xl text-left font-bold">{name}</div>

@@ -1,10 +1,11 @@
 import { Request } from "express";
 import multer from "multer";
 import { RequestWithUser } from "../types/Request.interface";
-
+import Staff from "../models/staff.model";
 
 const profileImageStorage = multer.diskStorage({
-  destination: (req: Request, file: any, cb: Function) => {
+  destination: (req: RequestWithUser, file: any, cb: Function) => {
+    const user = req.user;
     cb(null, "public/profileImages");
   },
   filename: function (req: RequestWithUser, file: any, cb: Function) {
@@ -29,11 +30,14 @@ const uploadProfileImage = multer({
 });
 
 const postImageStorage = multer.diskStorage({
-  destination: function (req: Request, file: any, cb: Function) {
+  destination: async function (req: RequestWithUser, file: any, cb: Function) {
     cb(null, "public/postImages");
   },
-  filename: function (req: Request, file: any, cb: Function) {
-    cb(null, req.body.post._id + ".jpg");
+  filename: async function (req: RequestWithUser, file: any, cb: Function) {
+    const { Title, Category, AverageKcal } = req.body;
+    const user = req?.user;
+    const isStaff = await Staff.findOne({ User_id: user?.id });
+    cb(null, `${isStaff?._id}${Title}${Category}${AverageKcal}` + ".jpg");
   },
 });
 

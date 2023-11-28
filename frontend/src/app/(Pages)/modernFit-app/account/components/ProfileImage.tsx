@@ -91,7 +91,7 @@ const ProfileImage: React.FC<{}> = () => {
           </label>
           <input
             type="file"
-            className="fixed opacity-0"
+            className="w-full h-full absolute  opacity-0"
             accept="image/*"
             {...register("profileImage", { required: true })}
             id="profileImage"
