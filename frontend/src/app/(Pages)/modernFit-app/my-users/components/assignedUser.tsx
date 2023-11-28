@@ -1,8 +1,11 @@
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
+import Link from 'next/link';
+import { useState } from 'react';
 
 type props = {
     children?: React.ReactNode;
+    User_id: string;
     firstName: string;
     lastName: string;
     profileImage: string;
@@ -11,7 +14,8 @@ type props = {
     weight: number;
 }
 
-const AssignedUser: React.FC<props> = ({children, firstName, lastName, profileImage, goals, height, weight}) =>{
+
+const AssignedUser: React.FC<props> = ({children, User_id, firstName, lastName, profileImage, goals, height, weight}) =>{
     if (goals.length > 30)
     {
         goals = goals.slice(0, 30);
@@ -28,7 +32,10 @@ const AssignedUser: React.FC<props> = ({children, firstName, lastName, profileIm
             </div>
             <div className="mx-auto w-5/6">
                 <div className="text-black"> {firstName}&#39;s gym goals are: {goals}  </div>
-                <div className="text-white font-bold underline"><a href="#">Veiw Records</a></div>
+
+                <div className="text-white font-bold underline"><Link
+href={`/modernFit-app/dbuser/${User_id}`}>View Records</Link></div>
+
                 <div className="text-center">
                     <Button
                         shadow="default"

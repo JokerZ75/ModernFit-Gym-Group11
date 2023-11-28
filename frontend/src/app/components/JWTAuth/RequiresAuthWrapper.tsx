@@ -8,19 +8,23 @@ import axios from "axios";
 const RequiresAuthWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { Headers, verify_api_endpoint, redirectTo } = useAuthContext();
+  const { getHeaders, verify_api_endpoint, redirectTo } = useAuthContext();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["login"],
     queryFn: async () => {
-      console.log(Headers);
-      await axios
-        .post(`${verify_api_endpoint}`, {}, { headers: Headers })
-        .then((response) => {
-          return response.data;
-        })
-        .catch((error) => {});
+      const Headers = await getHeaders();
+      const { data } = await axios.post(
+        verify_api_endpoint,
+        {},
+        {
+          headers: Headers,
+        }
+      );
+      return data;
     },
+    refetchInterval: 1000 * 60 * 5,
+    retry: 2,
   });
 
   const redirect = () => {
@@ -29,7 +33,18 @@ const RequiresAuthWrapper: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <>
-      {isLoading ? <></> :<>{children}</> }
+      {isLoading ? (
+        <div className="flex flex-col min-h-screen">
+          <div className="mx-auto my-auto flex flex-col">
+            <p className="text-2xl text-blue-200 animate-pulse ">
+              Loading and Authenticating...
+            </p>
+            <div className="loading-circle mx-auto"></div>
+          </div>
+        </div>
+      ) : (
+        <>{children}</>
+      )}
       {isError && redirect()}
     </>
   );

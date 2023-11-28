@@ -8,6 +8,9 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import Modal from "@/app/components/Modal";
+import CreateClass from "./components/CreateClass";
+import CreateClassButton from "./components/CreateClassButton";
 
 type classType = {
   _id?: string;
@@ -49,7 +52,32 @@ const Classes: React.FC = async () => {
           return aDate.getTime() - bDate.getTime();
         })
         .reverse();
+
+      data?.sort((a: classType, b: classType) => {
+        if (a.Type === "cancelled") return 1;
+        if (b.Type === "cancelled") return -1;
+        return 0;
+      });
+
       return data as classType[];
+    },
+  });
+
+  const isTrainer = await queryClient.fetchQuery({
+    queryKey: ["isTrainer"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookieStore.get("_auth_token")?.value}`,
+          },
+        }
+      );
+      if (data?.position == "Trainer") {
+        return true;
+      }
+      return false;
     },
   });
 
@@ -79,6 +107,21 @@ const Classes: React.FC = async () => {
     },
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data as any[];
+    },
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="px-2 py-5 md:w-3/4 mx-auto">
@@ -90,6 +133,7 @@ const Classes: React.FC = async () => {
           <h2 className="text-blue-200 font-bold text-3xl">upcoming classes</h2>
           <MyClassesContainer type="upcomingClasses" />
         </div>
+        {isTrainer ? <CreateClassButton /> : null}
       </main>
     </HydrationBoundary>
   );

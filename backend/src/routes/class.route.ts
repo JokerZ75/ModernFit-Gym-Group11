@@ -11,8 +11,14 @@ router.route("/branch").get(Auth, classController.getClassesAtBranch);
 
 router.route("/mark-interest/:id").post(Auth, classController.MarkInterested);
 
-router.route("/mark-uninterest/:id").post(Auth, classController.UnmarkInterested);
+router
+  .route("/mark-uninterest/:id")
+  .post(Auth, classController.UnmarkInterested);
 
 router.route("/generate").get(classController.generateClass);
+
+router.route("/add").post(Auth, classController.AddClass);
+
+router.route("/cancel/:id").post(Auth, classController.cancelClass);
 
 module.exports = router;

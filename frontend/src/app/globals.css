@@ -213,4 +213,18 @@
   .create-post-form > select option:first-child {
     @apply hidden;
   }
+  .loading-circle {
+    @apply h-12 w-12 border-4 border-gray-300 rounded-full animate-spin;
+    border-top-color: #3288c4;
+  }
+
+  .loading-circle-small {
+    @apply h-6 w-6 border-2 border-gray-300 rounded-full animate-spin;
+    border-top-color: #3288c4;
+  }
+
+  .loading-circle-tiny {
+    @apply h-4 w-4 border-2 border-gray-300 rounded-full animate-spin;
+    border-top-color: #3288c4;
+  }
 }

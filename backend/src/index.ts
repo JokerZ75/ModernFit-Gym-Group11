@@ -90,6 +90,7 @@ const userRouter = require("./routes/user.route");
 const diet_planRouter = require("./routes/diet_plan.route");
 const workout_planRouter = require("./routes/workout_plan.route");
 const program_requestRouter = require("./routes/program_request.route");
+const staffRouter = require("./routes/staff.route");
 
 // Use Routes
 
@@ -107,6 +108,7 @@ app.use("/user", userRouter);
 app.use("/diet-plan", diet_planRouter);
 app.use("/workout-plan", workout_planRouter);
 app.use("/program-request", program_requestRouter);
+app.use("/staff", staffRouter);
 
 // Start the server on the specified port
 
