@@ -7,6 +7,7 @@ import UnassignedUser from "./components/unassignedUser";
 
 const myUsers: React.FC = () => {
     let profileImage = "https://placehold.co/300x300"
+    let id = "12345"
     let firstName = "John"
     let lastName = "Smith"
     let height = "5'8"
@@ -30,6 +31,7 @@ const myUsers: React.FC = () => {
                 </div>
                 <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
                     <AssignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
@@ -38,6 +40,7 @@ const myUsers: React.FC = () => {
                     weight={weight}
                     />
                     <AssignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
@@ -46,6 +49,7 @@ const myUsers: React.FC = () => {
                     weight={weight}
                     />
                     <AssignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
@@ -54,6 +58,7 @@ const myUsers: React.FC = () => {
                     weight={weight}
                     />
                     <AssignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
@@ -62,6 +67,7 @@ const myUsers: React.FC = () => {
                     weight={weight}
                     />
                     <AssignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
@@ -76,6 +82,7 @@ const myUsers: React.FC = () => {
                 </div>
                 <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
                     <UnassignedUser
+                    User_id={id}
                     firstName={firstName}
                     lastName={lastName}
                     profileImage={profileImage}
