@@ -178,4 +178,39 @@
   .profile-scaling {
     @apply h-[200px] w-[200px] md:h-[300px] md:w-[300px] lg:h-[400px] lg:w-[400px];
   }
+
+  .create-post-form {
+    @apply flex flex-col my-4;
+  }
+  .create-post-form > input {
+    @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 first:mt-0 mt-4 text-blue-200 font-bold text-xl;
+  }
+
+  .create-post-form > textarea {
+    @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 first:mt-0 mt-4;
+  }
+
+  .create-post-form > input:focus {
+    @apply outline-none border-blue-500;
+  }
+
+  .create-post-form > input::placeholder {
+    @apply text-blue-200 font-bold text-xl;
+  }
+
+  .create-post-form > textarea:focus {
+    @apply outline-none border-blue-500;
+  }
+
+  .create-post-form > select {
+    @apply w-full border-2 border-gray-300 rounded-md p-3 pl-2 bg-transparent text-blue-200 font-bold text-xl mt-4;
+  }
+
+  .create-post-form > select:focus {
+    @apply outline-none border-blue-500 bg-transparent;
+  }
+
+  .create-post-form > select option:first-child {
+    @apply hidden;
+  }
 }

@@ -9,7 +9,7 @@ const staffSchema = new Schema({
         ref: "User"
     },
     Position:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
         trim: true,
         minlength: 3
