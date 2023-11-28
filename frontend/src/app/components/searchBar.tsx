@@ -5,7 +5,7 @@ import { useForm, FieldValues } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import UserType from "../../../../../../../backend/src/types/user.type";
+import UserType from "../../../../backend/src/types/user.type";
 
 const SearchBar: React.FC = () => {
   const { getHeaders, api_url } = useAuthContext();

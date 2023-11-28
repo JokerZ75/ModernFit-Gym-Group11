@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
 import AutoComplete from "@/app/components/UI/AutoComplete";
-import SearchBar from "./components/searchBar";
 import AssignedUser from "./components/assignedUser";
 import UnassignedUser from "./components/unassignedUser";
+import SearchBar from "@/app/components/searchBar";
 
 const myUsers: React.FC = () => {
     let profileImage = "https://placehold.co/300x300"
