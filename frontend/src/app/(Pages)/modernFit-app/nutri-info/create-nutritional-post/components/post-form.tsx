@@ -27,7 +27,6 @@ const PostForm: React.FC = () => {
     formData.append("AverageKcal", data.AverageKcal);
     formData.append("Image", data.Image[0]);
     formData.append("Content", data.Content);
-    console.log(formData);
     createPost(formData);
   };
 
