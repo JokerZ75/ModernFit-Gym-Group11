@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 
 type props = {
   user: userType;
@@ -26,17 +27,81 @@ const AssignedUser: React.FC<props> = ({ user }) => {
     setGoals((old) => old.slice(0, 30) + "...");
   }
 
-  React.useEffect(() => {
-    axios
-      .get(`${user.Profile_picture}`)
-      .then((res) => {})
-      .catch((err) => {
-        user.Profile_picture = "https://placehold.co/300x300";
+  axios
+    .get(`${user.Profile_picture}`)
+    .then((res) => {})
+    .catch((err) => {
+      user.Profile_picture = "https://placehold.co/300x300";
+    });
+
+  const { getHeaders, api_url } = useAuthContext();
+
+  const queryClient = useQueryClient();
+
+  const { mutate: unassignUser } = useMutation({
+    mutationKey: ["assignedUsers", user._id],
+    mutationFn: async (user: userType) => {
+      queryClient.cancelQueries({ queryKey: ["waitingUsers"] });
+      queryClient.cancelQueries({ queryKey: ["assignedUsers"] });
+      queryClient.cancelQueries({ queryKey: ["assignedUsersOptions"] });
+
+      const previousAssignedUsers = queryClient.getQueryData(["assignedUsers"]);
+      const previousWaitingUsers = queryClient.getQueryData(["waitingUsers"]);
+      const previousAssignedUsersOptions = queryClient.getQueryData([
+        "assignedUsersOptions",
+      ]);
+
+      const headers = await getHeaders();
+      const { data } = await axios.post(
+        `${api_url}/program-request/unassign/${user._id}`,
+        {},
+        {
+          headers: headers,
+        }
+      );
+      queryClient.setQueryData(["waitingUsers"], (old: userType[]) => {
+        return [...old, user];
       });
-  }, []);
+      queryClient.setQueryData(["assignedUsers"], (old: userType[]) => {
+        return old?.filter((user: userType) => user._id !== user._id);
+      });
+      queryClient.setQueryData(["assignedUsersOptions"], (old: string[]) => {
+        return old?.filter((name: string) => name !== user.Name);
+      });
+
+      return {
+        previousAssignedUsers,
+        previousWaitingUsers,
+        previousAssignedUsersOptions,
+      };
+    },
+    onError: (err, variables, context: any) => {
+      queryClient.setQueryData(["waitingUsers"], context?.previousWaitingUsers);
+      queryClient.setQueryData(
+        ["assignedUsers"],
+        context?.previousAssignedUsers
+      );
+      queryClient.setQueryData(
+        ["assignedUsersOptions"],
+        context?.previousAssignedUsersOptions
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["waitingUsers"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["assignedUsers"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["assignedUsersOptions"],
+      });
+    },
+  });
 
   return (
-    <div className="max-w-sm w-full mx-auto mb-3 bg-blue-100 rounded-xl p-3">
+    <div className="max-w-sm w-full h-full mx-auto mb-3 bg-blue-100 rounded-xl p-3">
       <div className="flex">
         <img
           src={user.Profile_picture}
@@ -76,6 +141,7 @@ const AssignedUser: React.FC<props> = ({ user }) => {
             hover="default"
             rounded="circle"
             className="rounded-lg mx-auto text-center m-1"
+            onClick={() => unassignUser(user)}
           >
             Unassign Member
           </Button>

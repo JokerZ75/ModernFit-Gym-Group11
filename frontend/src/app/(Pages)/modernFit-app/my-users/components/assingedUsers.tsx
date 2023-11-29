@@ -31,6 +31,7 @@ const AssignedUsers: React.FC = () => {
     },
   });
 
+
   return (
     <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6 max-h-[400px] overflow-y-scroll">
       {assignedUsers !== null ? (

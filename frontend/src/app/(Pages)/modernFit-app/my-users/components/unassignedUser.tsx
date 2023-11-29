@@ -36,9 +36,13 @@ const UnassignedUser: React.FC<props> = ({ user }) => {
     mutationFn: async (user: userType) => {
       queryClient.cancelQueries({ queryKey: ["waitingUsers"] });
       queryClient.cancelQueries({ queryKey: ["assignedUsers"] });
+      queryClient.cancelQueries({ queryKey: ["assignedUsersOptions"] });
 
       const previousWaitingUsers = queryClient.getQueryData(["waitingUsers"]);
       const previousAssignedUsers = queryClient.getQueryData(["assignedUsers"]);
+      const previousAssignedUsersOptions = queryClient.getQueryData([
+        "assignedUsersOptions",
+      ]);
 
       const headers = await getHeaders();
       const { data } = await axios.post(
@@ -49,19 +53,30 @@ const UnassignedUser: React.FC<props> = ({ user }) => {
         }
       );
       queryClient.setQueryData(["assignedUsers"], (old: userType[]) => {
-        return [...old, data];
+        return [...old, user];
       });
       queryClient.setQueryData(["waitingUsers"], (old: userType[]) => {
         return old?.filter((user: userType) => user._id !== user._id);
       });
+      queryClient.setQueryData(["assignedUsersOptions"], (old: string[]) => {
+        return old?.filter((name: string) => name !== user.Name);
+      });
 
-      return { previousWaitingUsers, previousAssignedUsers };
+      return {
+        previousWaitingUsers,
+        previousAssignedUsers,
+        previousAssignedUsersOptions,
+      };
     },
     onError: (err, variables, context: any) => {
       queryClient.setQueryData(["waitingUsers"], context?.previousWaitingUsers);
       queryClient.setQueryData(
         ["assignedUsers"],
         context?.previousAssignedUsers
+      );
+      queryClient.setQueryData(
+        ["assignedUsersOptions"],
+        context?.previousAssignedUsersOptions
       );
     },
     onSettled: () => {
@@ -72,17 +87,18 @@ const UnassignedUser: React.FC<props> = ({ user }) => {
       queryClient.invalidateQueries({
         queryKey: ["assignedUsers"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["assignedUsersOptions"],
+      });
     },
   });
 
-  React.useEffect(() => {
-    axios
-      .get(`${user.Profile_picture}`)
-      .then((res) => {})
-      .catch((err) => {
-        user.Profile_picture = "https://placehold.co/300x300";
-      });
-  }, []);
+  axios
+    .get(`${user.Profile_picture}`)
+    .then((res) => {})
+    .catch((err) => {
+      user.Profile_picture = "https://placehold.co/300x300";
+    });
 
   return (
     <div className="max-w-sm w-full mx-auto mb-3 bg-blue-100 p-3 rounded-xl">

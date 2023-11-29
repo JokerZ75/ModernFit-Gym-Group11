@@ -19,6 +19,7 @@ type userType = {
 const SearchBar: React.FC = () => {
   const { getHeaders, api_url } = useAuthContext();
 
+
   const { data: options } = useQuery({
     queryKey: ["assignedUsersOptions"],
     queryFn: async () => {
@@ -46,17 +47,19 @@ const SearchBar: React.FC = () => {
 
   React.useEffect(() => {
     setOriginalUsers(queryClient.getQueryData(["assignedUsers"]));
-  }, []);
+  }, [options]);
 
   const { mutate: searchUser } = useMutation({
     mutationKey: ["assignedUsers", getValues().searchValue],
     mutationFn: async (searchValue: string) => {
       if (!originalUsers) return;
-      queryClient.setQueryData(["users"], [...originalUsers]);
-      queryClient.setQueryData(["users"], (old: any) => {
-        return old?.filter((user: any) =>
+      queryClient.setQueryData(["assignedUsers"], [...originalUsers]);
+      queryClient.setQueryData(["assignedUsers"], (old: any) => {
+        const filtered = old?.filter((user: any) =>
           user.Name.toLowerCase().includes(searchValue.toLowerCase())
         );
+        if (filtered.length === 0) return null;
+        return filtered;
       });
     },
   });

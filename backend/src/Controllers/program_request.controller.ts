@@ -181,7 +181,7 @@ const unassignUser = async (req: RequestWithUser, res: Response) => {
   // get program request from cache
   await Staff.findOneAndUpdate(
     { User_id: user.id },
-    { $pull: { Assigned_users: userID } },
+    { $pull: { AssignedUsers: userID } },
     { new: true }
   )
     .then(async (staff) => {

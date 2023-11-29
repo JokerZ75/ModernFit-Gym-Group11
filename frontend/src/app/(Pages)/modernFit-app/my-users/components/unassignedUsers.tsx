@@ -26,16 +26,21 @@ const UnassignedUsers: React.FC = () => {
       const { data } = await axios.get(`${api_url}/program-request/`, {
         headers: headers,
       });
+      if (data.length == 0) return null;
       return data as userType[];
     },
   });
 
+
   return (
     <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6 max-h-[400px] overflow-y-scroll">
-      {waitingUsers &&
-        waitingUsers.map((user: userType) => {
+      {waitingUsers !== null ? (
+        waitingUsers?.map((user: userType) => {
           return <UnassignedUser key={user._id} user={user} />;
-        })}
+        })
+      ) : (
+        <div>There are no unassigned users</div>
+      )}
     </div>
   );
 };
