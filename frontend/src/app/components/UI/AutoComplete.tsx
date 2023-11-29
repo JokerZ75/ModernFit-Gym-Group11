@@ -26,7 +26,6 @@ const AutoComplete: React.FC<props> = ({
   extraOnChangeFn,
   ...props
 }) => {
-  const [option, setOption] = React.useState<string[]>(options);
   const [display, setDisplay] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
@@ -73,7 +72,7 @@ const AutoComplete: React.FC<props> = ({
         />
         {display && (
           <div className="absolute z-10 w-full bg-white border-2 rounded-lg rounded-t-none -mt-1 border-gray-300 max-h-[200px] overflow-y-scroll">
-            {option
+            {options
               .filter((options) => {
                 if (search === "") {
                   return options;
@@ -89,6 +88,7 @@ const AutoComplete: React.FC<props> = ({
                     key={index}
                     onClick={() => {
                       setSearch(option);
+                      extraOnChangeFn && extraOnChangeFn(option);
                       setDisplay(false);
                     }}
                     className="p-2 hover:bg-gray-200 cursor-pointer"

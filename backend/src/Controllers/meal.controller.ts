@@ -3,6 +3,7 @@ import Meal from "../models/meal.model";
 import meal from "../types/meal.type";
 import MealCatagory from "../models/meal_catagory.model";
 import { RequestWithUser } from "../types/Request.interface";
+import Staff from "../models/staff.model";
 
 const generateMeal = async (req: Request, res: Response) => {
   // used for testing
@@ -85,4 +86,48 @@ const AddMeal = async (req: RequestWithUser, res: Response) => {
       res.status(400).json({ msg: err });
     });
 };
-export default { generateMeal, getMeals, AddMeal };
+
+const getMealsOfUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Nutritionist" && isStaff.Position !== "Trainer") {
+    return res.status(400).json({ msg: "User is not nutritionist or trainer" });
+  }
+
+  const User_id = req.params.id;
+
+  await Meal.find({ User_id })
+    .then(async (meals) => {
+      const mealsData = [] as any[];
+      await Promise.all(
+        meals.map(async (meal) => {
+          const mealData = JSON.parse(JSON.stringify(meal));
+          const mealCatagory = await MealCatagory.findById(
+            mealData.Catagory_id
+          );
+          if (mealCatagory) {
+            mealsData.push({
+              _id: mealData._id,
+              User_id: mealData.User_id,
+              Meal_desc: mealData.Meal_desc,
+              Portion: mealData.Portion,
+              Calories_intake: mealData.Calories_intake,
+              Catagory_id: mealData.Catagory_id,
+              Catagory_name: mealCatagory.Name,
+            });
+          }
+        })
+      );
+      res.status(200).json(mealsData);
+    })
+    .catch((err) => {
+      res.status(200).json([]);
+    });
+};
+export default { generateMeal, getMeals, AddMeal, getMealsOfUser };

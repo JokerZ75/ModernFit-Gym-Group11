@@ -8,6 +8,14 @@ router.route("/").get(Auth, program_requestController.getAllProgramRequests);
 
 router.route("/").post(Auth, program_requestController.makeProgramRequest);
 
-router.route("/user").get(Auth, program_requestController.getAUsersProgramRequest);
+router
+  .route("/user")
+  .get(Auth, program_requestController.getAUsersProgramRequest);
+
+router.route("/assign/:id").post(Auth, program_requestController.assignUser);
+
+router
+  .route("/unassign/:id")
+  .post(Auth, program_requestController.unassignUser);
 
 module.exports = router;
