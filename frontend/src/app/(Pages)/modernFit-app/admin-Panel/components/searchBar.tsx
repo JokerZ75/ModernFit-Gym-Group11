@@ -5,7 +5,22 @@ import { useForm, FieldValues } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import UserType from "../../../../backend/src/types/user.type";
+
+type UserType = {
+  _id: string;
+  Branch_id: string;
+  Access_pin: number;
+  Name: string;
+  Email: string;
+  Phone_number: number;
+  Password: string;
+  Profile_picture: string;
+  Height: number;
+  Weight: number;
+  Gym_Goals: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 const SearchBar: React.FC = () => {
   const { getHeaders, api_url } = useAuthContext();

@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/app/components/UI/Button";
 import Link from "next/link";
 import { useState } from "react";
+import axios from "axios";
 
 type props = {
   children?: React.ReactNode;
@@ -14,7 +15,7 @@ type props = {
   weight: number;
 };
 
-const AssignedUser: React.FC<props> = ({
+const AssignedUser: React.FC<props> = async ({
   children,
   User_id,
   firstName,
@@ -28,51 +29,57 @@ const AssignedUser: React.FC<props> = ({
     goals = goals.slice(0, 30);
     goals += "...";
   }
+
+  await axios
+    .get(`${profileImage}`)
+    .then((res) => {})
+    .catch((err) => {
+      profileImage = "https://placehold.co/300x300";
+    });
+
   return (
-    <div className="max-w-sm mx-auto m-4 bg-blue-100 p-1 rounded-xl">
-      <div className="flex flexbox m-3">
-        <div className="w-1/4 rounded-full overflow-hidden">
-          <img
-            src={profileImage}
-            alt="Profile Picture"
-            height="100000"
-            width="50000"
-          ></img>
-        </div>
+    <div className="max-w-sm mx-auto mb-3 bg-blue-100 rounded-xl p-3">
+      <div className="flex">
+        <img
+          src={profileImage}
+          alt="Profile Picture"
+          className="w-[75px] h-[75px] rounded-full object-cover"
+        />
         <div className="mx-auto w-3/4 ml-5">
-          <div className="text-white text-xl">
+          <p className="text-white text-xl">
             {firstName} {lastName}
-          </div>
-          <div className="text-black text-lg">
+          </p>
+          <p className="text-black text-lg">
             {height} {weight}lbs
-          </div>
+          </p>
         </div>
       </div>
       <div className="mx-auto w-5/6">
         <div className="text-black">
           {firstName}&#39;s gym goals are: {goals}
         </div>
-        <div className="text-white font-bold underline">
-          <Link href={`/modernFit-app/dbuser/${User_id}`}>View Records</Link>
+        <div className="text-white font-bold underline hover:text-orange-100 transition-all duration-500">
+          <Link href={`/modernFit-app/my-users/user-record/${User_id}`}>
+            View Records
+          </Link>
         </div>
         <div className="text-center">
           <Button
             shadow="default"
-            size="small"
+            size="fillWidth"
             variant="darkBlue"
             hover="default"
-            rounded="circle"
-            className="w-5/6 border mx-auto text-center m-1"
+            className="rounded-lg mx-auto text-center m-1"
           >
             Create Program
           </Button>
           <Button
             shadow="default"
-            size="small"
+            size="fillWidth"
             variant="default"
             hover="default"
             rounded="circle"
-            className="w-5/6 border mx-auto text-center m-1"
+            className="rounded-lg mx-auto text-center m-1"
           >
             Unassign Member
           </Button>

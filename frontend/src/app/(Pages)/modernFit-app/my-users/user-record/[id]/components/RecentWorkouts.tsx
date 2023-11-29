@@ -1,13 +1,11 @@
 import React from "react";
-import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 type workout = {
   _id?: string;
   User_id: string;
   Name: string;
   Duration: number;
+  Type_of_workout_name: string;
   Type_of_workout: string;
   Calories_burned: number;
   createdAt?: Date;
@@ -15,19 +13,23 @@ type workout = {
 };
 
 const RecentWorkouts: React.FC<{
-  data: workout[];
-  workoutTypes: workoutType[];
-}> = ({ data, workoutTypes }) => {
+  workouts: workout[];
+}> = ({ workouts }) => {
   return (
     <>
       <div className="h-full">
         <h2 className="text-2xl font-bold text-blue-200">recent workouts</h2>
         <div className="mt-2">
           <ul className="overflow-y-scroll h-[250px]">
-            {data?.map((workout) => {
+            {workouts == null && (
+              <p className="text-blue-200 text-xl mt-5">
+                No recent workouts...
+              </p>
+            )}
+            {workouts?.map((workout) => {
               return (
                 <li className="mt-3 first:mt-0" key={workout._id}>
-                  <Workout workout={workout} workoutType={workoutTypes} />
+                  <Workout workout={workout} />
                 </li>
               );
             })}
@@ -45,10 +47,7 @@ type workoutType = {
   updatedAt?: Date;
 };
 
-const Workout: React.FC<{ workout: workout; workoutType: workoutType[] }> = ({
-  workout,
-  workoutType,
-}) => {
+const Workout: React.FC<{ workout: workout }> = ({ workout }) => {
   return (
     <div className="bg-blue-200 bg-opacity-50 rounded-xl p-2 ">
       <div className="flex">
@@ -57,12 +56,7 @@ const Workout: React.FC<{ workout: workout; workoutType: workoutType[] }> = ({
           {workout.Duration} min
         </p>
       </div>
-      <p className="font-bold">
-        {
-          workoutType?.find((type) => type._id === workout.Type_of_workout)
-            ?.Name
-        }
-      </p>
+      <p className="font-bold">{workout.Type_of_workout_name}</p>
       <p className="font-bold">{workout.Calories_burned} Kcal</p>
     </div>
   );

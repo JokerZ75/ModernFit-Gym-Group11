@@ -34,20 +34,20 @@ const User: React.FC<props> = ({
 
   return (
     <div className="md:w-[450px] w-[350px] mx-auto m-4 bg-blue-100 p-1 rounded-xl">
-      <div className="flex flexbox m-3">
+      <div className="flex m-3">
         <div className="">
           {image === "" ? (
             <img
               src="https://placehold.co/300x300"
               alt="Profile Picture"
               className="w-[75px] h-[75px] rounded-full"
-            ></img>
+            />
           ) : (
             <img
               src={`${image}`}
               alt="Profile Picture"
               className="w-[75px] h-[75px] rounded-full"
-            ></img>
+            />
           )}
         </div>
         <div className="mx-auto w-3/4 ml-5">

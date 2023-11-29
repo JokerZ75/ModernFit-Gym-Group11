@@ -215,7 +215,7 @@ const getUserById = async (req: Request, res: Response) => {
       res.status(200).json(returnJSON);
     })
     .catch((err) => {
-      res.status(400).json({ msg: "No user" });
+      res.status(207).json({ msg: "No user" });
     });
 };
 
