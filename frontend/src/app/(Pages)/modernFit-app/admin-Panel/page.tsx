@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from "../../../components/searchBar";
+import SearchBar from "./components/searchBar";
 import { Button } from "@/app/components/UI/Button";
 import IssueContainer from "./components/issueContainer";
 import {
@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
-import GoBackButton from "./components/GoBackButton";
+import GoBackButton from "../../../components/GoBackButton";
 import User from "./components/User";
 import UserContainer from "./components/userContainer";
 

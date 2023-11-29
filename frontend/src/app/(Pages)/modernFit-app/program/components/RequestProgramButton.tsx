@@ -12,7 +12,6 @@ const RequestProgramButton: React.FC = () => {
   const { mutate } = useMutation({
     mutationKey: ["requestProgram"],
     mutationFn: async () => {
-      console.log("requesting program");
       const headers = await getHeaders();
       const { data } = await axios.post(
         `${api_url}/program-request/`,

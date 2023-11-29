@@ -8,6 +8,7 @@ import {
 import { cookies } from "next/headers";
 import axios from "axios";
 import RecentNutritionalActivity from "./components/RecentNutritionalActivity";
+import GoBackButton from "@/app/components/GoBackButton";
 
 const ActivityDiary: React.FC<{ params: { id: string } }> = async ({
   params,
@@ -22,6 +23,35 @@ const ActivityDiary: React.FC<{ params: { id: string } }> = async ({
     },
   });
 
+  const isTrainerOrNutritionist = await queryClient.fetchQuery({
+    queryKey: ["isTrainerOrNutritionist"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return (data?.position === "Trainer" ||
+        data?.position === "Nutritionist") as boolean;
+    },
+  });
+
+  if (!isTrainerOrNutritionist) {
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <main className="text-center">
+          <h1 className="text-2xl font-bold mt-4 mb-4">
+            You are not authorized to view this page
+          </h1>
+          <GoBackButton />
+        </main>
+      </HydrationBoundary>
+    );
+  }
+
   const workouts = await queryClient.fetchQuery({
     queryKey: ["workouts", params.id],
     queryFn: async () => {
@@ -33,21 +63,7 @@ const ActivityDiary: React.FC<{ params: { id: string } }> = async ({
           },
         }
       );
-      return data;
-    },
-  });
-
-  const workoutTypes = await queryClient.fetchQuery({
-    queryKey: ["workoutTypes"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/typeofworkout/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (data.length === 0) return null;
       return data;
     },
   });
@@ -63,21 +79,23 @@ const ActivityDiary: React.FC<{ params: { id: string } }> = async ({
           },
         }
       );
+      if (data.length === 0) return null;
       return data;
     },
   });
 
-  const mealCatagories = await queryClient.fetchQuery({
-    queryKey: ["mealcatagories", params.id],
+  const user = await queryClient.fetchQuery({
+    queryKey: ["user", params.id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/mealcatagory/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      if (data.length === 0) return null;
       return data;
     },
   });
@@ -85,12 +103,15 @@ const ActivityDiary: React.FC<{ params: { id: string } }> = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="px-8 py-5 md:w-3/4 mx-auto">
-        <RecentWorkouts data={workouts} workoutTypes={workoutTypes} />
+        <div className="flex gap-5">
+          <GoBackButton />
+          <div className="text-2xl font-bold mt-4 mb-4">
+            {user?.Name}'s Activity Diary
+          </div>
+        </div>
+        <RecentWorkouts workouts={workouts} />
         <div className="mt-4"></div>
-        <RecentNutritionalActivity
-          meals={meals}
-          mealCatagories={mealCatagories}
-        />
+        <RecentNutritionalActivity meals={meals} />
       </main>
     </HydrationBoundary>
   );

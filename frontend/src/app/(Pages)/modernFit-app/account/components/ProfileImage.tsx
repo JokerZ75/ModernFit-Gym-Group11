@@ -16,6 +16,7 @@ const ProfileImage: React.FC<{}> = () => {
   const { api_url, getHeaders } = useAuthContext();
   const formRef = React.useRef<HTMLFormElement>(null);
   const labelRef = React.useRef<HTMLLabelElement>(null);
+  const [profileImage, setProfileImage] = React.useState<string>("");
 
   const { mutate: uploadProfileImage } = useMutation({
     mutationKey: ["uploadProfileImage"],
@@ -55,25 +56,34 @@ const ProfileImage: React.FC<{}> = () => {
       const { data } = await axios.get(`${api_url}/user`, {
         headers: headers,
       });
+      setProfileImage(data.Profile_picture);
       return data;
     },
   });
 
+  React.useEffect(() => {
+    axios
+      .get(`${profileImage}`)
+      .then((res) => {})
+      .catch((err) => {
+        setProfileImage("");
+      });
+  }, [userInfo]);
 
   return (
     <div>
       <div className="relative">
-        {userInfo?.Profile_picture ? (
+        {profileImage == "" ? (
           <img
-            src={`${userInfo.Profile_picture}`}
+            src="https://placehold.jp/200x200.png"
+            alt="profile image"
             className="block rounded-full m-4 ml-auto mr-auto profile-scaling object-cover"
-            alt="account profile picture"
           />
         ) : (
           <img
-            src="https://placehold.co/200x200"
+            src={`${profileImage}`}
+            alt="profile image"
             className="block rounded-full m-4 ml-auto mr-auto profile-scaling object-cover"
-            alt="account profile picture"
           />
         )}
         <form

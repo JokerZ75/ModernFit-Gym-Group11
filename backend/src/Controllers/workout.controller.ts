@@ -3,6 +3,7 @@ import Workout from "../models/workout.model";
 import workout from "../types/workout.type";
 import TypeOfWorkout from "../models/type_of_workout.model";
 import { RequestWithUser } from "../types/Request.interface";
+import Staff from "../models/staff.model";
 
 const generateWorkout = async (req: Request, res: Response) => {
   const workout: workout = {
@@ -90,4 +91,50 @@ const AddWorkout = async (req: RequestWithUser, res: Response) => {
     });
 };
 
-export default { generateWorkout, getWorkouts, AddWorkout };
+const getWorkoutsOfUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Nutritionist" && isStaff.Position !== "Trainer") {
+    return res.status(400).json({ msg: "User is not nutritionist or trainer" });
+  }
+
+  const User_id = req.params.id;
+
+  await Workout.find({ User_id })
+    .then(async (workouts) => {
+      const workoutsData = [] as any[];
+      await Promise.all(
+        workouts.map(async (workout) => {
+          const workoutData = JSON.parse(JSON.stringify(workout));
+          const type = await TypeOfWorkout.findById(
+            workoutData.Type_of_workout
+          );
+          if (type) {
+            workoutsData.push({
+              _id: workoutData._id,
+              Name: workoutData.Name,
+              User_id: workoutData.User_id,
+              Duration: workoutData.Duration,
+              Type_of_workout: workoutData.Type_of_workout,
+              Type_of_workout_name: type.Name,
+              Calories_burned: workoutData.Calories_burned,
+              createdAt: workoutData.createdAt,
+              updatedAt: workoutData.updatedAt,
+            } as any);
+          }
+        })
+      );
+      res.status(200).json(workoutsData);
+    })
+    .catch((err) => {
+      res.status(200).json([]);
+    });
+};
+
+export default { generateWorkout, getWorkouts, AddWorkout, getWorkoutsOfUser };

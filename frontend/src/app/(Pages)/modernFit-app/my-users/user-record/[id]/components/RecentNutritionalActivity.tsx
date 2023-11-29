@@ -1,7 +1,4 @@
 import React from "react";
-import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import { useQuery, useMutationState } from "@tanstack/react-query";
-import axios from "axios";
 
 type meal = {
   _id: string;
@@ -9,14 +6,14 @@ type meal = {
   Meal_desc: string;
   Portion: number;
   Calories_intake: number;
+  Catagory_name: string;
   Catagory_id: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
 const RecentNutritionalActivity: React.FC<{
   meals: meal[];
-  mealCatagories: mealCatagory[];
-}> = ({ meals, mealCatagories }) => {
+}> = ({ meals }) => {
   return (
     <>
       <div className="h-full">
@@ -25,10 +22,13 @@ const RecentNutritionalActivity: React.FC<{
         </h2>
         <div className="mt-2">
           <ul className="overflow-y-scroll h-[250px]">
+            {meals == null && (
+              <p className="text-blue-200 text-xl mt-5">No recent meals...</p>
+            )}
             {meals?.map((meal) => {
               return (
                 <li className="mt-3 first:mt-0" key={meal._id}>
-                  <Meal meal={meal} mealCatagories={mealCatagories} />
+                  <Meal meal={meal} />
                 </li>
               );
             })}
@@ -39,17 +39,7 @@ const RecentNutritionalActivity: React.FC<{
   );
 };
 
-type mealCatagory = {
-  _id: string;
-  Name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-};
-
-const Meal: React.FC<{ meal: meal; mealCatagories: mealCatagory[] }> = ({
-  meal,
-  mealCatagories,
-}) => {
+const Meal: React.FC<{ meal: meal }> = ({ meal }) => {
   return (
     <>
       <div className="bg-blue-200 bg-opacity-50 p-4 mt-3 rounded-xl">
@@ -59,12 +49,7 @@ const Meal: React.FC<{ meal: meal; mealCatagories: mealCatagory[] }> = ({
             {meal.Calories_intake} Kcal
           </p>
         </div>
-        <p className="font-bold">
-          {
-            mealCatagories?.find((cata: any) => meal?.Catagory_id === cata?._id)
-              ?.Name
-          }
-        </p>
+        <p className="font-bold">{meal.Catagory_name}</p>
         <p className="font-bold">{meal.Portion} portions</p>
       </div>
     </>
