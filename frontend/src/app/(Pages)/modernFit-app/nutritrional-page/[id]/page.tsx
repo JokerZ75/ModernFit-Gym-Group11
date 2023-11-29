@@ -17,6 +17,7 @@ type mealCatagory = {
 };
 
 type nutrional_post = {
+  _id: string;
   Staff_id: string;
   Title: string;
   Catagory_id: string;
@@ -84,6 +85,7 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
           {posts?.map((post) => {
             return (
               <InformationContainer
+                key={post._id}
                 name={post.Title}
                 image={post.Image}
                 description={post.Content}

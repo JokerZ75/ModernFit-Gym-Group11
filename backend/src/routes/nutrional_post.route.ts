@@ -7,8 +7,6 @@ const router = express.Router();
 
 router.route("/").get(nutrional_postController.generatePost);
 
-router.route("/:id").get(Auth, nutrional_postController.getPosts);
-
 router.route("/post/:id").get(Auth, nutrional_postController.getPost);
 
 router
@@ -18,5 +16,7 @@ router
     uploadPostImage.single("Image"),
     nutrional_postController.createPost
   );
+
+router.route("/:id").get(Auth, nutrional_postController.getPosts);
 
 module.exports = router;
