@@ -27,7 +27,11 @@ const getAllProgramRequests = async (req: RequestWithUser, res: Response) => {
       await Promise.all(
         users.map(async (user) => {
           const userData = await User.findById(user);
-          if (userData) {
+          // if been assigned to staff, remove from program request
+          const isAssigned = await Staff.findOne({
+            AssignedUsers: { $in: [userData?.id] },
+          });
+          if (userData && !isAssigned) {
             usersData.push({
               _id: userData._id,
               Name: userData.Name,
@@ -119,8 +123,83 @@ const getAUsersProgramRequest = async (req: RequestWithUser, res: Response) => {
   return res.status(207).json({ msg: "No program request" });
 };
 
+const assignUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  const userID = req.params.id;
+
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Nutritionist" && isStaff.Position !== "Trainer") {
+    return res.status(400).json({ msg: "User is not nutritionist or trainer" });
+  }
+  // get program request from cache
+  const currentProgramRequest = await getCacheAsJson("programRequests");
+  if (!currentProgramRequest) {
+    return res.status(400).json({ msg: "No program request" });
+  }
+  if (currentProgramRequest[userID] == false) {
+    return res.status(400).json({ msg: "No program request" });
+  }
+  // assign user to staff
+  await Staff.findOneAndUpdate(
+    { User_id: user.id },
+    { $push: { AssignedUsers: userID } },
+    { new: true }
+  )
+    .then(async (staff) => {
+      if (!staff) {
+        return res.status(400).json({ msg: "Staff not found" });
+      }
+      // Remove user from program request
+      return res.status(200).json({ msg: "User assigned" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
+const unassignUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  const userID = req.params.id;
+
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Nutritionist" && isStaff.Position !== "Trainer") {
+    return res.status(400).json({ msg: "User is not nutritionist or trainer" });
+  }
+  // get program request from cache
+  await Staff.findOneAndUpdate(
+    { User_id: user.id },
+    { $pull: { Assigned_users: userID } },
+    { new: true }
+  )
+    .then(async (staff) => {
+      if (!staff) {
+        return res.status(400).json({ msg: "Staff not found" });
+      }
+      // Remove user from program request
+      return res.status(200).json({ msg: "User unassigned" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
 export default {
   getAllProgramRequests,
   makeProgramRequest,
   getAUsersProgramRequest,
+  assignUser,
+  unassignUser,
 };
