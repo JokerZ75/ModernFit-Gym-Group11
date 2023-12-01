@@ -18,4 +18,7 @@ router
   .route("/unassign/:id")
   .post(Auth, program_requestController.unassignUser);
 
+router
+  .route("/user/:id")
+  .get(Auth, program_requestController.getUserProgramRequest);
 module.exports = router;

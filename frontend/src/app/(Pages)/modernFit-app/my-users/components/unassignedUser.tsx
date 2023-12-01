@@ -93,12 +93,14 @@ const UnassignedUser: React.FC<props> = ({ user }) => {
     },
   });
 
-  axios
-    .get(`${user.Profile_picture}`)
-    .then((res) => {})
-    .catch((err) => {
-      user.Profile_picture = "https://placehold.co/300x300";
-    });
+  React.useEffect(() => {
+    axios
+      .get(`${user.Profile_picture}`)
+      .then((res) => {})
+      .catch((err) => {
+        user.Profile_picture = "https://placehold.co/300x300";
+      });
+  }, []);
 
   return (
     <div className="max-w-sm w-full mx-auto mb-3 bg-blue-100 p-3 rounded-xl">

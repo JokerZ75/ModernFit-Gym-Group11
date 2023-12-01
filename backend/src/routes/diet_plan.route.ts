@@ -8,4 +8,6 @@ router.route("/").get(Auth, diet_planController.getDietPlan);
 
 router.route("/generate").get(diet_planController.generateDietPlan);
 
+router.route("/send").post(Auth, diet_planController.sendDietPlan);
+
 module.exports = router;

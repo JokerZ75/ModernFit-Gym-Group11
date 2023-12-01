@@ -7,4 +7,5 @@ router.route("/assigned/").get(Auth, staffController.getStaffAssignedUser);
 
 router.route("/:id").get(Auth, staffController.getStaffById);
 
+
 module.exports = router;
