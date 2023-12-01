@@ -86,6 +86,7 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
             return (
               <InformationContainer
                 key={post._id}
+                postId={post._id}
                 name={post.Title}
                 image={post.Image}
                 description={post.Content}
