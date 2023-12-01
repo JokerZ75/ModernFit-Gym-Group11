@@ -10,6 +10,8 @@ router.route("/login").post(sessionController.StartSession);
 
 router.route("/logout").post(sessionController.EndSession);
 
+router.route("/recover").post(sessionController.EndSession);
+
 router.route("/refresh").post(sessionController.RefreshSession);
 
 router.route("/verify").post(sessionController.VerifySession);

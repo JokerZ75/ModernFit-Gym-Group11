@@ -8,7 +8,7 @@ const Login: React.FC = () => {
     <>
       <div className="px-5 py-5 md:w-2/3 mx-auto">
         <div className="text-blue-200 text-center font-bold text-4xl mb-2">
-          <h1>login</h1>
+          <h1>Login</h1>
         </div>
         <LoginForm />
         <div className="text-center">
@@ -23,6 +23,22 @@ const Login: React.FC = () => {
               className="w-3/4 border mx-auto"
             >
               Register
+            </Button>
+          </Link>
+
+          <div style={{ margin: '10px' }}></div>
+
+          <Link href="/recover" passHref>
+            <Button
+                type="button"
+                shadow="default"
+                size="default"
+                variant="lightBlue"
+                hover="hoverDarkBlue"
+                rounded="circle"
+                className="w-3/4 border mx-auto"
+            >
+              Forget Passowrd
             </Button>
           </Link>
         </div>
