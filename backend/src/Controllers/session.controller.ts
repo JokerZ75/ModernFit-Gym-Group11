@@ -27,7 +27,7 @@ const SendFor2FA = async (req: Request, res: Response) => {
 
   const isMatch = await bcrypt.compare(password, user.Password);
   if (!isMatch) {
-    return res.status(400).json({ msg: "Invalid credentials" });
+    return res.status(400).json({ msg: "Invalid details" });
   }
 
   let unique = false;
@@ -74,7 +74,7 @@ const StartSession = async (req: Request, res: Response) => {
 
     const isMatch = await bcrypt.compare(password, user.Password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Invalid details" });
     }
 
     const retrievedUser: UserType = JSON.parse(JSON.stringify(user));
@@ -228,7 +228,7 @@ const StartSessionFromRegister = async (req: Request, res: Response) => {
 
     const isMatch = await bcrypt.compare(password, user.Password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Invalid details" });
     }
 
     const retrievedUser: UserType = JSON.parse(JSON.stringify(user));

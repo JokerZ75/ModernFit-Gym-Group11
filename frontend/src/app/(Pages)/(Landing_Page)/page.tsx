@@ -23,7 +23,7 @@ export default function Home() {
       // Nutritionist
       const data = await axios.post(`${api_url}/session/login`, {
         email: "dhughes1704@icloud.com",
-        password: "HelloWorld1",
+        password: "HelloWorld2",
         authCode: "123456",
       });
       // Trainer

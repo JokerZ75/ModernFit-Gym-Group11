@@ -1,18 +1,22 @@
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
 import Link from "next/link";
-import LoginForm from "./components/LoginForm";
+import RecoverForm from "./components/RecoverForm";
 
-const Login: React.FC = () => {
+const Recover: React.FC<{
+  params: {
+    token: string;
+  };
+}> = ({ params }) => {
   return (
     <>
       <div className="px-5 py-5 md:w-2/3 mx-auto">
         <div className="text-blue-200 text-center font-bold text-4xl mb-2">
-          <h1>login</h1>
+          <h1>recover</h1>
         </div>
-        <LoginForm />
+        <RecoverForm token={params.token} />
         <div className="text-center">
-          <Link href="/register" passHref>
+          <Link href="/login" passHref>
             <Button
               type="button"
               shadow="default"
@@ -22,14 +26,13 @@ const Login: React.FC = () => {
               rounded="circle"
               className="w-3/4 border mx-auto"
             >
-              register
+              login
             </Button>
           </Link>
-          <div style={{ margin: "10px" }}></div>
         </div>
       </div>
     </>
   );
 };
 
-export default Login;
+export default Recover;

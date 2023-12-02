@@ -62,6 +62,11 @@ const RegisterForm: React.FC = () => {
         }
       );
     },
+    onError: async (error:any) => {
+      if (error.response?.data?.msg === "User already exists") {
+        toast.error("This email is already registered");
+      }
+    },
   });
 
   return (
