@@ -8,6 +8,7 @@ import {
 import { cookies } from "next/headers";
 import axios from "axios";
 import PostContainer from "./components/postContainer";
+import GoBackButton from "./components/GoBackButton";
 
 type mealCatagory = {
   Name: string;
@@ -75,7 +76,10 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="md:w-3/4 mx-auto px-4">
         <div>
-          <div className=" font-bold text-blue-200 text-2xl md:text-4xl mt-4">
+          <div className="mt-4 flex flex-col md:flex-row">
+            <GoBackButton />
+          </div>
+          <div className=" font-bold text-blue-200 text-2xl md:text-4xl ">
             <h2>{catagory.Name}</h2>
           </div>
           <br></br>
