@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import Link from "next/link";
 import { Button } from "@/app/components/UI/Button";
-import CreatePostButton from "./create-nutritional-post/components/createPostButton";
 
 const Nutricategories: React.FC = async () => {
   const cookieStore = cookies();
@@ -69,12 +68,9 @@ const Nutricategories: React.FC = async () => {
             );
           })}
         </div>
-        
-        <CreatePostButton
-          isNutritionist={isNutritionist}
-        />
 
-        {/* {isNutritionist && (
+
+        {isNutritionist && (
           <Link href="/modernFit-app/nutri-info/create-nutritional-post">
             <Button
               variant="darkBlue"
@@ -86,7 +82,7 @@ const Nutricategories: React.FC = async () => {
               create post
             </Button>
           </Link>
-        )} */}
+        )}
       </main>
     </HydrationBoundary>
   );

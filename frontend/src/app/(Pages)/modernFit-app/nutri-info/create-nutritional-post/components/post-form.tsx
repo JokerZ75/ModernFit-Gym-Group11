@@ -7,12 +7,14 @@ import { Button } from "@/app/components/UI/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
+import { toast } from "react-toastify";
 
 const PostForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm();
 
   const { getHeaders, api_url } = useAuthContext();
@@ -30,6 +32,8 @@ const PostForm: React.FC = () => {
     createPost(formData);
   };
 
+  const queryClient = useQueryClient();
+
   const { mutate: createPost } = useMutation({
     mutationKey: ["createPost"],
     mutationFn: async (data: FieldValues) => {
@@ -38,14 +42,31 @@ const PostForm: React.FC = () => {
         Authorization: string;
       };
       headers["Content-Type"] = "multipart/form-data";
-      const { data: post } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/nutritional_post/create`,
-        data,
+      const { data: post } = await toast.promise(
+        axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/nutritional_post/create`,
+          data,
+          {
+            headers: headers,
+          }
+        ),
         {
-          headers: headers,
+          pending: "Creating post...",
+          success: "Post created!",
+          error: "Error creating post",
         }
       );
       return post;
+    },
+    onError: (error: any) => {
+      if (error.response.data?.msg === "Post already exists") {
+        toast.error("Post may already exists");
+      }
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts", getValues("Category")],
+      });
     },
   });
 

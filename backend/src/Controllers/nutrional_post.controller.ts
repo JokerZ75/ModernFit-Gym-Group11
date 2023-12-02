@@ -5,6 +5,7 @@ import Staff from "../models/staff.model";
 import User from "../models/user.model";
 import { RequestWithUser } from "../types/Request.interface";
 import { deleteFile } from "../utils/files";
+import MealCatagory from "../models/meal_catagory.model";
 
 const generatePost = async (req: Request, res: Response) => {
   const nutrional_post: nutrional_post = {
@@ -29,13 +30,17 @@ const generatePost = async (req: Request, res: Response) => {
 const getPost = async (req: Request, res: Response) => {
   const postID = req.params.id;
   await Nutrional_post.findById({ _id: postID }).then(
-    (post: nutrional_post | null) => {
+    async (post: any | null) => {
       if (post) {
-        post = JSON.parse(JSON.stringify(post));
-        post!.Image = `http://localhost:${process.env.PORT}/public/postImages/${
-          post!.Image
-        }.jpg`;
-        return res.status(200).json(post);
+        const Author = await Staff.findById(post.Staff_id);
+        let responsePost = JSON.parse(JSON.stringify(post));
+        responsePost.Image = `http://localhost:${process.env.PORT}/public/postImages/${post.Image}.jpg`;
+        responsePost = {
+          ...responsePost,
+          catagory: (await MealCatagory.findById(post.Catagory_id))?.Name,
+          author: (await User.findById(Author?.User_id))?.Name,
+        };
+        return res.status(200).json(responsePost);
       } else {
         return res.status(400).json({ msg: "No post found" });
       }
@@ -55,9 +60,9 @@ const getPosts = async (req: Request, res: Response) => {
           const staff = await Staff.findById(post.Staff_id);
           const user = await User.findById(staff?.User_id);
           if (user) {
-            post.Staff_id = user?.Name;
+            post.author = user?.Name;
           } else {
-            post.Staff_id = "No name found";
+            post.author = "No name found";
           }
         })
       );
@@ -71,6 +76,22 @@ const getPosts = async (req: Request, res: Response) => {
 
 const createPost = async (req: RequestWithUser, res: Response) => {
   const { Title, Category, AverageKcal, Image, Content } = req.body;
+  const postExists = await Nutrional_post.findOne({
+    $and: [
+      { Title: Title },
+      { Catagory_id: Category },
+      { Average_calories: AverageKcal },
+    ],
+  });
+  if (postExists != null || postExists != undefined) {
+    await deleteFile(
+      `./public/postImages/undefined${Title}${Category}${AverageKcal}.jpg`
+    );
+    await deleteFile(
+      `./public/postImages/${req.user?.id}${Title}${Category}${AverageKcal}.jpg`
+    );
+    return res.status(400).json({ msg: "Post already exists" });
+  }
   const user = req.user;
   let filePath = `./public/postImages/undefined${Title}${Category}${AverageKcal}.jpg`;
   if (!user) {
@@ -107,6 +128,24 @@ const createPost = async (req: RequestWithUser, res: Response) => {
 };
 const updatePost = async (req: RequestWithUser, res: Response) => {
   const { Title, Category, AverageKcal, Image, Content } = req.body;
+  const postExists = await Nutrional_post.findOne({
+    $and: [
+      { Title: Title },
+      { Catagory_id: Category },
+      { Average_calories: AverageKcal },
+      { _id: { $ne: req.params.id } },
+    ],
+  });
+  // Find posts with same title, category and average calories but not the same id
+  if (postExists != null || postExists != undefined) {
+    await deleteFile(
+      `./public/postImages/undefined${Title}${Category}${AverageKcal}.jpg`
+    );
+    await deleteFile(
+      `./public/postImages/${req.user?.id}${Title}${Category}${AverageKcal}.jpg`
+    );
+    return res.status(400).json({ msg: "Post already exists" });
+  }
   const postID = req.params.id;
   const user = req.user;
   let filePath = `./public/postImages/undefined${Title}${Category}${AverageKcal}.jpg`;
@@ -124,23 +163,32 @@ const updatePost = async (req: RequestWithUser, res: Response) => {
     await deleteFile(filePath);
     return res.status(400).json({ msg: "User not found" });
   }
+  const oldData = await Nutrional_post.findById(postID);
   try {
-     await Nutrional_post.findByIdAndUpdate(
+    await Nutrional_post.findByIdAndUpdate(
       postID,
       {
-    Staff_id: isStaff._id,
-    Title,
-    Catagory_id: Category,
-    Average_calories: AverageKcal,
-    Image: `${isStaff._id}${Title}${Category}${AverageKcal}`,
-    Content,
-},
+        Title: Title,
+        Catagory_id: Category,
+        Average_calories: AverageKcal,
+        Image: `${isStaff._id}${Title}${Category}${AverageKcal}`,
+        Content: Content,
+      },
       { new: true }
-    ).then((updatedPos) => {
-res.status(200).json({msg:"Updated"});
-}).catch((err) => {
-res.status(400).json({msg:err})});
-
+    )
+      .then(async (updatedPos) => {
+        if (updatedPos?.Image !== oldData?.Image) {
+          await deleteFile(`./public/postImages/${oldData?.Image}.jpg`).catch(
+            (err) => {
+              console.log(err);
+            }
+          );
+        }
+        res.status(200).json({ msg: "Updated" });
+      })
+      .catch((err) => {
+        res.status(400).json({ msg: err });
+      });
   } catch (err) {
     await deleteFile(filePath);
     res.json({
@@ -148,4 +196,40 @@ res.status(400).json({msg:err})});
     });
   }
 };
-export default { generatePost, getPosts, getPost, createPost, updatePost };
+
+const deletePost = async (req: RequestWithUser, res: Response) => {
+  const postID = req.params.id;
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  if (isStaff.Position !== "Nutritionist") {
+    return res.status(400).json({ msg: "User not found" });
+  }
+
+  const postData = await Nutrional_post.findById(postID);
+  if (!postData) {
+    return res.status(400).json({ msg: "Post not found" });
+  }
+
+  const deletedPost = await Nutrional_post.findByIdAndDelete(postID);
+  if (!deletedPost) {
+    return res.status(400).json({ msg: "Post not found" });
+  }
+  await deleteFile(`./public/postImages/${postData.Image}.jpg`).catch((err) => {
+    console.log(err);
+  });
+  res.status(200).json({ msg: "Post deleted" });
+};
+export default {
+  generatePost,
+  getPosts,
+  getPost,
+  createPost,
+  updatePost,
+  deletePost,
+};

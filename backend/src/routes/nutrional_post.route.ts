@@ -17,8 +17,10 @@ router
     nutrional_postController.createPost
   );
 
-router.route("/update").post(Auth, uploadPostImage.single("Image"), nutrional_postController.updatePost)
+router.route("/update/:id").post(Auth, uploadPostImage.single("Image"), nutrional_postController.updatePost)
 
 router.route("/:id").get(Auth, nutrional_postController.getPosts);
+
+router.route("/:id").delete(Auth, nutrional_postController.deletePost);
 
 module.exports = router;
