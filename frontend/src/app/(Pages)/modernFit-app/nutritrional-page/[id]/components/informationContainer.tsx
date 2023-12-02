@@ -1,8 +1,10 @@
 import React from "react";
 import { Button } from "@/app/components/UI/Button";
 import axios from "axios";
+import Link from "next/link";
 
 type props = {
+    postId: string;
     name: string;
     image: string;
     description: string;
@@ -10,7 +12,7 @@ type props = {
     calories: number;
 }
 
-const InformationContainer: React.FC<props> = async ({ name, image, description, author, calories}) =>{
+const InformationContainer: React.FC<props> = async ({ postId, name, image, description, author, calories}) =>{
     if (description.length > 75)
     {
         description = description.slice(0, 75);
@@ -40,7 +42,7 @@ const InformationContainer: React.FC<props> = async ({ name, image, description,
                     rounded="circle"
                     className="w-5/6 border mx-auto text-center"
                     >
-                    Open
+                    <Link href={`../individual-nutritional-info/${postId}`}> Open </Link>
                 </Button>
             </div>
         </div>
