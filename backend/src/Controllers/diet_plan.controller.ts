@@ -119,7 +119,7 @@ const sendDietPlan = async (req: RequestWithUser, res: Response) => {
         };
         nRequestData[User_id] = {
           diet: false,
-          workout: true,
+          workout: nRequestData[User_id].workout,
         };
         try {
           await setCacheAsJson("programRequests", nRequestData);

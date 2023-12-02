@@ -198,9 +198,19 @@ const assignUser = async (req: RequestWithUser, res: Response) => {
   if (!currentProgramRequest) {
     return res.status(400).json({ msg: "No program request" });
   }
-  if (currentProgramRequest[userID]?.diet == false || currentProgramRequest[userID]?.workout == false) {
-    return res.status(400).json({ msg: "No program request" });
+
+  if (isStaff.Position === "Nutritionist") {
+    if (currentProgramRequest[userID]?.diet == false) {
+      return res.status(400).json({ msg: "No program request" });
+    }
   }
+
+  if (isStaff.Position === "Trainer") {
+    if (currentProgramRequest[userID]?.workout == false) {
+      return res.status(400).json({ msg: "No program request" });
+    }
+  }
+  
   // assign user to staff
   await Staff.findOneAndUpdate(
     { User_id: user.id },
@@ -272,15 +282,26 @@ const getUserProgramRequest = async (req: RequestWithUser, res: Response) => {
   // get program request from cache
   const currentProgramRequest = await getCacheAsJson("programRequests");
 
-  if (!currentProgramRequest) {
-    return res.status(207).json({ msg: "No program request" });
+  if (isStaff.Position === "Nutritionist") {
+    if (currentProgramRequest) {
+      if (currentProgramRequest[userID]?.diet == true) {
+        return res.status(200).json({ msg: "Diet" });
+      } else {
+        return res.status(200).json({ msg: "No program request" });
+      }
+    }
+    return res.status(200).json({ msg: "No program request" });
   }
 
-  if (
-    currentProgramRequest[userID]?.diet == false ||
-    currentProgramRequest[userID]?.workout == false
-  ) {
-    return res.status(207).json({ msg: "No program request" });
+  if (isStaff.Position === "Trainer") {
+    if (currentProgramRequest) {
+      if (currentProgramRequest[userID]?.workout == true) {
+        return res.status(200).json({ msg: "Workout" });
+      } else {
+        return res.status(200).json({ msg: "No program request" });
+      }
+    }
+    return res.status(200).json({ msg: "No program request" });
   }
 };
 

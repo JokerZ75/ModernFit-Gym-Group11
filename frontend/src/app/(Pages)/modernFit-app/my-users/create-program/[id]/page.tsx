@@ -9,6 +9,7 @@ import {
 import GoBackButton from "@/app/components/GoBackButton";
 import FormWrapper from "./components/formWrapper";
 import NutritionalProgramForm from "./components/nutritionalProgramForm";
+import WorkoutoutProgramForm from "./components/workoutProgramForm";
 
 const createProgram: React.FC<{
   params: {
@@ -85,34 +86,77 @@ const createProgram: React.FC<{
 
   if (isTrainer) {
     // Make phyical program here
+    const hasProgramWithNoRequest = await queryClient.fetchQuery({
+      queryKey: ["hasProgramWithNoRequest", params.id],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/program-request/user/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (data.msg == "Workout") return true;
+        if (data.msg == "No program request") return false;
+        return data;
+      },
+    });
+
+    if (!hasProgramWithNoRequest) {
+      return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <main className="text-center">
+            <h1 className="text-2xl font-bold mt-4 mb-4">
+              This user hasn't requested a workout program yet
+            </h1>
+            <GoBackButton />
+          </main>
+        </HydrationBoundary>
+      );
+    }
     return (
       <FormWrapper
         params={{
           user: user.Name,
         }}
       >
-        <div></div>
+        <WorkoutoutProgramForm id={params.id} />
       </FormWrapper>
     );
   }
 
   if (isNutritionist) {
     // Make nutritional program here
-    // const hasProgramWithNoRequest = await queryClient.fetchQuery({
-    //   queryKey: ["hasProgramWithNoRequest", params.id],
-    //   queryFn: async () => {
-    //     const { data } = await axios.get(
-    //       `${process.env.NEXT_PUBLIC_API_URL}/program-request/${params.id}`,
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       }
-    //     );
-    //     return data;
-    //   },
-    // });
+    const hasProgramWithNoRequest = await queryClient.fetchQuery({
+      queryKey: ["hasProgramWithNoRequest", params.id],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/program-request/user/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (data.msg == "Diet") return true;
+        if (data.msg == "No program request") return false;
+        return data;
+      },
+    });
 
+    if (!hasProgramWithNoRequest) {
+      return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <main className="text-center">
+            <h1 className="text-2xl font-bold mt-4 mb-4">
+              This user hasn't requested a nutritional program yet
+            </h1>
+            <GoBackButton />
+          </main>
+        </HydrationBoundary>
+      );
+    }
 
     return (
       <FormWrapper
