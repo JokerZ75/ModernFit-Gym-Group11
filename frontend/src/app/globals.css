@@ -227,4 +227,20 @@
     @apply h-4 w-4 border-2 border-gray-300 rounded-full animate-spin;
     border-top-color: #3288c4;
   }
+
+  .page-form-pages {
+    @apply relative h-[380px];
+  }
+
+  .page-form__page {
+    @apply absolute flex flex-col w-full transition-opacity duration-500 ease-in-out;
+  }
+
+  .page-form__page > h2 {
+    @apply text-xl font-bold;
+  }
+
+  .page-form__unselected {
+    @apply opacity-0 -left-[10000px] transition-opacity duration-500 ease-in-out;
+  }
 }

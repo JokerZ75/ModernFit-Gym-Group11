@@ -1,6 +1,8 @@
 import WorkoutPlan from "../models/workout_plan.model";
 import { Request, Response } from "express";
 import { RequestWithUser } from "../types/Request.interface";
+import { getCacheAsJson, setCacheAsJson } from "../utils/cache";
+import Staff from "../models/staff.model";
 
 const generateWorkoutPlan = async (req: Request, res: Response) => {
   const nworkoutPlan = {
@@ -11,7 +13,7 @@ const generateWorkoutPlan = async (req: Request, res: Response) => {
         WorkoutsList: ["Workout", "Workout", "Workout"],
       },
       Tuesday: {
-        WorkoutsList: ["Workout", "Workout","Workout"],
+        WorkoutsList: ["Workout", "Workout", "Workout"],
       },
       Wednesday: {
         WorkoutsList: ["Workout", "Workout", "Workout"],
@@ -51,4 +53,58 @@ const getWorkoutPlan = async (req: RequestWithUser, res: Response) => {
     });
 };
 
-export default { generateWorkoutPlan, getWorkoutPlan };
+const sendWorkoutPlan = async (req: RequestWithUser, res: Response) => {
+  const { User_id, Plan } = req.body;
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  if (!User_id || !Plan) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Trainer") {
+    return res.status(400).json({ msg: "User is not a trainer" });
+  }
+  const workoutPlan = {
+    User_id: User_id,
+    Staff_id: isStaff._id,
+    Plan: Plan,
+  };
+  const newWorkoutPlan = new WorkoutPlan(workoutPlan);
+  await newWorkoutPlan
+    .save()
+    .then(async (workoutPlan) => {
+      // Update Cache
+      const currentProgramRequest = await getCacheAsJson("programRequests");
+      if (currentProgramRequest) {
+        const nRequestData = {
+          ...currentProgramRequest,
+        };
+        nRequestData[User_id] = {
+          diet: nRequestData[User_id].diet,
+          workout: false,
+        };
+        try {
+          await setCacheAsJson("programRequests", nRequestData);
+          // Unassign user from staff
+          const staff = await Staff.findOneAndUpdate(
+            { User_id: user.id },
+            { $pull: { AssignedUsers: User_id } },
+            { new: true }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      return res.status(200).json({ msg: "Workout plan sent" });
+    })
+    .catch((err) => {
+      res.status(400).json({ msg: err });
+    });
+};
+
+export default { generateWorkoutPlan, getWorkoutPlan, sendWorkoutPlan };

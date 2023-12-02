@@ -20,17 +20,30 @@ export default function Home() {
   const { api_url, login } = useAuthContext();
   React.useEffect(() => {
     const log = async () => {
+      // Nutritionist
       const data = await axios.post(`${api_url}/session/login`, {
         email: "dhughes1704@icloud.com",
         password: "HelloWorld1",
         authCode: "123456",
       });
+      // Trainer
+      // const data = await axios.post(`${api_url}/session/login`, {
+      //   email: "deaconhughes07@gmail.com",
+      //   password: "HelloWorld1",
+      //   authCode: "123456",
+      // });
+      // User
+      // const data = await axios.post(`${api_url}/session/login`, {
+      //   email: "altsteam682@gmail.com",
+      //   password: "OtherUser1",
+      //   authCode: "123456",
+      // });
       const { accessToken, refreshToken, tokenType } = data.data;
       login({ accessToken, refreshToken, tokenType });
     };
     log();
   }, []);
-  
+
   return (
     // Classnames hacky way to fix scroller issue appearing over the nav
     <main className="">

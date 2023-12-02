@@ -19,25 +19,25 @@ const dietPlanSchema = new Schema(
         Monday: {
           Breakfast: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Lunch: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Dinner: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Snack: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
@@ -45,25 +45,25 @@ const dietPlanSchema = new Schema(
         Tuesday: {
           Breakfast: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Lunch: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Dinner: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Snack: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
@@ -71,25 +71,25 @@ const dietPlanSchema = new Schema(
         Wednesday: {
           Breakfast: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Lunch: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Dinner: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Snack: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
@@ -97,25 +97,25 @@ const dietPlanSchema = new Schema(
         Thursday: {
           Breakfast: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Lunch: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Dinner: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Snack: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
@@ -123,25 +123,25 @@ const dietPlanSchema = new Schema(
         Friday: {
           Breakfast: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Lunch: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Dinner: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
           Snack: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
             minlength: 3,
           },
