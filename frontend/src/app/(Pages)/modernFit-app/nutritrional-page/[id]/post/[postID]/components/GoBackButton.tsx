@@ -12,7 +12,7 @@ const GoBackButton: React.FC = () => {
       rounded="default"
       className=""
       onClick={() => {
-        Router.back();
+        Router.push("../");
       }}
     >
       Go Back

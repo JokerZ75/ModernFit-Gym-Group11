@@ -126,7 +126,7 @@ const PostForm: React.FC = () => {
           <span ref={labelSpanRef}>upload image</span>
         </label>
         <input
-          className="absolute w-full border-2 h-full top-0 left-0 opacity-0"
+          className="absolute w-full border-2 h-full top-0 left-0 opacity-0 hover:cursor-pointer"
           type="file"
           {...register("Image", { required: true })}
           onChange={() => {

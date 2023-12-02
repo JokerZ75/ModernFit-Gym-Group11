@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
-
+import { useRouter } from "next/navigation";
 type props = {
   id: string;
   title: string;
@@ -34,6 +34,7 @@ const EditRemoveForm: React.FC<props> = ({
   } = useForm();
 
   const { getHeaders, api_url } = useAuthContext();
+  const Router = useRouter();
 
   const labelSpanRef = React.useRef<HTMLSpanElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -79,7 +80,7 @@ const EditRemoveForm: React.FC<props> = ({
         queryKey: ["posts", catagory],
       });
       setTimeout(() => {
-        window.location.href = "../";
+        Router.push(`../`);
       }, 1000);
     },
     onError: (error: any) => {
@@ -182,16 +183,16 @@ const EditRemoveForm: React.FC<props> = ({
           </p>
         )}
         {/* TODO: put image in background here*/}
-        <div className="mt-4 relative w-full">
+        <div className="mt-4 relative w-full hover:cursor-pointer">
           <label
             htmlFor="Image"
-            className="flex flex-col items-center w-full border-2 border-gray-300 rounded-md text-blue-200 font-bold text-xl py-16 bg-transparent "
+            className="flex flex-col items-center w-full border-2 border-gray-300 rounded-md text-blue-200 font-bold text-xl py-16 bg-transparent hover:cursor-pointer  "
           >
             <FontAwesomeIcon icon={faUpload} />
             <span ref={labelSpanRef}>upload image</span>
           </label>
           <input
-            className="absolute w-full border-2 h-full top-0 left-0 opacity-0"
+            className="absolute w-full border-2 h-full top-0 left-0 opacity-0 hover:cursor-pointer"
             type="file"
             {...register("Image", { required: false })}
             onChange={() => {
