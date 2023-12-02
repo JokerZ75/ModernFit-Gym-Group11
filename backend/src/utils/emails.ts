@@ -23,8 +23,8 @@ const sendEmail = async (email: string, subject: string, text: string) => {
 };
 
 const SendVerificationEmailForRegistration = async (
-    email: string,
-    token: string
+  email: string,
+  token: string
 ) => {
   const mailData = {
     from: process.env.EMAIL_USER,
@@ -48,7 +48,8 @@ const LoginEmail = async (email: string, token: string) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Login 2FA",
-    text: "Your login code is: " + token + ".\n This code will expire in 5 minutes",
+    text:
+      "Your login code is: " + token + ".\n This code will expire in 5 minutes",
   };
 
   transporter.sendMail(mailData, (err, info) => {
@@ -60,53 +61,55 @@ const LoginEmail = async (email: string, token: string) => {
   });
 };
 
-const RecoverEmail = async (email: string,) => {
-  const newPassword = generatedPassword(12)
-
+const RecoverEmail = async (email: string, url: string) => {
   const mailData = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Password Recovery",
-    text: "Your new password is: " + newPassword,
+    text: "Update your password at the following location " + url,
   };
 
-  try {
-    await updatePassword(email, newPassword);
-    await transporter.sendMail(mailData);
-    console.log(`Password recovery email sent to ${email}`);
-  } catch (error) {
-    console.error(`Error recovering password: ${error}`);
-    throw error;
-  }
-};
-
-const updatePassword = async (email: string, newPassword: string): Promise<void> => {
-  try {
-    const User = mongoose.model("User");
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      throw new Error("User not found");
+  await transporter.sendMail(mailData, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return info;
     }
-
-    user.password = newPassword;
-    await user.save();
-
-    console.log(`Password updated for user with email: ${email}`);
-  } catch (error) {
-    throw error;
-  }
+  });
 };
 
-const generatedPassword = (length: number): string => {
-  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=[]<>?';
-  let password = '';
+const updatePassword = async (email: string) => {
+  const mailData = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Password Updated",
+    text: "Your password has been updated",
+  };
 
-  for(let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    password += characters.charAt(randomIndex)
-  }
-  return password;
-}
+  await transporter.sendMail(mailData, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return info;
+    }
+  });
+};
 
-export { sendEmail, SendVerificationEmailForRegistration, LoginEmail, RecoverEmail };
+// const generatedPassword = (length: number): string => {
+//   const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=[]<>?';
+//   let password = '';
+
+//   for(let i = 0; i < length; i++) {
+//     const randomIndex = Math.floor(Math.random() * characters.length);
+//     password += characters.charAt(randomIndex)
+//   }
+//   return password;
+// }
+
+export {
+  sendEmail,
+  SendVerificationEmailForRegistration,
+  LoginEmail,
+  RecoverEmail,
+  updatePassword,
+};

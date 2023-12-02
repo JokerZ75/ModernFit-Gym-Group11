@@ -22,7 +22,7 @@ export default function Home() {
     const log = async () => {
       const data = await axios.post(`${api_url}/session/login`, {
         email: "dhughes1704@icloud.com",
-        password: "HelloWorld1",
+        password: "HelloWorld2",
         authCode: "123456",
       });
       const { accessToken, refreshToken, tokenType } = data.data;

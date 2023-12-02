@@ -42,6 +42,14 @@ const CheckServerRedirect: React.FC<{ cookie: string | undefined }> = ({
         window.location.href = "/modernFit-app/dashboard";
       }, 2000);
     },
+    onError: async (error: any) => {
+      if (error.response?.data?.msg === "Invalid token") {
+        toast.error("Link expired or invalid");
+      }
+      if (error.response?.data?.msg === "Invalid details") {
+        toast.error("Email or password is incorrect");
+      }
+    },
   });
 
   useEffect(() => {

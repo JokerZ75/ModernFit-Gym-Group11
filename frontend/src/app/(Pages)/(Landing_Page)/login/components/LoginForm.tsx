@@ -6,6 +6,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const LoginForm: React.FC = () => {
   const {
@@ -47,8 +48,16 @@ const LoginForm: React.FC = () => {
     onSuccess: async (data) => {
       login(data);
       setTimeout(() => {
-        window.location.href = "/modernFit-app/dashboard"
+        window.location.href = "/modernFit-app/dashboard";
       }, 2000);
+    },
+    onError: async (error: any) => {
+      if (error.response?.data?.msg === "Invalid details") {
+        toast.error("Email or password is incorrect");
+      }
+      if (error.response?.data?.msg === "Invalid auth code") {
+        toast.error("Invalid 2FA code");
+      } 
     },
   });
 
@@ -69,6 +78,11 @@ const LoginForm: React.FC = () => {
     },
     onSuccess: (data) => {
       faRef.current?.classList.remove("!hidden");
+    },
+    onError: async (error: any) => {
+      if (error.response?.data?.msg === "Invalid details") {
+        toast.error("Email or password is incorrect");
+      }
     },
   });
 
@@ -116,8 +130,13 @@ const LoginForm: React.FC = () => {
         {errors["authCode"] && (
           <p className="form-error">Please enter your 2FA code</p>
         )}
+        <Link href="/recover" passHref className="inline">
+            <p className="text-blue-200 font-bold text-sm my-1 hover:text-orange-200 hover:brightness-125 transition-all duration-500 ease-in-out inline">
+              forgot password?
+            </p>
+        </Link>
         <Button
-          className="mt-4 mb-2 w-3/4 border mx-auto"
+          className="mt-2 mb-2 w-3/4 border mx-auto"
           type="submit"
           shadow="default"
           size="default"

@@ -8,7 +8,7 @@ const Recover: React.FC = () => {
         <>
             <div className="px-5 py-5 md:w-2/3 mx-auto">
                 <div className="text-blue-200 text-center font-bold text-4xl mb-2">
-                    <h1> Recover Account </h1>
+                    <h1>recover</h1>
                 </div>
                 <RecoverForm />
                 <div className="text-center">
@@ -22,7 +22,7 @@ const Recover: React.FC = () => {
                             rounded="circle"
                             className="w-3/4 border mx-auto"
                         >
-                            Login
+                            login
                         </Button>
                     </Link>
                 </div>
