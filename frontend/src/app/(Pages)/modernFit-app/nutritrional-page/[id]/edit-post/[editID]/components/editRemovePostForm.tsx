@@ -7,7 +7,6 @@ import { Button } from "@/app/components/UI/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
-import { Content } from "next/font/google";
 import { toast } from "react-toastify";
 
 type props = {
@@ -79,6 +78,9 @@ const EditRemoveForm: React.FC<props> = ({
       queryClient.invalidateQueries({
         queryKey: ["posts", catagory],
       });
+      setTimeout(() => {
+        window.location.href = "../";
+      }, 1000);
     },
     onError: (error: any) => {
       if (error.response.data?.msg === "Post already exists") {
@@ -134,6 +136,7 @@ const EditRemoveForm: React.FC<props> = ({
       "catSelect"
     ) as HTMLSelectElement;
     selectInput.value = catagory;
+    setValue("Category", catagory);
   }, [categories]);
 
   return (
@@ -182,7 +185,7 @@ const EditRemoveForm: React.FC<props> = ({
         <div className="mt-4 relative w-full">
           <label
             htmlFor="Image"
-            className="flex flex-col items-center w-full border-2 border-gray-300 rounded-md text-blue-200 font-bold text-xl py-16 "
+            className="flex flex-col items-center w-full border-2 border-gray-300 rounded-md text-blue-200 font-bold text-xl py-16 bg-transparent "
           >
             <FontAwesomeIcon icon={faUpload} />
             <span ref={labelSpanRef}>upload image</span>
@@ -190,13 +193,21 @@ const EditRemoveForm: React.FC<props> = ({
           <input
             className="absolute w-full border-2 h-full top-0 left-0 opacity-0"
             type="file"
-            {...register("Image", { required: true })}
+            {...register("Image", { required: false })}
             onChange={() => {
               labelSpanRef.current!.innerText = `${
                 formRef.current!.Image.files[0].name
               }`;
             }}
           />
+          <div className="-z-10 absolute top-0 left-0 w-full h-full">
+            <div className="absolute bg-black w-full h-full rounded-md bg-opacity-75"></div>
+            <img
+              src={`${image}`}
+              alt="image used"
+              className="w-full max-h-full object-fit rounded-lg "
+            />
+          </div>
         </div>
         {errors.Image && <p className="form-error">This field is required</p>}
         <textarea
