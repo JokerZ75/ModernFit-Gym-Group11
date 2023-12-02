@@ -1,5 +1,5 @@
 import React from "react";
-import InformationContainer from "./components/informationContainer";
+import InformationContainer from "./components/post";
 import {
   HydrationBoundary,
   QueryClient,
@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import axios from "axios";
+import PostContainer from "./components/postContainer";
+import GoBackButton from "./components/GoBackButton";
 
 type mealCatagory = {
   Name: string;
@@ -24,6 +26,7 @@ type nutrional_post = {
   Average_calories: number;
   Image: string;
   Content: string;
+  author: string;
 };
 
 const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
@@ -39,8 +42,8 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
     },
   });
 
-  const posts = await queryClient.fetchQuery({
-    queryKey: ["nutritional_post", params.id],
+  await queryClient.prefetchQuery({
+    queryKey: ["posts", params.id],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/nutritional_post/${params.id}`,
@@ -73,7 +76,10 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="md:w-3/4 mx-auto px-4">
         <div>
-          <div className=" font-bold text-blue-200 text-2xl md:text-4xl mt-4">
+          <div className="mt-4 flex flex-col md:flex-row">
+            <GoBackButton />
+          </div>
+          <div className=" font-bold text-blue-200 text-2xl md:text-4xl ">
             <h2>{catagory.Name}</h2>
           </div>
           <br></br>
@@ -82,19 +88,7 @@ const nutritionInfo: React.FC<{ params: { id: string } }> = async ({
           </div>
         </div>
         <div className="md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:gap-x-6">
-          {posts?.map((post) => {
-            return (
-              <InformationContainer
-                key={post._id}
-                postId={post._id}
-                name={post.Title}
-                image={post.Image}
-                description={post.Content}
-                author={post.Staff_id}
-                calories={post.Average_calories}
-              />
-            );
-          })}
+          <PostContainer catagoryID={params.id} />
         </div>
       </main>
     </HydrationBoundary>

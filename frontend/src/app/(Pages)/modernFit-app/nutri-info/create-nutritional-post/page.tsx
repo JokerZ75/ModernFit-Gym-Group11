@@ -20,7 +20,7 @@ const NutritionPost: React.FC = async () => {
     },
   });
   await queryClient.prefetchQuery({
-    queryKey: ["mealcatagory"],
+    queryKey: ["categories"],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/mealcategory/`,
@@ -37,31 +37,33 @@ const NutritionPost: React.FC = async () => {
     },
   });
 
-  // const isNutritionist = await queryClient.fetchQuery({
-  //   queryKey: ["isNutritionist"],
-  //   queryFn: async () => {
-  //     const { data } = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     return (data?.position === "Nutritionist") as boolean;
-  //   },
-  // });
+  const isNutritionist = await queryClient.fetchQuery({
+    queryKey: ["isNutritionist"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return (data?.position === "Nutritionist") as boolean;
+    },
+  });
 
-  // if (!isNutritionist) {
-  //   return (
-  //     <HydrationBoundary state={dehydrate(queryClient)}>
-  //       <h1 className="text-red-500 text-3xl font-extrabold">
-  //         You are not authorized to view this page
-  //       </h1>
-  //       <GoBackButton />
-  //     </HydrationBoundary>
-  //   );
-  // }
+  if (!isNutritionist) {
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="w-3/4 mx-auto text-center">
+            <h1 className="text-red-500 text-3xl font-extrabold">
+              You are not authorized to view this page
+            </h1>
+          <GoBackButton />
+        </div>
+      </HydrationBoundary>
+    );
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
