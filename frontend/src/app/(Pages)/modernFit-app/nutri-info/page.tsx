@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import Link from "next/link";
 import { Button } from "@/app/components/UI/Button";
+import CreatePostButton from "./create-nutritional-post/components/createPostButton";
 
 const Nutricategories: React.FC = async () => {
   const cookieStore = cookies();
@@ -34,25 +35,25 @@ const Nutricategories: React.FC = async () => {
     },
   });
 
-  // const isNutritionist = await queryClient.fetchQuery({
-  //   queryKey: ["isNutritionist"],
-  //   queryFn: async () => {
-  //     const { data } = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     return (data?.position === "Nutritionist") as boolean;
-  //   },
-  // });
-
+  const isNutritionist = await queryClient.fetchQuery({
+    queryKey: ["isNutritionist"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+    );
+      return (data?.position === "Nutritionist") as boolean;
+    },
+  })
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="flex m-auto flex-col">
+
         <h1 className="m-auto text-4xl text-sky-300">Info categories</h1>
         <div className="flex justify-center m-auto md:flex-row flex-wrap">
           {catagories.map((catagory) => {
@@ -68,6 +69,11 @@ const Nutricategories: React.FC = async () => {
             );
           })}
         </div>
+        
+        <CreatePostButton
+          isNutritionist={isNutritionist}
+        />
+
         {/* {isNutritionist && (
           <Link href="/modernFit-app/nutri-info/create-nutritional-post">
             <Button
@@ -84,5 +90,7 @@ const Nutricategories: React.FC = async () => {
       </main>
     </HydrationBoundary>
   );
+
+
 };
 export default Nutricategories;

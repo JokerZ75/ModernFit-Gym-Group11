@@ -6,37 +6,47 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { cookies } from "next/headers";
-import PostForm from "./components/post-form";
 import GoBackButton from "./components/GoBackButton";
+import EditRemoveForm from "./components/editRemovePostForm";
 
-const NutritionPost: React.FC = async () => {
-  const cookieStore = cookies();
-  const token = cookieStore.get("_auth_token")?.value;
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 1000 * 60,
+type nutrional_post = {
+    _id: string;
+    Staff_id: string;
+    Title: string;
+    Catagory_id: string;
+    Average_calories: number;
+    Image: string;
+    Content: string;
+  };
+
+const editRemovePost: React.FC<{ params: { id: string } }> = async ({
+    params,
+  }) => {
+    const cookieStore = cookies();
+    const token = cookieStore.get("_auth_token")?.value;
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60,
+        },
       },
-    },
-  });
-  await queryClient.prefetchQuery({
-    queryKey: ["mealcatagory"],
+    });
+    
+  const posts = await queryClient.fetchQuery({
+    queryKey: ["nutritional_post", params.id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/mealcategory/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/nutritional_post/post/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      return data as {
-        _id: string;
-        Name: string;
-      }[];
-    },
-  });
-
+        );
+        return data as nutrional_post;
+      },
+    });
+ 
   const isNutritionist = await queryClient.fetchQuery({
     queryKey: ["isNutritionist"],
     queryFn: async () => {
@@ -57,7 +67,7 @@ const NutritionPost: React.FC = async () => {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="w-3/4 mx-auto text-center">
             <h1 className="text-red-500 text-3xl font-extrabold">
-              You are not authorized to view this page
+               You are not authorized to view this page
             </h1>
           <GoBackButton />
         </div>
@@ -68,11 +78,18 @@ const NutritionPost: React.FC = async () => {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="px-4 py-8 md:w-3/4 mx-auto">
-        <h1 className="text-blue-200 text-3xl font-extrabold">Create Post</h1>
-        <PostForm />
+        <h1 className="text-blue-200 text-3xl font-extrabold">Edit / Remove Post</h1>
+          <EditRemoveForm
+              id={params.id}
+              title={posts.Title}
+              catagory={posts.Catagory_id}
+              image={posts.Image}
+              description={posts.Content}
+              calories={posts.Average_calories}
+          />
       </main>
     </HydrationBoundary>
   );
 };
 
-export default NutritionPost;
+export default editRemovePost;

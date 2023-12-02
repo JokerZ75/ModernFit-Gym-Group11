@@ -105,5 +105,47 @@ const createPost = async (req: RequestWithUser, res: Response) => {
     });
   }
 };
+const updatePost = async (req: RequestWithUser, res: Response) => {
+  const { Title, Category, AverageKcal, Image, Content } = req.body;
+  const postID = req.params.id;
+  const user = req.user;
+  let filePath = `./public/postImages/undefined${Title}${Category}${AverageKcal}.jpg`;
+  if (!user) {
+    await deleteFile(filePath);
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    await deleteFile(filePath);
+    return res.status(400).json({ msg: "User not found" });
+  }
+  filePath = `./public/postImages/${isStaff._id}${Title}${Category}${AverageKcal}.jpg`;
+  if (isStaff.Position !== "Nutritionist") {
+    await deleteFile(filePath);
+    return res.status(400).json({ msg: "User not found" });
+  }
+  try {
+     await Nutrional_post.findByIdAndUpdate(
+      postID,
+      {
+    Staff_id: isStaff._id,
+    Title,
+    Catagory_id: Category,
+    Average_calories: AverageKcal,
+    Image: `${isStaff._id}${Title}${Category}${AverageKcal}`,
+    Content,
+},
+      { new: true }
+    ).then((updatedPos) => {
+res.status(200).json({msg:"Updated"});
+}).catch((err) => {
+res.status(400).json({msg:err})});
 
-export default { generatePost, getPosts, getPost, createPost };
+  } catch (err) {
+    await deleteFile(filePath);
+    res.json({
+      message: err,
+    });
+  }
+};
+export default { generatePost, getPosts, getPost, createPost, updatePost };

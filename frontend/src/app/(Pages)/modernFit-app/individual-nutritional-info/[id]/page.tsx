@@ -33,7 +33,22 @@ const individualNutritionInfo: React.FC<{ params: { id: string } }> = async ({
         },
       },
     });
-    
+
+    const isNutritionist = await queryClient.fetchQuery({
+      queryKey: ["isNutritionist"],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/session/session-data`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return (data?.position === "Nutritionist") as boolean;
+      },
+    });
+
 const posts = await queryClient.fetchQuery({
   queryKey: ["nutritional_post", params.id],
   queryFn: async () => {
@@ -53,13 +68,15 @@ const posts = await queryClient.fetchQuery({
       <HydrationBoundary state={dehydrate(queryClient)}>
         <main className="md:w-3/4 mx-auto p-4">
 
-              <IndividualInformation 
+              <IndividualInformation
+              id={posts._id} 
               title={posts.Title}
               catagory={posts.Catagory_id}
               image={posts.Image}
               description={posts.Content}
               author={posts.Staff_id}
               calories={posts.Average_calories}
+              isNutrisionist={isNutritionist}
             />
             
         </main>
