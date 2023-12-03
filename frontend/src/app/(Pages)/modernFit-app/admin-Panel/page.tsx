@@ -12,6 +12,7 @@ import axios from "axios";
 import GoBackButton from "../../../components/GoBackButton";
 import User from "./components/User";
 import UserContainer from "./components/userContainer";
+import DownTimeContainer from "./components/downTimeContainer";
 
 type userType = {
   _id?: string;
@@ -98,6 +99,16 @@ const adminPanel: React.FC = async () => {
     },
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: ["gymLocations"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/branch/`
+      );
+      return data as any[];
+    },
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="py-5 m-auto md:w-3/4">
@@ -121,16 +132,7 @@ const adminPanel: React.FC = async () => {
             </div>
           </div>
           <div className="text-center">
-            <Button
-              shadow="default"
-              size="small"
-              variant="darkBlue"
-              hover="hoverLightBlue"
-              rounded="circle"
-              className="w-5/6 border mx-auto text-center"
-            >
-              Create User
-            </Button>
+            <DownTimeContainer />
           </div>
           <div className="">
             <h2 className="w-5/6 mx-auto mt-4 mb-4 font-bold text-xl">users</h2>

@@ -21,11 +21,11 @@ export default function Home() {
   React.useEffect(() => {
     const log = async () => {
       // Nutritionist
-      const data = await axios.post(`${api_url}/session/login`, {
-        email: "dhughes1704@icloud.com",
-        password: "HelloWorld2",
-        authCode: "123456",
-      });
+      // const data = await axios.post(`${api_url}/session/login`, {
+      //   email: "dhughes1704@icloud.com",
+      //   password: "HelloWorld2",
+      //   authCode: "123456",
+      // });
       // Trainer
       // const data = await axios.post(`${api_url}/session/login`, {
       //   email: "deaconhughes07@gmail.com",
@@ -38,6 +38,12 @@ export default function Home() {
       //   password: "OtherUser1",
       //   authCode: "123456",
       // });
+      // Admin
+      const data = await axios.post(`${api_url}/session/login`, {
+        email: "mk8james@gmail.com",
+        password: "Helloworld1",
+        authCode: "123456",
+      });
       const { accessToken, refreshToken, tokenType } = data.data;
       login({ accessToken, refreshToken, tokenType });
     };

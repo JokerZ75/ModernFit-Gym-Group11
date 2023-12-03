@@ -30,6 +30,7 @@ const SearchBar: React.FC = () => {
     handleSubmit,
     getValues,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
@@ -85,6 +86,7 @@ const SearchBar: React.FC = () => {
             placeholder="Search"
             type="text"
             extraOnChangeFn={searchUser}
+            setValue={setValue}
           />
         )}
       </form>
