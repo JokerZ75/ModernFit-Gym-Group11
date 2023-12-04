@@ -9,7 +9,10 @@ import { toast } from "react-toastify";
 import { useForm, FieldValues } from "react-hook-form";
 import AutoComplete from "@/app/components/UI/AutoComplete";
 
-const SendDowntime: React.FC<{ children?: React.ReactNode }> = () => {
+const SendDowntime: React.FC<{
+  children?: React.ReactNode;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setModalOpen }) => {
   const { getHeaders, api_url } = useAuthContext();
 
   const [checked, setChecked] = React.useState(false);
@@ -32,9 +35,47 @@ const SendDowntime: React.FC<{ children?: React.ReactNode }> = () => {
     setValue,
   } = useForm();
 
-  const onSubmit = async (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = async (formData: FieldValues) => {
+    let requestData = {
+      Description: `There will be down time at ${formData.gymLocation} from ${formData.downTime} to ${formData.upTime}`,
+      Location: gymLocations?.find(
+        (location) =>
+          `${location.Name}-(${location.Address})` === formData.gymLocation
+      )?._id,
+    };
+
+    if (getValues("all")) {
+      {
+        requestData["Location"] = "All";
+        requestData["Description"] = `There will be down time at all gyms from ${formData.downTime} to ${formData.upTime}`;
+      }
+    }
+    // console.log(requestData);
+    mutate(requestData);
   };
+
+  const { mutate } = useMutation({
+    mutationKey: ["sendDowntime"],
+    mutationFn: async (data: FieldValues) => {
+      const headers = await getHeaders();
+      const { data: response } = await axios.post(
+        `${api_url}/notification/downtime`,
+        data,
+        {
+          headers: headers,
+        }
+      );
+      return response;
+    },
+    onSuccess: (data) => {
+      setModalOpen(false);
+      toast.success("Downtime sent");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("error sending downtime");
+    },
+  });
 
   return (
     <form className="modal-form text-center" onSubmit={handleSubmit(onSubmit)}>
@@ -87,7 +128,7 @@ const SendDowntime: React.FC<{ children?: React.ReactNode }> = () => {
       )}
       <div>
         {/* check box is all */}
-        <label htmlFor="all">all gyms or systemn?</label>
+        <label htmlFor="all">all gyms or system?</label>
         <input
           type="checkbox"
           className="modal-form-input"

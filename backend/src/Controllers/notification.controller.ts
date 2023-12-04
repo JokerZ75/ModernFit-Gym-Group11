@@ -117,8 +117,8 @@ const CreateDowntimeNotification = async (
     const newNotification = new Notification(notif);
     const savedNotification = await newNotification.save();
 
-    await emailDownTime(emails, req.body.Description, location);
-    return savedNotification;
+    await emailDownTime(emails, req.body.Description);
+    return res.json({ msg: "Emails sent" });
   } catch (err) {
     return err;
   }

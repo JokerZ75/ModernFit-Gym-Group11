@@ -106,16 +106,12 @@ const updatePassword = async (email: string) => {
 //   return password;
 // }
 
-const emailDownTime = async (
-  emails: string[],
-  downtime: string,
-  location: string
-) => {
+const emailDownTime = async (emails: string[], Description: string) => {
   const mailData = {
     from: process.env.EMAIL_USER,
     to: emails,
     subject: "Email Downtime",
-    text: `The email server will be down for maintenance at ${downtime} at ${location}`,
+    text: Description,
   };
 
   await transporter.sendMail(mailData, (err, info) => {

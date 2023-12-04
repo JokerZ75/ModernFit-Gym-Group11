@@ -12,10 +12,8 @@ const DownTimeContainer: React.FC<{ children?: React.ReactNode }> = ({}) => {
       {showModal && (
         <Modal withRouter={false} closeModal={setShowModal}>
           <div className="px-4 py-4">
-            <h1 className="text-3xl  font-bold text-blue-200 mb-5">
-              Notify of Downtime
-            </h1>
-            <SendDowntime />
+            <h1 className="text-3xl  font-bold text-blue-200 mb-5">Notify</h1>
+            <SendDowntime setModalOpen={setShowModal} />
           </div>
         </Modal>
       )}
