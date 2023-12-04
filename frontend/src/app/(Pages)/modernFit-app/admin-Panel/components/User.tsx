@@ -38,7 +38,7 @@ const User: React.FC<props> = ({
         setImage("");
       });
   }, []);
-  
+  //delete user
   const deleteUser = async () => {
     const { api_url, getHeaders } = useAuthContext();
     const { data: user } = useMutation({
