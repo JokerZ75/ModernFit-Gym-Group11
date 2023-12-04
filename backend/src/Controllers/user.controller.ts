@@ -328,6 +328,45 @@ const ConfirmUser = async (req: Request, res: Response) => {
   });
 };
 
+const adminDeleteUser = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const isStaff = await Staff.findOne({ User_id: user.id });
+  if (!isStaff) {
+    return res.status(400).json({ msg: "User is not staff" });
+  }
+  if (isStaff.Position !== "Admin") {
+    return res.status(400).json({ msg: "User is not admin" });
+  }
+  const { id } = req.params;
+  const foundUser = await User.findById(id);
+  if (!foundUser) {
+    return res.status(200).json({ msg: "No user" });
+  }
+  if (foundUser) {
+    // delete all data related to the user
+    const isStaff = await Staff.findOne({ User_id: id });
+    if (isStaff) {
+      await Class.deleteMany({ Owner_id: isStaff._id });
+      await NutritionalPost.deleteMany({ Staff_id: isStaff._id });
+    }
+    await Workout.deleteMany({ User_id: id });
+    await Meal.deleteMany({ User_id: id });
+    await DietPlan.deleteMany({ User_id: id });
+    await WorkoutPlan.deleteMany({ User_id: id });
+    await User.findByIdAndDelete(id);
+    await Notification.updateMany({
+      $pull: { Recievers: id },
+    });
+    await deleteFile(`./public/profileImages/${id}.jpg`);
+    return res.status(200).json({ msg: "User deleted" });
+  }
+
+  // delete all data related to the user
+};
+
 export default {
   getUser,
   updateUser,
@@ -337,4 +376,5 @@ export default {
   ConfirmUser,
   updateProfilePicture,
   getAllUsers,
+  adminDeleteUser,
 };

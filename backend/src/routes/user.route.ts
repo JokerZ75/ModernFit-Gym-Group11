@@ -13,6 +13,8 @@ router.route("/update").post(Auth, userController.updateUser);
 
 router.route("/delete").post(Auth, userController.deleteUser);
 
+router.route("/delete/:id").delete(Auth, userController.adminDeleteUser);
+
 router.route("/:id").get(Auth, userController.getUserById);
 
 router.route("/create").post(userController.CreateUser);

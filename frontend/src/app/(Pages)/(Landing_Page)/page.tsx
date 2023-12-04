@@ -20,9 +20,14 @@ export default function Home() {
   const { api_url, login } = useAuthContext();
   React.useEffect(() => {
     const log = async () => {
+      // const data = await axios.post(`${api_url}/session/login`, {
+      //   email: "dhughes1704@icloud.com",
+      //   password: "HelloWorld1",
+      //   authCode: "123456",
+      // });
       const data = await axios.post(`${api_url}/session/login`, {
-        email: "dhughes1704@icloud.com",
-        password: "HelloWorld1",
+        email: "mk8james@gmail.com",
+        password: "Helloworld1",
         authCode: "123456",
       });
       const { accessToken, refreshToken, tokenType } = data.data;
@@ -30,7 +35,7 @@ export default function Home() {
     };
     log();
   }, []);
-  
+
   return (
     // Classnames hacky way to fix scroller issue appearing over the nav
     <main className="">
