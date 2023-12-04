@@ -134,8 +134,8 @@ const User: React.FC<props> = ({ children, User }) => {
             <div className="text-white text-xl">{User.Email}</div>
           </div>
         </div>
-          {/*
-          TODO: IF HAD MORE TIME FOR THIS PROJECT AND ASSIGNMENT I WOULD HAVE IMPLEMENTED THIS FEATURE
+        <div className="text-center flex flex-col">
+          {/* TODO: IF HAD MORE TIME FOR THIS PROJECT AND ASSIGNMENT I WOULD HAVE IMPLEMENTED THIS FEATURE
            <Button
             shadow="default"
             size="small"
@@ -146,21 +146,19 @@ const User: React.FC<props> = ({ children, User }) => {
           >
             Edit Account
           </Button> */}
-            <Button
-              shadow="default"
-              size="small"
-              variant="default"
-              hover="default"
-              rounded="circle"
-              className="w-5/6 border mx-auto text-center m-1"
-              //delete user from database on button click
-              onClick={() => {
-                setConfirmModal(true);
-              }}
-            >
-              Remove Account
-            </Button>
-          </div>
+          <Button
+            shadow="default"
+            size="small"
+            variant="default"
+            hover="default"
+            rounded="circle"
+            className=" mx-auto text-center m-1"
+            onClick={() => {
+              setConfirmModal(true);
+            }}
+          >
+            Remove Account
+          </Button>
         </div>
       </div>
     </>

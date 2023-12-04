@@ -367,7 +367,7 @@ const adminDeleteUser = async (req: RequestWithUser, res: Response) => {
     await deleteFile(`./public/profileImages/${id}.jpg`);
     return res.status(200).json({ msg: "User deleted" });
   }
-
+};
 
 const RecoverAccount = async (req: Request, res: Response) => {
   const { Email } = req.body;
