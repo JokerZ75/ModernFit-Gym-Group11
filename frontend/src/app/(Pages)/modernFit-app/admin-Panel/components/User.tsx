@@ -1,8 +1,14 @@
 "use client";
 import React from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 import { Button } from "@/app/components/UI/Button";
 import { StringToBoolean } from "class-variance-authority/types";
-import axios from "axios";
+import { get } from "http";
+
 
 type props = {
   children?: React.ReactNode;
@@ -19,6 +25,7 @@ const User: React.FC<props> = ({
   email,
   profileImage,
 }) => {
+  
   const [image, setImage] = React.useState(profileImage);
 
   React.useEffect(() => {
@@ -31,7 +38,21 @@ const User: React.FC<props> = ({
         setImage("");
       });
   }, []);
-
+  
+  const deleteUser = async () => {
+    const { api_url, getHeaders } = useAuthContext();
+    const { data: user } = useMutation({
+      mutationKey: ["user"],
+      mutationFn: async () => {
+        const headers = await getHeaders();
+        const { data } = await axios.get(`${api_url}/users/${User}`, {
+          headers: headers,
+        });
+        return data as any[];
+      },
+    });
+    
+  }
   return (
     <div className="md:w-[450px] w-[350px] mx-auto m-4 bg-blue-100 p-1 rounded-xl">
       <div className="flex m-3">
@@ -75,6 +96,9 @@ const User: React.FC<props> = ({
             hover="default"
             rounded="circle"
             className="w-5/6 border mx-auto text-center m-1"
+            //delete user from database on button click
+            onClick={() => {deleteUser();}}
+          
           >
             Remove Account
           </Button>
