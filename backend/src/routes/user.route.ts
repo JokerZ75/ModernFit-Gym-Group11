@@ -29,4 +29,8 @@ router
     userController.updateProfilePicture
   );
 
+router.route("/recover-account").post(userController.RecoverAccount);
+
+router.route("/reset-password/:token").post(userController.ResetPassword);
+
 module.exports = router;

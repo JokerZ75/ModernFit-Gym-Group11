@@ -134,18 +134,18 @@ const User: React.FC<props> = ({ children, User }) => {
             <div className="text-white text-xl">{User.Email}</div>
           </div>
         </div>
-        <div className="mx-auto w-5/6">
-          <div className="text-center">
-            <Button
-              shadow="default"
-              size="small"
-              variant="darkBlue"
-              hover="default"
-              rounded="circle"
-              className="w-5/6 border mx-auto text-center m-1"
-            >
-              Edit Account
-            </Button>
+          {/*
+          TODO: IF HAD MORE TIME FOR THIS PROJECT AND ASSIGNMENT I WOULD HAVE IMPLEMENTED THIS FEATURE
+           <Button
+            shadow="default"
+            size="small"
+            variant="darkBlue"
+            hover="default"
+            rounded="circle"
+            className="w-5/6 border mx-auto text-center m-1"
+          >
+            Edit Account
+          </Button> */}
             <Button
               shadow="default"
               size="small"

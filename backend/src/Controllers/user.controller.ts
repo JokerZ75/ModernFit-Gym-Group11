@@ -10,13 +10,17 @@ import WorkoutPlan from "../models/workout_plan.model";
 import NutritionalPost from "../models/nurtional_post.model";
 import Notification from "../models/notification.model";
 import {
+  getCache,
   getCacheAsJson,
   setCacheAsJson,
   setCacheAsJsonWithExpire,
   setCacheWithExpire,
 } from "../utils/cache";
 import bcrypt from "bcrypt";
-import { SendVerificationEmailForRegistration } from "../utils/emails";
+import {
+  RecoverEmail,
+  SendVerificationEmailForRegistration,
+} from "../utils/emails";
 import { RequestWithUser } from "../types/Request.interface";
 import dotenv from "dotenv";
 import { deleteFile } from "../utils/files";
@@ -364,7 +368,63 @@ const adminDeleteUser = async (req: RequestWithUser, res: Response) => {
     return res.status(200).json({ msg: "User deleted" });
   }
 
-  // delete all data related to the user
+
+const RecoverAccount = async (req: Request, res: Response) => {
+  const { Email } = req.body;
+  if (!Email) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  const user = await User.findOne({ Email });
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  let token = "";
+  let unqiue = false;
+  while (!unqiue) {
+    token = Math.random().toString(16).substr(2, 16);
+    await getCache(token).then((data) => {
+      if (!data) {
+        unqiue = true;
+      }
+    });
+  }
+  await setCacheWithExpire(token, Email, 3600);
+  // send email with token
+  await RecoverEmail(Email, `http://localhost:3000/recover/${token}`).then(
+    () => {
+      return res.status(200).json({ msg: "Email sent" });
+    }
+  );
+};
+
+const ResetPassword = async (req: Request, res: Response) => {
+  const token = req.params.token;
+  await getCache(token).then(async (data) => {
+    if (!data) {
+      return res.status(400).json({ msg: "Invalid token" });
+    }
+    const { Email, Password } = req.body;
+    if (!Email || !Password) {
+      return res.status(400).json({ msg: "Please enter all fields" });
+    }
+    if (Email !== data) {
+      return res.status(400).json({ msg: "Invalid email" });
+    }
+    // Hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(Password, salt);
+    await User.findOneAndUpdate(
+      { Email },
+      { Password: hash },
+      { new: true }
+    ).then(async (user) => {
+      if (!user) {
+        return res.status(400).json({ msg: "User not found" });
+      }
+      setCacheWithExpire(token, null, 1);
+      return res.status(200).json({ msg: "Password updated" });
+    });
+  });
 };
 
 export default {
@@ -377,4 +437,6 @@ export default {
   updateProfilePicture,
   getAllUsers,
   adminDeleteUser,
+  RecoverAccount,
+  ResetPassword,
 };

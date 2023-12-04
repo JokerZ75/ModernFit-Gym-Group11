@@ -51,7 +51,7 @@ const Register: React.FC = async () => {
               rounded="circle"
               className="w-3/4 border mx-auto"
             >
-              Login
+              login
             </Button>
           </Link>
         </div>

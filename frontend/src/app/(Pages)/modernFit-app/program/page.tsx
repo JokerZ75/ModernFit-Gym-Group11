@@ -131,6 +131,7 @@ const ProgramPage: React.FC = async () => {
     },
   });
 
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="px-8 md:w-3/4 md:mx-auto">

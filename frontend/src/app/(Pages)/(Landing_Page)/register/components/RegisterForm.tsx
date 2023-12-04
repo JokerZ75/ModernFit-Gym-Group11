@@ -3,7 +3,7 @@
 import React from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
+import { useForm, FieldValues, UseFormRegister, set } from "react-hook-form";
 import { Button } from "@/app/components/UI/Button";
 import AutoComplete from "@/app/components/UI/AutoComplete";
 import { toast } from "react-toastify";
@@ -15,6 +15,7 @@ const RegisterForm: React.FC = () => {
     getValues,
     formState: { errors },
     setError,
+    setValue,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
@@ -61,6 +62,11 @@ const RegisterForm: React.FC = () => {
           error: "Failed to register",
         }
       );
+    },
+    onError: async (error:any) => {
+      if (error.response?.data?.msg === "User already exists") {
+        toast.error("This email is already registered");
+      }
     },
   });
 
@@ -117,6 +123,7 @@ const RegisterForm: React.FC = () => {
                 (location) => `${location.Name}-(${location.Address})`
               )}
               placeholder="gym location e.g (Sheffield ModernFit Gym)"
+              setValue={setValue}
             />
           )}
         </div>

@@ -27,12 +27,14 @@ const AssignedUser: React.FC<props> = ({ user }) => {
     setGoals((old) => old.slice(0, 30) + "...");
   }
 
-  axios
-    .get(`${user.Profile_picture}`)
-    .then((res) => {})
-    .catch((err) => {
-      user.Profile_picture = "https://placehold.co/300x300";
-    });
+  React.useEffect(() => {
+    axios
+      .get(`${user.Profile_picture}`)
+      .then((res) => {})
+      .catch((err) => {
+        user.Profile_picture = "https://placehold.co/300x300";
+      });
+  }, []);
 
   const { getHeaders, api_url } = useAuthContext();
 
@@ -125,15 +127,17 @@ const AssignedUser: React.FC<props> = ({ user }) => {
           </Link>
         </div>
         <div className="text-center">
-          <Button
-            shadow="default"
-            size="fillWidth"
-            variant="darkBlue"
-            hover="default"
-            className="rounded-lg mx-auto text-center m-1"
-          >
-            Create Program
-          </Button>
+          <Link href={`/modernFit-app/my-users/create-program/${user._id}`}>
+            <Button
+              shadow="default"
+              size="fillWidth"
+              variant="darkBlue"
+              hover="default"
+              className="rounded-lg mx-auto text-center m-1"
+            >
+              Create Program
+            </Button>
+          </Link>
           <Button
             shadow="default"
             size="fillWidth"

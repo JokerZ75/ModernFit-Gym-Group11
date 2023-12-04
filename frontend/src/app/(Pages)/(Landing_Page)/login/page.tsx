@@ -22,13 +22,14 @@ const Login: React.FC = () => {
               rounded="circle"
               className="w-3/4 border mx-auto"
             >
-              Register
+              register
             </Button>
           </Link>
+          <div style={{ margin: "10px" }}></div>
         </div>
       </div>
     </>
   );
-}  
+};
 
 export default Login;

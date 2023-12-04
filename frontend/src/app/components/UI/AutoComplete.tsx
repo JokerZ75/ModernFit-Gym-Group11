@@ -3,7 +3,12 @@
 import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
+import {
+  useForm,
+  FieldValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { cn } from "@/app/utils/classMerge";
 
 interface props extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -14,11 +19,13 @@ interface props extends React.InputHTMLAttributes<HTMLInputElement> {
   containerDivClassName?: string;
   fetchedData?: string;
   extraOnChangeFn?: (value: string) => void;
+  setValue?: UseFormSetValue<FieldValues>;
 }
 
 const AutoComplete: React.FC<props> = ({
   children,
   register,
+  setValue,
   options,
   className,
   containerDivClassName,
@@ -52,6 +59,13 @@ const AutoComplete: React.FC<props> = ({
       setSearch(fetchedData);
     }
   }, [fetchedData]);
+
+  React.useEffect(() => {
+    if (search === "") {
+      setDisplay(false);
+    }
+    setValue && setValue(register.name, search);
+  }, [search]);
 
   return (
     <>
