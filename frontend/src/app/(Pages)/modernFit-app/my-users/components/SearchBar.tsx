@@ -39,6 +39,7 @@ const SearchBar: React.FC = () => {
     handleSubmit,
     getValues,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const queryClient = useQueryClient();
@@ -76,6 +77,7 @@ const SearchBar: React.FC = () => {
             placeholder="Search"
             type="text"
             extraOnChangeFn={searchUser}
+            setValue={setValue}
           />
         )}
       </form>

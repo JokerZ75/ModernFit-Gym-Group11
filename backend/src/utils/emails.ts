@@ -106,10 +106,28 @@ const updatePassword = async (email: string) => {
 //   return password;
 // }
 
+const emailDownTime = async (emails: string[], Description: string) => {
+  const mailData = {
+    from: process.env.EMAIL_USER,
+    to: emails,
+    subject: "Email Downtime",
+    text: Description,
+  };
+
+  await transporter.sendMail(mailData, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return info;
+    }
+  });
+};
+
 export {
   sendEmail,
   SendVerificationEmailForRegistration,
   LoginEmail,
   RecoverEmail,
   updatePassword,
+  emailDownTime,
 };

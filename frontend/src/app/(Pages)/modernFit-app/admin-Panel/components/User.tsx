@@ -58,7 +58,9 @@ const User: React.FC<props> = ({
       </div>
       <div className="mx-auto w-5/6">
         <div className="text-center">
-          <Button
+          {/*
+          TODO: IF HAD MORE TIME FOR THIS PROJECT AND ASSIGNMENT I WOULD HAVE IMPLEMENTED THIS FEATURE
+           <Button
             shadow="default"
             size="small"
             variant="darkBlue"
@@ -67,7 +69,7 @@ const User: React.FC<props> = ({
             className="w-5/6 border mx-auto text-center m-1"
           >
             Edit Account
-          </Button>
+          </Button> */}
           <Button
             shadow="default"
             size="small"

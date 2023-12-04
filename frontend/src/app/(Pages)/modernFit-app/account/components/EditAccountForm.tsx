@@ -4,7 +4,7 @@ import { Button } from "@/app/components/UI/Button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import { toast } from "react-toastify";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, set, useForm } from "react-hook-form";
 import AutoComplete from "@/app/components/UI/AutoComplete";
 import axios from "axios";
 
@@ -35,6 +35,7 @@ const EditAccountForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm();
 
   const onSubmit = async (data: FieldValues) => {
@@ -132,6 +133,7 @@ const EditAccountForm: React.FC = () => {
             type="text"
             className="page-form-input"
             placeholder="gym location e.g (Sheffield ModernFit Gym)"
+            setValue={setValue}
           />
         ) : (
           <input
