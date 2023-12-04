@@ -6,6 +6,17 @@ import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import axios from "axios";
 import User from "./User";
 
+type userType = {
+  _id?: string;
+  Name: string;
+  Email: string;
+  Profile_picture: string;
+  Height: number;
+  Weight: number;
+  Gym_Goals: string;
+  Position: string;
+};
+
 const UserContainer: React.FC<{ children?: React.ReactNode }> = ({}: {
   children?: React.ReactNode;
 }) => {
@@ -34,26 +45,11 @@ const UserContainer: React.FC<{ children?: React.ReactNode }> = ({}: {
     refetchOnReconnect: false,
   });
 
-  type userType = {
-    _id: string;
-    Name: string;
-    Email: string;
-    Position: string;
-    Profile_picture: string;
-  };
   return (
     <>
       <div className="md:grid md:grid-cols-2 md:gap-x-6  max-h-[400px] overflow-y-scroll">
         {users?.map((user: userType) => {
-          return (
-            <User
-              key={user._id}
-              name={user.Name}
-              permission={user.Position}
-              email={user.Email}
-              profileImage={user.Profile_picture as string}
-            />
-          );
+          return <User key={user._id} User={user} />;
         })}
       </div>
     </>

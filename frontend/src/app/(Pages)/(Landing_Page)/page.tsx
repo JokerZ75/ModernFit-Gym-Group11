@@ -20,6 +20,12 @@ export default function Home() {
   const { api_url, login } = useAuthContext();
   React.useEffect(() => {
     const log = async () => {
+
+      // const data = await axios.post(`${api_url}/session/login`, {
+      //   email: "dhughes1704@icloud.com",
+      //   password: "HelloWorld1",
+      //   authCode: "123456",
+      // });
       // Nutritionist
       // const data = await axios.post(`${api_url}/session/login`, {
       //   email: "dhughes1704@icloud.com",
