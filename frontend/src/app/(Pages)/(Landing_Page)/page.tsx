@@ -60,33 +60,9 @@ export default function Home() {
     // Classnames hacky way to fix scroller issue appearing over the nav
     <main className="">
       <HeroBanner />
-      <Link href="/login" className="flex mt-2 mb-4">
-        <Button
-          shadow="default"
-          size="default"
-          variant="default"
-          hover="default"
-          rounded="circle"
-          className="w-3/4 border mx-auto"
-        >
-          Test Login
-        </Button>
-      </Link>
-      <Link href="/register" className="flex mt-2 mb-4">
-        <Button
-          shadow="default"
-          size="default"
-          variant="default"
-          hover="default"
-          rounded="circle"
-          className="w-3/4 border mx-auto"
-        >
-          Test Register
-        </Button>
-      </Link>
       <div
         id="map-card"
-        className="mx-8 md:mx-24 mt-3 border-2 border-gray-200 rounded-xl"
+        className="mx-8 md:mx-24 mt-3 border-2 border-gray-200 rounded-xl in-development"
       >
         <div id="map-image" className="">
           <Image

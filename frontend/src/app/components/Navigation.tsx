@@ -4,6 +4,8 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "./UI/Button";
+import { useAuthContext } from "./JWTAuth/AuthContext";
+import LogoutButton from "./LogoutButton";
 type NavigationProps = {
   Links?: Array<NavigationLinkProps>;
 };
@@ -19,6 +21,7 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
     setUrl(window.location.pathname);
   }, []);
 
+  const { isLoggedIn } = useAuthContext();
   React.useEffect(() => {
     setMenuOpen(false);
   }, [url]);
@@ -98,20 +101,32 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
           </div>
           <div id="nav-items" className="mt-10">
             <ul>
-              {Links?.map((link) => {
-                return (
-                  <NavigationLink
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setUrl(link.to)}
-                  >
-                    {link.children}
-                  </NavigationLink>
-                );
-              })}
+              {!isLoggedIn
+                ? Links?.map((link) => {
+                    return (
+                      <NavigationLink
+                        key={link.to}
+                        to={"/login"}
+                        onClick={() => setUrl("/login")}
+                      >
+                        {link.children}
+                      </NavigationLink>
+                    );
+                  })
+                : Links?.map((link) => {
+                    return (
+                      <NavigationLink
+                        key={link.to}
+                        to={link.to}
+                        onClick={() => setUrl(link.to)}
+                      >
+                        {link.children}
+                      </NavigationLink>
+                    );
+                  })}
             </ul>
           </div>
-          {!url?.includes("modernFit-app") ? (
+          {!isLoggedIn ? (
             <div id="join-now-button" className="mt-auto">
               <Link href="/register">
                 <Button
@@ -120,13 +135,15 @@ const Navigation: React.FC<NavigationProps> = ({ Links }) => {
                   rounded="circle"
                   shadow="shadow2xl"
                   hover="default"
-                  className="md:text-2xl whitespace-nowrap "
+                  className="md:text-2xl whitespace-nowrap mt-auto "
                 >
                   join now
                 </Button>
               </Link>
             </div>
-          ) : null}
+          ) : (
+            <LogoutButton />
+          )}
         </div>
       </div>
     </nav>
@@ -148,7 +165,9 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       <Link href={to} {...props}>
         {to == "/modernFit-app/admin-panel" ||
         to == "/modernFit-app/my-users" ? (
-          <div className="flex navigation-item gap-6 whitespace-nowrap mt-24">{children}</div>
+          <div className="flex navigation-item gap-6 whitespace-nowrap mt-24">
+            {children}
+          </div>
         ) : (
           <div className="flex navigation-item gap-6 whitespace-nowrap">
             {children}

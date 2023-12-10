@@ -113,7 +113,7 @@ const adminPanel: React.FC = async () => {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="py-5 m-auto md:w-3/4">
         <div className="text-blue-200 mx-auto mt-4 mb-4 px-4">
-          <div className="mx-auto mb-4 p-1 pb-4 bg-white border-solid border-2 border-blue-200 rounded-xl">
+          <div className="mx-auto mb-4  pb-4 bg-white border-solid border-2 in-development border-blue-200 rounded-xl">
             <h2 className="font-bold text-center text-lg mt-2 mb-2">
               System Flagged Issues
             </h2>

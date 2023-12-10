@@ -22,7 +22,7 @@ const RecentWorkouts: React.FC = () => {
   return (
     <>
       <p className="text-center font-bold text-4xl md:text-6xl">{data?.length}</p>
-      <Link href="modernfit-app/activity-diary" className="flex mt-2">
+      <Link href="/modernFit-app/activity-diary" className="flex mt-2">
         <Button variant="default" shadow="default" rounded="circle" className="w-[75%] mx-auto">go to diary</Button>
         </Link>
     </>

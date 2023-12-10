@@ -243,4 +243,17 @@
   .page-form__unselected {
     @apply opacity-0 -left-[10000px] transition-opacity duration-500 ease-in-out;
   }
+  .in-development {
+    @apply relative;
+  }
+  
+  .in-development::before {
+    @apply absolute bg-black bg-opacity-80 w-full h-full;
+    content: "";
+  }
+
+  .in-development::after {
+    @apply absolute bg-red-500 text-white text-2xl font-bold px-1 rounded-bl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ;
+    content: "In Development";
+  }
 }

@@ -118,7 +118,7 @@ const RegisterForm: React.FC = () => {
               className="modal-form-input  !ml-0"
               containerDivClassName="flex-grow w-3/5 ml-1"
               id="gymLocation"
-              register={...register("gymLocation", { required: true }) as any}
+              register={register("gymLocation", { required: true }) as any}
               options={gymLocations?.map(
                 (location) => `${location.Name}-(${location.Address})`
               )}
