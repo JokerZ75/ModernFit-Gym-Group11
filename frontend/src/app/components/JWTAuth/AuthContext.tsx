@@ -22,6 +22,8 @@ const Context = createContext<{
   api_url: string;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   redirectTo: string;
+  getRefreshToken: () => Promise<string | undefined>;
+  isLoggedIn: boolean;
 }>(undefined!);
 
 export const AuthContext = ({
@@ -76,8 +78,9 @@ export const AuthContext = ({
   const [Headers, setHeaders] = useState({});
   const [api_url] = useState(API_ENDPOINT);
   const [RemainingTime, setRemainingTime] = useState<number>(0);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const getRefreshToken = () => {
+  const getRefreshToken = async () => {
     return document.cookie
       .split(";")
       .find((c) => c.trim().startsWith(`${authName}_refreshToken=`))
@@ -118,6 +121,7 @@ export const AuthContext = ({
     document.cookie = `${authName}_tokenType=${tokenType};Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${"session"}; path=/; Secure=${cookieSecure}`;
     const headers = await getHeaders();
     setHeaders(headers);
+    setIsLoggedIn(true);
     if (refresh_api_endpoint != "") {
       Refresh();
     }
@@ -127,6 +131,7 @@ export const AuthContext = ({
     document.cookie = `${authName}_token=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
     document.cookie = `${authName}_refreshToken=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getRefreshExpires()}; path=/; Secure=${cookieSecure}`;
     document.cookie = `${authName}_tokenType=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=${getExpires()}; path=/; Secure=${cookieSecure}`;
+    setIsAuthenticated(false);
   };
   const mounted = React.useRef(false);
 
@@ -149,7 +154,7 @@ export const AuthContext = ({
       const token = await getJwtToken();
       if (RemainingTime <= 0 && refresh_api_endpoint != "" && token != "" && token != undefined) {
         const headers = await getHeaders();
-        const refresh_token = getRefreshToken();
+        const refresh_token = await getRefreshToken();
         await axios
           .post(
             `${refresh_api_endpoint}`,
@@ -161,6 +166,9 @@ export const AuthContext = ({
             }
           )
           .then((response) => {
+            if (response.status == 200){
+              setIsLoggedIn(true);
+            }
             const { accessToken } = response.data;
             const expires = getExpiresAsMiliseconds();
             setRemainingTime((prev) => prev + expires - 30000);
@@ -208,6 +216,8 @@ export const AuthContext = ({
         getHeaders,
         redirectTo,
         api_url,
+        getRefreshToken,
+        isLoggedIn,
       }}
     >
       {children}
