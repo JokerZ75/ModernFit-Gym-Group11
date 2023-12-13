@@ -67,6 +67,7 @@ const UpcomingClasses: React.FC = () => {
       </div>
     );
 
+
   return (
     <>
       {data?.map((item: classType) => {
@@ -80,7 +81,7 @@ const UpcomingClasses: React.FC = () => {
               {formatDayMonth(item.Date)}
             </p>
             <p className="text-center font-bold ml-2">
-              {formatHourMinute(item.Time)}
+              {formatHourMinute(item.Date)}
             </p>
           </div>
         );
