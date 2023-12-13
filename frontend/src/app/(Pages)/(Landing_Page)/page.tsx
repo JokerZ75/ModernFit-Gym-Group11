@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { Button } from "../../components/UI/Button";
 import HeroBanner from "./components/Herobanner";
@@ -12,52 +11,11 @@ import {
 import ClassCardImage from "@/app/Assets/Hero-alternate-min.jpeg";
 import ClassesAvailableCard from "./components/ClassessAvailableCard";
 import Carousel from "@/app/components/Carousel";
-import axios from "axios";
-import { useAuthContext } from "@/app/components/JWTAuth/AuthContext";
 import React from "react";
 
 export default function Home() {
-  const { api_url, login } = useAuthContext();
-  React.useEffect(() => {
-    const log = async () => {
-
-      // const data = await axios.post(`${api_url}/session/login`, {
-      //   email: "dhughes1704@icloud.com",
-      //   password: "HelloWorld1",
-      //   authCode: "123456",
-      // });
-      // Nutritionist
-      // const data = await axios.post(`${api_url}/session/login`, {
-      //   email: "dhughes1704@icloud.com",
-      //   password: "HelloWorld2",
-      //   authCode: "123456",
-      // });
-      // Trainer
-      // const data = await axios.post(`${api_url}/session/login`, {
-      //   email: "deaconhughes07@gmail.com",
-      //   password: "HelloWorld1",
-      //   authCode: "123456",
-      // });
-      // User
-      // const data = await axios.post(`${api_url}/session/login`, {
-      //   email: "altsteam682@gmail.com",
-      //   password: "OtherUser1",
-      //   authCode: "123456",
-      // });
-      // Admin
-      const data = await axios.post(`${api_url}/session/login`, {
-        email: "mk8james@gmail.com",
-        password: "Helloworld1",
-        authCode: "123456",
-      });
-      const { accessToken, refreshToken, tokenType } = data.data;
-      login({ accessToken, refreshToken, tokenType });
-    };
-    log();
-  }, []);
 
   return (
-    // Classnames hacky way to fix scroller issue appearing over the nav
     <main className="">
       <HeroBanner />
       <div
