@@ -126,7 +126,7 @@ const createWorkout: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
               placeholder="calories burned (Kcal) (optional)"
               id="caloriesBurned"
               {...register("caloriesBurned", {
-                required: true,
+                required: false,
                 pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
                 min: 1,
               })}
