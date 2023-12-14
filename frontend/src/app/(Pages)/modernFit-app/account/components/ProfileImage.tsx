@@ -59,12 +59,15 @@ const ProfileImage: React.FC<{}> = () => {
       setProfileImage(data.Profile_picture);
       return data;
     },
+    refetchOnMount: true,
   });
 
   React.useEffect(() => {
     axios
-      .get(`${profileImage}`)
-      .then((res) => {})
+      .get(`${userInfo?.Profile_picture}`)
+      .then((res) => {
+        setProfileImage(userInfo?.Profile_picture);
+      })
       .catch((err) => {
         setProfileImage("");
       });

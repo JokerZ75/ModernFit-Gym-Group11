@@ -36,6 +36,7 @@ const getUser = async (req: RequestWithUser, res: Response) => {
         return res.status(200).json({ msg: "No user" });
       }
       const returnJSON = {
+        _id: user._id,
         Name: user.Name,
         Access_pin: user.Access_pin,
         Email: user.Email,

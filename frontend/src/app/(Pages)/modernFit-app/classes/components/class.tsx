@@ -41,10 +41,21 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
       );
       return data;
     },
-    enabled: passedClass.Owner_id !== undefined,
+    enabled: passedClass.Owner_id != undefined,
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+  });
+
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: async () => {
+      const headers = await getHeaders();
+      const { data } = await axios.get(`${api_url}/user`, {
+        headers: headers,
+      });
+      return data;
+    },
   });
 
   const queryClient = useQueryClient();
@@ -314,7 +325,18 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
             {formatHourMinute(passedClass.Date)}.
           </p>
           <p>Duration: {passedClass.Duration} minutes.</p>
-          {ownerInfo?.id !== passedClass.Owner_id ? (
+          {userInfo?.id == passedClass.Owner_id ? (
+            <Button
+              rounded="square"
+              className=" mx-auto rounded-2xl mt-2 py-2 bg-yellow-500 hover:bg-yellow-300"
+              size="fillWidth"
+              onClick={() => {
+                cancelClass(passedClass);
+              }}
+            >
+              Cancel Class
+            </Button>
+          ) : (
             <>
               {type == "myClasses" ? (
                 <Button
@@ -342,17 +364,6 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
                 </Button>
               )}
             </>
-          ) : (
-            <Button
-              rounded="square"
-              className=" mx-auto rounded-2xl mt-2 py-2 bg-yellow-500 hover:bg-yellow-300"
-              size="fillWidth"
-              onClick={() => {
-                cancelClass(passedClass);
-              }}
-            >
-              Cancel Class
-            </Button>
           )}
         </div>
       </div>
