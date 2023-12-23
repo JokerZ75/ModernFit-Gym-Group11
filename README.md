@@ -135,7 +135,7 @@ _Below is an example of how you can instruct your audience on installing and set
         - Create a .env file
         - In the file add
           ```sh
-          NEXT_PUBLIC_API_URL=http://localhost:80 (IF YOUR NOT USING THE DOCKER COMPOSE YOU CAN USE WHATEVER PORT YOU LIKE AS LONG AS ITS THE ONE UR BACKEND IS RUNNING ON)
+          NEXT_PUBLIC_API_URL=http://localhost:5001 (IF YOUR NOT USING THE DOCKER COMPOSE YOU CAN USE WHATEVER PORT YOU LIKE AS LONG AS ITS THE ONE UR BACKEND IS RUNNING ON)
           ```
     - In the directory /backend/src
         - Create a .env file
@@ -148,13 +148,22 @@ _Below is an example of how you can instruct your audience on installing and set
           EMAIL_PASSWORD=<google gmail app password (for gmail used as EMAIL_USER)>
           EMAIL_USER=<google gmail>
           ```
-3. Now go to /ModernFit-Gym-Group11 directory
+3. Now go to /backend directory
 4. If you have docker installed you should be able to run
 ```sh
 docker compose up --build
 ```
-5. You can now visit the site on localhost:3000 and everything should be working.
-6. You could also run them individually using npm if you like. For the backend, you will require Redis (https://redis.io/docs/install/)
+5. This will launch the backend in a docker container
+6. Then in a new terminal go to /frontend and run
+```sh
+npm install
+```
+7. Then run
+```sh
+npm run dev
+```
+8. The frontend should now also be running on localhost:3000 and you can use the application
+9. You could also run them individually using npm if you like. For the backend, you will require Redis (https://redis.io/docs/install/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
