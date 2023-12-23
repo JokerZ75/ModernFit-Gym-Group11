@@ -135,7 +135,7 @@ _Below is an example of how you can instruct your audience on installing and set
         - Create a .env.local file
         - In the file add
           ```sh
-          NEXT_PUBLIC_API_URL=http://localhost:80
+          NEXT_PUBLIC_API_URL=http://localhost:80 (IF YOUR NOT USING THE DOCKER COMPOSE YOU CAN USE WHATEVER PORT YOU LIKE AS LONG AS ITS THE ONE UR BACKEND IS RUNNING ON)
           ```
     - In the directory /backend/src
         - Create a .env file
