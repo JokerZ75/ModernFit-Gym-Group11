@@ -8,16 +8,3 @@ services:
     build: ./src
     ports:
       - "5001:5001"
-  api-application-2:
-    restart: on-failure
-    build: ./src
-    ports:
-      - "5002:5001"
-  nginx:
-    restart: on-failure
-    build: ./nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - api-application
-      - api-application-2

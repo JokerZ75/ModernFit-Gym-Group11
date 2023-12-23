@@ -67,6 +67,7 @@ const myUsers: React.FC = async () => {
           },
         }
       );
+      if (data.msg === "No program requests") return null;
       if (data.length === 0) return null;
       return data as userType[];
     },
