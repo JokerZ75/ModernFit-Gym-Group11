@@ -8,5 +8,5 @@ COPY ./ ./
 ENV NODE_ENV="container"
 ENV PORT=5001
 ENV REDIS_URL="redis://redis"
-
-CMD npm run dev
+RUN npm run tsc
+CMD npm run production

@@ -1,3 +1,4 @@
+# ON SOME MACHINES THIS DOESNT PLAY NICE WITH PORTS SO YOU SHOULD USE DOCKER COMPOSE IN BACKEND THEN RUN FRONTEND WITH NPM RUN DEV
 services:
   next-app:
     build: ./frontend
@@ -16,18 +17,16 @@ services:
   api-application:
     restart: on-failure
     build: ./backend/src
-    ports:
-      - "81:5000"
-  api-application-2:
-    restart: on-failure
-    build: ./backend/src
-    ports:
-      - "82:5000"
-  nginx:
-    restart: on-failure
-    build: ./backend/nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - api-application
-      - api-application-2
+    ports: 
+      - "5001:5001"
+  # api-application-2:
+  #   restart: on-failure
+  #   build: ./backend/src
+  # nginx: # not properly configured for development environment works on production (also isnt necessary for development)
+  #   restart: on-failure
+  #   build: ./backend/nginx
+  #   ports:
+  #     - "8001:8001"
+  #   depends_on:
+  #     - api-application
+  #     - api-application-2

@@ -169,6 +169,11 @@ export const AuthContext = ({
             if (response.status == 200){
               setIsLoggedIn(true);
             }
+            if (response.status == 403){
+              document.cookie = `${authName}_token=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=0; path=/; Secure=${cookieSecure}`;
+              document.cookie = `${authName}_refreshToken=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=0; path=/; Secure=${cookieSecure}`;
+              document.cookie = `${authName}_tokenType=;Domain=${cookieDomain};HostOnly=${cookieSameSite};SameSite=${cookieSameSite}; expires=0; path=/; Secure=${cookieSecure}`;
+            }
             const { accessToken } = response.data;
             const expires = getExpiresAsMiliseconds();
             setRemainingTime((prev) => prev + expires - 30000);
