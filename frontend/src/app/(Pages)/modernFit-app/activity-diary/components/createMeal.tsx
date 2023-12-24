@@ -42,7 +42,7 @@ const createMeal: React.FC<{ setModalOpen: React.Dispatch<boolean> }> = ({
     queryKey: ["mealCatagories"],
     queryFn: async () => {
       const headers = await getHeaders();
-      const { data } = await axios.get(`${api_url}/users/`, {
+      const { data } = await axios.get(`${api_url}/mealcatagory/`, {
         headers: headers,
       });
       return data as any[];

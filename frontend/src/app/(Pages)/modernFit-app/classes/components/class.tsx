@@ -325,7 +325,7 @@ const Class: React.FC<ClassProps> = ({ passedClass, type }) => {
             {formatHourMinute(passedClass.Date)}.
           </p>
           <p>Duration: {passedClass.Duration} minutes.</p>
-          {userInfo?.id == passedClass.Owner_id ? (
+          {ownerInfo?.user_id == userInfo?._id ? (
             <Button
               rounded="square"
               className=" mx-auto rounded-2xl mt-2 py-2 bg-yellow-500 hover:bg-yellow-300"

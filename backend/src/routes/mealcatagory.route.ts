@@ -7,6 +7,9 @@ const router = express.Router();
 
 router.route("/").get(Auth, mealcatagoryController.getMealCatagories);
 
+router.route("/data/generate").get(mealcatagoryController.generateMealCatagory);
+
 router.route("/:id").get(Auth, mealcatagoryController.getMealCatagory);
+
 
 module.exports = router;

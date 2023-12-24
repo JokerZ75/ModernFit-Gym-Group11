@@ -5,25 +5,6 @@ import TypeOfWorkout from "../models/type_of_workout.model";
 import { RequestWithUser } from "../types/Request.interface";
 import Staff from "../models/staff.model";
 
-const generateWorkout = async (req: Request, res: Response) => {
-  const workout: workout = {
-    Name: "Workout",
-    User_id: "5f9e3b3b9d3b9b1b3c9d3b9b",
-    Duration: 1,
-    Type_of_workout: "5f9e3b3b9d3b9b1b3c9d3b9b",
-    Calories_burned: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  const newWorkout = new Workout(workout);
-
-  try {
-    const savedWorkout = await newWorkout.save();
-    res.json(savedWorkout);
-  } catch (err) {
-    res.json({ message: err });
-  }
-};
 
 const getWorkouts = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
@@ -137,4 +118,4 @@ const getWorkoutsOfUser = async (req: RequestWithUser, res: Response) => {
     });
 };
 
-export default { generateWorkout, getWorkouts, AddWorkout, getWorkoutsOfUser };
+export default {getWorkouts, AddWorkout, getWorkoutsOfUser };

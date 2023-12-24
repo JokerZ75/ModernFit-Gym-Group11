@@ -8,26 +8,6 @@ import mongoose, { ObjectId } from "mongoose";
 import { sendEmail } from "../utils/emails";
 import notification from "../utils/notification";
 
-const generateClass = async (req: Request, res: Response) => {
-  const classObj: classType = {
-    Owner_id: "60b9b0b9b3b3c2b0e4e0b0b9",
-    Name: "Test Class",
-    Date: new Date(),
-    Type: "ongoing",
-    Duration: 1,
-    Branch_id: "60b9b0b9b3b3c2b0e4e0b0b9",
-    Interested_users: ["60b9b0b9b3b3c2b0e4e0b0b9"],
-  };
-
-  try {
-    const newClass = new Class(classObj);
-    const savedClass = await newClass.save();
-    res.json(savedClass);
-  } catch (err) {
-    res.json({ message: err });
-  }
-};
-
 const getClasses = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
   if (!user) {
@@ -234,7 +214,6 @@ const cancelClass = async (req: RequestWithUser, res: Response) => {
 };
 
 export default {
-  generateClass,
   getClasses,
   getClassesAtBranch,
   MarkInterested,

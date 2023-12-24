@@ -66,11 +66,12 @@ const ProfileImage: React.FC<{}> = () => {
     axios
       .get(`${userInfo?.Profile_picture}`)
       .then((res) => {
-        setProfileImage(userInfo?.Profile_picture);
-      })
-      .catch((err) => {
-        setProfileImage("");
-      });
+        if (userInfo?.Profile_picture == null) {
+          setProfileImage("");
+        }else{
+          setProfileImage(userInfo?.Profile_picture);
+        }
+      }).catch((err) => {});
   }, [userInfo]);
 
   return (

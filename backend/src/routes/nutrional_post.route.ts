@@ -5,8 +5,6 @@ import { uploadPostImage } from "../Middlewares/upload";
 
 const router = express.Router();
 
-router.route("/").get(nutrional_postController.generatePost);
-
 router.route("/post/:id").get(Auth, nutrional_postController.getPost);
 
 router

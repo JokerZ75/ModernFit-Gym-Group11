@@ -23,4 +23,40 @@ const getWorkoutTypes = async (req: Request, res: Response) => {
     });
 };
 
-export default { getWorkoutTypesByID, getWorkoutTypes };
+const generateWorkoutTypes = async (req: Request, res: Response) => {
+  const workoutTypes: type_of_workout[] = [
+    {
+      Name: "Chest",
+      Avg_calories_burned: 100,
+    },
+    {
+      Name: "Back",
+      Avg_calories_burned: 100,
+    },
+    {
+      Name: "Shoulders",
+      Avg_calories_burned: 100,
+    },
+    {
+      Name: "Legs",
+      Avg_calories_burned: 100,
+    },
+    {
+      Name: "Biceps",
+      Avg_calories_burned: 100,
+    },
+    {
+      Name: "Triceps",
+      Avg_calories_burned: 100,
+    },
+  ];
+  await TypeOfWorkout.insertMany(workoutTypes)
+    .then(() => {
+      res.status(200).json({ msg: "Workout types generated" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export default { getWorkoutTypesByID, getWorkoutTypes, generateWorkoutTypes };

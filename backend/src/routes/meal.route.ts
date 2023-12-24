@@ -7,8 +7,6 @@ const router = express.Router();
 
 router.route("/user").get(Auth, mealController.getMeals);
 
-router.route("/generate").get(mealController.generateMeal);
-
 router.route("/add").post(Auth, mealController.AddMeal);
 
 router.route("/:id").get(Auth,mealController.getMealsOfUser);
