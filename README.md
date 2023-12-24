@@ -111,6 +111,8 @@ Other Notes:
     * Emails can be temp emails made with sites like https://tempail.com/en/
 * It should also be of note that images may be set to their default placeholder ones if docker container running the backend restarts for any reason
 
+* As the backend runs on AWS the free tier runs out after so many hours so the live demo will be up and working from
+* 1st Jan 2024 to 30th Jan 2024
 <details>
   <summary><i><b>Please Read the Above information before clicking here.</b></i></summary>
 <a href="https://site.modernfitdemosite.com/" target="_blank">DEMO SITE</a>
