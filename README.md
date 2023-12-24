@@ -166,6 +166,10 @@ _Below is an example of how you can instruct your audience on installing and set
 docker compose up --build
 ```
 5. This will launch the backend in a docker container
+    - From here you can go to these urls to add the required basic data to ur MongoDB database
+    - http://localhost:5001/branch/generate 
+    - http://localhost:5001/mealcatagory/data/generate
+    - http://localhost:5001/typeofworkout/data/generate
 6. Then in a new terminal go to /frontend and run
 ```sh
 npm install
@@ -175,6 +179,15 @@ npm install
 npm run dev
 ```
 8. The frontend should now also be running on localhost:3000 and you can use the application
+    - Once you register an account you can go to your database copy your ObjectID
+    - Then use it in this link like so  "http://localhost:5001/staff/generate/YOUR OBJECT ID"
+    - You will then have a staff account you can choose your role by editing the role attribute in the collection for staff
+      ```sh
+      The roles available are:
+      Nutritionist
+      Admin
+      Trainer
+      ```
 9. You could also run them individually using npm if you like. For the backend, you will require Redis (https://redis.io/docs/install/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
