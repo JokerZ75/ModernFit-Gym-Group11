@@ -119,7 +119,8 @@ Other Notes:
 </details>
 
 HERE IS A SHORT VIDEO WALKING THROUGH THE ADMINS, NUTRITIONIST AND TRAINER FEATURES YOU CANNOT EXPERIENCE WITH THIS DEMO 
-
+</br>
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8v9ThMatZ08/0.jpg)](https://www.youtube.com/watch?8v9ThMatZ08)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
