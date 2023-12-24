@@ -99,12 +99,24 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
 
 There is a tech demo for the site setup, the frontend has been hosted for free on vercel as it uses next.js.
 The backend is running in an AWS EC2 instance using docker-compose to set up the web server.
+</br>
 **ITS IMPORTANT TO NOTE THE DEMO BELOW HAS SOME SMALL FIXES AND EDITS THAT AREN'T SHOWN IN THIS REPO AS THEY WERE NEEDED TO MAKE IT WORK HOSTING ON VERCEL**
-When signing up we also suggest not using any real personal info as this is a demo and is bound to have some issues somewhere in its current state
-So phone numbers can be fake as they have no real use
-Temp emails can be made with sites like https://tempail.com/en/ 
+Other Notes:
+* In this demo you cannot have admin, trainer or nutritionist accounts, as you won't have access to the database to make staff and associate the users as such.
+    * This is also out of concern for others' privacy as being an admin and such may reveal people's names they don't wish to be shared.
+    * So features such as making classes, nutritional posts, removing users, and creating programs cannot be shown this way and you will need to set up the program yourself to see this.
+* All of the data such as nutritional posts made, and classes are fictional and created by us.
+* __We would suggest using fake information when signing up__
+    * Phone numbers can be fake as they currently have no use in the system.
+    * Emails can be temp emails made with sites like https://tempail.com/en/
 
-https://modern-fit-frontend-x1sc.vercel.app/
+<details>
+  <summary><i><b>Please Read the Above information before clicking here.</b></i></summary>
+<a href="https://modern-fit-frontend-x1sc.vercel.app/" target="_blank">DEMO SITE</a>
+</details>
+
+HERE IS A SHORT VIDEO WALKING THROUGH THE ADMINS, NUTRITIONIST AND TRAINER FEATURES YOU CANNOT EXPERIENCE WITH THIS DEMO 
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -115,12 +127,12 @@ https://modern-fit-frontend-x1sc.vercel.app/
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
   npm install npm@latest -g
   ```
-* It may also be beneficial to get docker as this is how we will show you how to get the application running
+* Docker - https://docs.docker.com/engine/install/ 
+    * It may also be beneficial to get docker as this is how we will show you how to get the application running
 
 ### Installation
 
