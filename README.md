@@ -113,7 +113,7 @@ Other Notes:
 
 <details>
   <summary><i><b>Please Read the Above information before clicking here.</b></i></summary>
-<a href="https://modern-fit-frontend-x1sc.vercel.app/" target="_blank">DEMO SITE</a>
+<a href="https://site.modernfitdemosite.com/" target="_blank">DEMO SITE</a>
 </details>
 
 HERE IS A SHORT VIDEO WALKING THROUGH THE ADMINS, NUTRITIONIST AND TRAINER FEATURES YOU CANNOT EXPERIENCE WITH THIS DEMO 
