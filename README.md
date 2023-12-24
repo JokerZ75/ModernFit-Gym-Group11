@@ -109,6 +109,7 @@ Other Notes:
 * __We would suggest using fake information when signing up__
     * Phone numbers can be fake as they currently have no use in the system.
     * Emails can be temp emails made with sites like https://tempail.com/en/
+* It should also be of note that images may be set to their default placeholder ones if docker container running the backend restarts for any reason
 
 <details>
   <summary><i><b>Please Read the Above information before clicking here.</b></i></summary>
