@@ -7,5 +7,7 @@ router.route("/assigned/").get(Auth, staffController.getStaffAssignedUser);
 
 router.route("/:id").get(Auth, staffController.getStaffById);
 
+router.route("/generate/:id").get(staffController.GenerateStaff);
+
 
 module.exports = router;

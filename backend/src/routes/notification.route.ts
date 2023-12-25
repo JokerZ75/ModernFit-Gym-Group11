@@ -8,6 +8,4 @@ router.route("/user").get(Auth, notificationController.getUsersNotifications);
 
 router.route("/downtime").post(Auth,notificationController.CreateDowntimeNotification);
 
-router.route("/generatetest").get(notificationController.generateNotification);
-
 module.exports = router;

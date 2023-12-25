@@ -18,6 +18,7 @@ const getStaffById = async (req: Request, res: Response) => {
         const returnJSON = {
           Name: user.Name,
           id: staff._id,
+          user_id: user._id,
         };
         return res.status(200).json(returnJSON);
       });
@@ -63,4 +64,24 @@ const getStaffAssignedUser = async (req: RequestWithUser, res: Response) => {
     });
 };
 
-export default { getStaffById, getStaffAssignedUser };
+const GenerateStaff = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(400).json({ msg: "User not found" });
+  }
+  const staff = new Staff({
+    User_id: user.id,
+    Position: "Nutritionist",
+  });
+  await staff
+    .save()
+    .then(() => {
+      return res.status(200).json({ msg: "Staff generated" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ msg: err });
+    });
+};
+
+export default { getStaffById, getStaffAssignedUser, GenerateStaff };

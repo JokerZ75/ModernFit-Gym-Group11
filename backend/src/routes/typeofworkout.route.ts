@@ -8,4 +8,6 @@ router.route("/:id").get(Auth, type_of_workoutController.getWorkoutTypesByID);
 
 router.route("/").get(Auth, type_of_workoutController.getWorkoutTypes);
 
+router.route("/data/generate").get(type_of_workoutController.generateWorkoutTypes);
+
 module.exports = router;

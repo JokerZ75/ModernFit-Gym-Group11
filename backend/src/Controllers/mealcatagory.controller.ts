@@ -3,20 +3,46 @@ import MealCatagory from "../models/meal_catagory.model";
 import mealCatagory from "../types/mealCatagory.type";
 
 const generateMealCatagory = async (req: Request, res: Response) => {
-  const mealCatagory: mealCatagory = {
-    Name: "MealCatagory",
-    Avg_calories: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  const newMealCatagory = new MealCatagory(mealCatagory);
-
-  try {
-    const savedMealCatagory = await newMealCatagory.save();
-    res.json(savedMealCatagory);
-  } catch (err) {
-    res.json({ message: err });
-  }
+  // Random number between 1 and 500
+  const mealCatagories: mealCatagory[] = [
+    {
+      Name: "Diary",
+      Description: "Diary products",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+    {
+      Name: "Fruits",
+      Description: "Fruits",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+    {
+      Name: "Vegetables",
+      Description: "Vegetables",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+    {
+      Name: "Meat",
+      Description: "Meat",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+    {
+      Name: "Fish",
+      Description: "Fish",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+    {
+      Name: "Grains",
+      Description: "Grains",
+      Avg_calories: Math.floor(Math.random() * 500) + 1,
+    },
+  ];
+  await MealCatagory.insertMany(mealCatagories)
+    .then(() => {
+      res.status(200).json({ msg: "Meal catagories generated" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }; // used for testing
 
 const getMealCatagories = async (req: Request, res: Response) => {

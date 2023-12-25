@@ -15,4 +15,24 @@ const getBranches = async (req: Request, res: Response) => {
     });
 };
 
-export default { getBranches };
+const GenerateBranches = async (req: Request, res: Response) => {
+  const branches = [
+    {
+      Name: "Branch 1",
+      Address: "Address 1",
+    },
+    {
+      Name: "Branch 2",
+      Address: "Address 2",
+    },
+  ];
+  await Branch.insertMany(branches)
+    .then(() => {
+      res.status(200).json({ msg: "Branches generated" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export default { getBranches, GenerateBranches };

@@ -4,38 +4,6 @@ import { RequestWithUser } from "../types/Request.interface";
 import { getCacheAsJson, setCacheAsJson } from "../utils/cache";
 import Staff from "../models/staff.model";
 
-const generateWorkoutPlan = async (req: Request, res: Response) => {
-  const nworkoutPlan = {
-    User_id: "5f9e3b3b9d3b9b1b3c9d3b9b",
-    Staff_id: "5f9e3b3b9d3b9b1b3c9d3b9b",
-    Plan: {
-      Monday: {
-        WorkoutsList: ["Workout", "Workout", "Workout"],
-      },
-      Tuesday: {
-        WorkoutsList: ["Workout", "Workout", "Workout"],
-      },
-      Wednesday: {
-        WorkoutsList: ["Workout", "Workout", "Workout"],
-      },
-      Thursday: {
-        WorkoutsList: ["Workout", "Workout", "Workout"],
-      },
-      Friday: {
-        WorkoutsList: ["Workout", "Workout", "Workout"],
-      },
-    },
-  };
-  const newWorkoutPlan = new WorkoutPlan(nworkoutPlan);
-
-  try {
-    const savedWorkoutPlan = await newWorkoutPlan.save();
-    res.json(savedWorkoutPlan);
-  } catch (err) {
-    res.json({ message: err });
-  }
-};
-
 const getWorkoutPlan = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
   if (!user) {
@@ -107,4 +75,4 @@ const sendWorkoutPlan = async (req: RequestWithUser, res: Response) => {
     });
 };
 
-export default { generateWorkoutPlan, getWorkoutPlan, sendWorkoutPlan };
+export default { getWorkoutPlan, sendWorkoutPlan };

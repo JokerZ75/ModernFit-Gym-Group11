@@ -5,24 +5,6 @@ import MealCatagory from "../models/meal_catagory.model";
 import { RequestWithUser } from "../types/Request.interface";
 import Staff from "../models/staff.model";
 
-const generateMeal = async (req: Request, res: Response) => {
-  // used for testing
-  const nmeal: meal = {
-    User_id: "5f9e3b3b9d3b9b1b3c9d3b9b",
-    Meal_desc: "Meal",
-    Portion: 1,
-    Calories_intake: 1,
-    Catagory_id: "5f9e3b3b9d3b9b1b3c9d3b9b",
-  };
-  const newMeal = new Meal(nmeal);
-
-  try {
-    const savedMeal = await newMeal.save();
-    res.json(savedMeal);
-  } catch (err) {
-    res.json({ message: err });
-  }
-};
 
 const getMeals = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
@@ -130,4 +112,4 @@ const getMealsOfUser = async (req: RequestWithUser, res: Response) => {
       res.status(200).json([]);
     });
 };
-export default { generateMeal, getMeals, AddMeal, getMealsOfUser };
+export default { getMeals, AddMeal, getMealsOfUser };
