@@ -99,12 +99,28 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
 
 There is a tech demo for the site setup, the frontend has been hosted for free on vercel as it uses next.js.
 The backend is running in an AWS EC2 instance using docker-compose to set up the web server.
+</br>
 **ITS IMPORTANT TO NOTE THE DEMO BELOW HAS SOME SMALL FIXES AND EDITS THAT AREN'T SHOWN IN THIS REPO AS THEY WERE NEEDED TO MAKE IT WORK HOSTING ON VERCEL**
-When signing up we also suggest not using any real personal info as this is a demo and is bound to have some issues somewhere in its current state
-So phone numbers can be fake as they have no real use
-Temp emails can be made with sites like https://tempail.com/en/ 
+Other Notes:
+* In this demo you cannot have admin, trainer or nutritionist accounts, as you won't have access to the database to make staff and associate the users as such.
+    * This is also out of concern for others' privacy as being an admin and such may reveal people's names they don't wish to be shared.
+    * So features such as making classes, nutritional posts, removing users, and creating programs cannot be shown this way and you will need to set up the program yourself to see this.
+* All of the data such as nutritional posts made, and classes are fictional and created by us.
+* __We would suggest using fake information when signing up__
+    * Phone numbers can be fake as they currently have no use in the system.
+    * Emails can be temp emails made with sites like https://tempail.com/en/
+* It should also be of note that images may be set to their default placeholder ones if docker container running the backend restarts for any reason
 
-https://modern-fit-frontend-x1sc.vercel.app/
+* As the backend runs on AWS the free tier runs out after so many hours so the live demo will be up and working from
+* 1st Jan 2024 to 30th Jan 2024
+<details>
+  <summary><i><b>Please Read the Above information before clicking here.</b></i></summary>
+<a href="https://site.modernfitdemosite.com/" target="_blank">DEMO SITE</a>
+</details>
+
+HERE IS A SHORT VIDEO WALKING THROUGH THE ADMINS, NUTRITIONIST AND TRAINER FEATURES YOU CANNOT EXPERIENCE WITH THIS DEMO 
+</br>
+[![DEMO STAFF VIDEO](https://img.youtube.com/vi/8v9ThMatZ08/0.jpg)](https://www.youtube.com/watch?v=8v9ThMatZ08)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -115,12 +131,12 @@ https://modern-fit-frontend-x1sc.vercel.app/
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
   npm install npm@latest -g
   ```
-* It may also be beneficial to get docker as this is how we will show you how to get the application running
+* Docker - https://docs.docker.com/engine/install/ 
+    * It may also be beneficial to get docker as this is how we will show you how to get the application running
 
 ### Installation
 
@@ -154,6 +170,10 @@ _Below is an example of how you can instruct your audience on installing and set
 docker compose up --build
 ```
 5. This will launch the backend in a docker container
+    - From here you can go to these urls to add the required basic data to ur MongoDB database
+    - http://localhost:5001/branch/generate 
+    - http://localhost:5001/mealcatagory/data/generate
+    - http://localhost:5001/typeofworkout/data/generate
 6. Then in a new terminal go to /frontend and run
 ```sh
 npm install
@@ -163,6 +183,15 @@ npm install
 npm run dev
 ```
 8. The frontend should now also be running on localhost:3000 and you can use the application
+    - Once you register an account you can go to your database copy your ObjectID
+    - Then use it in this link like so  "http://localhost:5001/staff/generate/YOUR OBJECT ID"
+    - You will then have a staff account you can choose your role by editing the role attribute in the collection for staff
+      ```sh
+      The roles available are:
+      Nutritionist
+      Admin
+      Trainer
+      ```
 9. You could also run them individually using npm if you like. For the backend, you will require Redis (https://redis.io/docs/install/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
